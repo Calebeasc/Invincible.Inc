@@ -63,3 +63,28 @@ $AgentFile
 Invincible/release_logs/
 Invincible/installer/*.ico
 Invincible/installer/*.bmp
+
+# Per-machine Claude / AI tool state
+.claude/scheduled_tasks.lock
+.claude/scheduled-tasks-state.json
+.claude/worktrees/
+.claude/agent-memory/
+.codex/
+.gemini/
+.instructions/
+.openclaw/
+.opencode/
+.terminus/
+
+# Caches
+.pytest_cache/
+__pycache__/
+
+# Backups
+*.bak
+*.with-lab.bak
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
