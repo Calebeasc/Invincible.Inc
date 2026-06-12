@@ -1,0 +1,9 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Woven Grid -->
+  <path d="M80 64V192M128 64V192M176 64V144" stroke="#111111" stroke-width="12" stroke-linecap="square"/>
+  <path d="M64 80H192M64 128H192M64 176H144" stroke="#111111" stroke-width="12" stroke-linecap="square"/>
+  <!-- Overlaps to create weave -->
+  <rect x="74" y="122" width="12" height="12" fill="#FFFFFF"/>
+  <rect x="122" y="74" width="12" height="12" fill="#FFFFFF"/>
+  <rect x="122" y="170" width="12" height="12" fill="#FFFFFF"/>
+</svg>

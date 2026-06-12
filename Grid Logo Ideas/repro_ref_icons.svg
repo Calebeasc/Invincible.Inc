@@ -1,0 +1,9 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Representative Icons Re-creation -->
+  <path d="M64 80H96V112H64V80Z" fill="#111111"/>
+  <circle cx="128" cy="96" r="16" stroke="#111111" stroke-width="4"/>
+  <path d="M160 80L192 112H160L192 80Z" fill="#111111"/>
+  <path d="M64 144L96 176L64 208" stroke="#111111" stroke-width="8" stroke-linecap="square"/>
+  <rect x="112" y="144" width="32" height="32" rx="16" fill="#111111"/>
+  <path d="M160 160C160 160 176 144 192 160C208 176 192 208 192 208C192 208 176 176 160 160Z" fill="#111111"/>
+</svg>

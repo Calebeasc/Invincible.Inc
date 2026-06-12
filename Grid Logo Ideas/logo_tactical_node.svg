@@ -1,0 +1,24 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#000000"/>
+  <!-- Isometric Grid Lines -->
+  <path d="M128 40L216 88V184L128 232L40 184V88L128 40Z" stroke="#2563EB" stroke-width="1.5" stroke-opacity="0.3"/>
+  <path d="M128 40V232" stroke="#2563EB" stroke-width="1" stroke-opacity="0.2"/>
+  <path d="M40 88L216 184" stroke="#2563EB" stroke-width="1" stroke-opacity="0.2"/>
+  <path d="M40 184L216 88" stroke="#2563EB" stroke-width="1" stroke-opacity="0.2"/>
+  <!-- Grid Nodes -->
+  <circle cx="128" cy="40" r="3" fill="#60A5FA"/>
+  <circle cx="216" cy="88" r="3" fill="#60A5FA"/>
+  <circle cx="216" cy="184" r="3" fill="#60A5FA"/>
+  <circle cx="128" cy="232" r="3" fill="#60A5FA"/>
+  <circle cx="40" cy="184" r="3" fill="#60A5FA"/>
+  <circle cx="40" cy="88" r="3" fill="#60A5FA"/>
+  <!-- The 'Active' Pentest Node -->
+  <circle cx="128" cy="136" r="6" fill="#F59E0B">
+    <animate attributeName="r" values="5;7;5" dur="2s" repeatCount="indefinite" />
+    <animate attributeName="fill-opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="128" cy="136" r="12" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.4">
+    <animate attributeName="r" values="10;18;10" dur="2s" repeatCount="indefinite" />
+    <animate attributeName="stroke-opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite" />
+  </circle>
+</svg>

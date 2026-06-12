@@ -1,0 +1,5 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- BLACK B-Mark Re-creation -->
+  <circle cx="128" cy="128" r="80" stroke="#111111" stroke-width="8"/>
+  <path d="M104 96V160M104 96H136C147.046 96 156 104.954 156 116C156 127.046 147.046 136 136 136H104M136 136H144C155.046 136 164 144.954 164 156C164 167.046 155.046 176 144 176H104" stroke="#111111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,-8)"/>
+</svg>

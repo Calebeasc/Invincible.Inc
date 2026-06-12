@@ -1,0 +1,28 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#000000"/>
+  
+  <!-- Helmet Crown Silhouette -->
+  <path d="M56 120C56 80 88 48 128 48C168 48 200 80 200 120V140H56V120Z" stroke="#2563EB" stroke-width="2" stroke-opacity="0.5"/>
+  
+  <!-- Side Tactical Nodes -->
+  <circle cx="48" cy="130" r="12" stroke="#60A5FA" stroke-width="1.5" stroke-opacity="0.6"/>
+  <circle cx="48" cy="130" r="4" fill="#60A5FA" fill-opacity="0.3"/>
+  
+  <circle cx="208" cy="130" r="12" stroke="#60A5FA" stroke-width="1.5" stroke-opacity="0.6"/>
+  <circle cx="208" cy="130" r="4" fill="#60A5FA" fill-opacity="0.3"/>
+
+  <!-- The Central Vanguard Triangle (Glowing) -->
+  <path d="M128 96L148 132H108L128 96Z" fill="#EF4444">
+    <animate attributeName="fill-opacity" values="1;0.4;1" dur="3s" repeatCount="indefinite" />
+  </path>
+  <path d="M128 90L156 138H100L128 90Z" stroke="#EF4444" stroke-width="1" stroke-opacity="0.4">
+    <animate attributeName="stroke-opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite" />
+  </path>
+  
+  <!-- Bottom Mask Line -->
+  <path d="M80 160L128 180L176 160" stroke="#2563EB" stroke-width="2" stroke-opacity="0.4"/>
+  
+  <!-- Grid Background Detail -->
+  <path d="M40 40H216M40 216H216" stroke="white" stroke-width="0.5" stroke-opacity="0.05"/>
+  <path d="M40 40V216M216 40V216" stroke="white" stroke-width="0.5" stroke-opacity="0.05"/>
+</svg>

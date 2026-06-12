@@ -1,0 +1,6 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M128 40L197.282 80V160L128 200L58.7179 160V80L128 40Z" stroke="#111111" stroke-width="4"/>
+  <path d="M128 40V200M197.282 80L58.7179 160M58.7179 80L197.282 160" stroke="#111111" stroke-width="2" stroke-opacity="0.5"/>
+  <path d="M93.359 60L162.641 100V180L93.359 220L24.0769 180V100L93.359 60Z" stroke="#111111" stroke-width="2" stroke-opacity="0.3"/>
+  <path d="M162.641 60L231.923 100V180L162.641 220L93.359 180V100L162.641 60Z" stroke="#111111" stroke-width="2" stroke-opacity="0.3"/>
+</svg>

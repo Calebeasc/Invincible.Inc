@@ -1,0 +1,12 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#000000"/>
+  <!-- Concentric 'Monitoring' Grid Squares -->
+  <rect x="64" y="64" width="128" height="128" stroke="#2563EB" stroke-width="1" stroke-opacity="0.8"/>
+  <rect x="96" y="96" width="64" height="64" stroke="#60A5FA" stroke-width="2"/>
+  <rect x="112" y="112" width="32" height="32" stroke="#F59E0B" stroke-width="4"/>
+  <!-- Corner Crosshairs -->
+  <path d="M48 48H72M48 48V72" stroke="white" stroke-width="1" stroke-opacity="0.5"/>
+  <path d="M208 48H184M208 48V72" stroke="white" stroke-width="1" stroke-opacity="0.5"/>
+  <path d="M48 208H72M48 208V184" stroke="white" stroke-width="1" stroke-opacity="0.5"/>
+  <path d="M208 208H184M208 208V184" stroke="white" stroke-width="1" stroke-opacity="0.5"/>
+</svg>

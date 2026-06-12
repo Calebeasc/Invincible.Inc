@@ -88,3 +88,34 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Nested git repos — pushed independently
+Omni-repo/
+Invincible/
+Grid/
+Oracle/
+
+# Built artifacts / installers (large binaries)
+Installers/
+
+# Quarantined deprecated React frontend
+.quarantine/
+
+# Downloaded third-party projects
+Chasing-Your-Tail-NG-main/
+
+# Pages_Backup (old XAML backup snapshot)
+Pages_Backup/
+
+# Logs
+*.log
+omni-build.log
+msbuild.log
+build_errors.txt
+build_utt_diag.log
+
+# Recovered OneDrive dump — VMDK / ISO / 3D / kernel files (too big for git)
+recovered from onedrive/
+
+# Other potentially-large user assets that don't belong in git
+.tmp_appdata/

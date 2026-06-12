@@ -1,0 +1,5 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M128 40L200 80V160L128 200L56 160V80L128 40Z" stroke="#111111" stroke-width="12" stroke-linejoin="miter"/>
+  <path d="M128 80L168 104V152L128 176L88 152V104L128 80Z" stroke="#111111" stroke-width="8" stroke-linejoin="miter"/>
+  <path d="M128 80V176M88 104L168 152M168 104L88 152" stroke="#111111" stroke-width="2" stroke-opacity="0.2"/>
+</svg>

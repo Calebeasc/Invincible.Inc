@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sign In — Oracle</title>
+<meta name="theme-color" content="#04080f"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/x-icon" href="../favicon-dark.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-dark-32.png"/>
+<link rel="icon" type="image/x-icon" href="../favicon.ico" media="(prefers-color-scheme: light)"/>
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" media="(prefers-color-scheme: light)"/>
+<link rel="apple-touch-icon" href="../apple-touch-icon.png"/>
+<style>
+:root{
+  --bg:#04080f; --bg2:#070e1a; --teal:#06b6d4; --teal2:#22d3ee;
+  --green:#10b981; --green2:#34d399; --amber:#f59e0b; --red:#f43f5e;
+  --red2:#fb7185; --text:#e2f0f8; --dim:#4d7090;
+  --border:rgba(6,182,212,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,rgba(6,182,212,0.07) 1px,transparent 1px);
+  background-size:36px 36px;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 30% 20%,rgba(6,182,212,0.06),transparent),
+    radial-gradient(ellipse 40% 30% at 80% 80%,rgba(16,185,129,0.05),transparent);}
+
+.login-card{position:relative;z-index:1;width:100%;max-width:380px;padding:40px;margin:16px;
+  border-radius:24px;background:rgba(7,14,26,0.95);backdrop-filter:blur(20px);
+  border:1px solid var(--border);box-shadow:0 40px 80px rgba(0,0,0,0.5);}
+
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+.brand-mark{width:40px;height:40px;border-radius:11px;
+  overflow:hidden;display:grid;place-items:center;}
+.brand-mark img{width:40px;height:40px;object-fit:contain;}
+.brand-name{font-size:20px;font-weight:900;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,var(--teal2),var(--green2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.brand-sub{font-size:10px;color:var(--dim);}
+
+h1{font-size:1.4rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:6px;}
+.subtitle{font-size:13px;color:var(--dim);margin-bottom:28px;}
+
+.form-field{margin-bottom:14px;}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--dim);
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px;}
+.form-input{width:100%;padding:12px 16px;border-radius:10px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(6,182,212,0.12);
+  color:var(--text);font-size:14px;outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:rgba(6,182,212,0.4);}
+
+.form-submit{width:100%;padding:14px;margin-top:6px;border-radius:100px;
+  background:linear-gradient(135deg,var(--teal),var(--green));
+  color:#000;font-size:14px;font-weight:800;border:none;cursor:pointer;
+  transition:all .25s;position:relative;}
+.form-submit:hover{box-shadow:0 8px 24px rgba(6,182,212,0.4);transform:translateY(-1px);}
+.form-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+.error-msg{display:none;margin-top:12px;padding:10px 14px;border-radius:8px;
+  background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.2);
+  font-size:12px;color:var(--red2);}
+
+.back-link{display:block;text-align:center;margin-top:20px;
+  font-size:12px;color:var(--dim);text-decoration:none;}
+.back-link:hover{color:var(--teal2);}
+
+.spinner{display:none;width:18px;height:18px;border:2px solid rgba(0,0,0,0.3);
+  border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite;
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);}
+@keyframes spin{to{transform:translateY(-50%) rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="login-card">
+  <div class="brand">
+    <div class="brand-mark"><picture><source srcset="../logo.png" media="(prefers-color-scheme: light)"/><img src="../logo-dark.png" alt="Oracle"/></picture></div>
+    <div>
+      <div class="brand-name">Oracle</div>
+      <div class="brand-sub">by Invincible.Inc</div>
+    </div>
+  </div>
+
+  <h1>Welcome back.</h1>
+  <p class="subtitle">Sign in to your Oracle account.</p>
+
+  <div class="form-field">
+    <label class="form-label" for="email">Email</label>
+    <input class="form-input" type="email" id="email" placeholder="you@example.com" autocomplete="email"/>
+  </div>
+  <div class="form-field">
+    <label class="form-label" for="password">Password</label>
+    <input class="form-input" type="password" id="password" placeholder="••••••••" autocomplete="current-password"/>
+  </div>
+
+  <button class="form-submit" id="submit-btn" onclick="doLogin()">
+    Sign In
+    <div class="spinner" id="spinner"></div>
+  </button>
+
+  <div class="error-msg" id="error-msg"></div>
+
+  <a class="back-link" href="../index.html">← Back to Oracle</a>
+</div>
+
+<script>
+// Use same-origin when served via backend (ngrok/Twingate), fallback to localhost for file://
+const API = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8742'
+  : window.location.origin;
+
+function parseJwt(t) {
+  try {
+    const b = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(b.padEnd(b.length + (4 - b.length % 4) % 4, '=')));
+  } catch { return {}; }
+}
+
+// If already logged in, redirect appropriately using backend-served URLs
+(function() {
+  const token = localStorage.getItem('oracle_token');
+  if (!token) return;
+  const payload = parseJwt(token);
+  if (payload.exp * 1000 > Date.now()) {
+    if (payload.is_developer) { window.location.href = API + '/sites/oracle/admin/'; }
+    else { window.location.href = 'http://localhost:5173'; }
+  } else {
+    localStorage.removeItem('oracle_token');
+  }
+})();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+async function doLogin() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('submit-btn');
+  const spinner = document.getElementById('spinner');
+  const errEl = document.getElementById('error-msg');
+
+  if (!email || !password) {
+    showError('Please enter your email and password.');
+    return;
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  errEl.style.display = 'none';
+
+  try {
+    const res = await fetch(API + '/auth/dev/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'omit',
+    });
+
+    const data = await res.json();
+
+    if (!data.ok || !data.token) {
+      showError('Invalid email or password. Please try again.');
+      return;
+    }
+
+    // Decode JWT; backend-provided tier is authoritative
+    const payload = parseJwt(data.token);
+    const isDev = payload.is_developer || data.is_developer || false;
+
+    // Store token
+    localStorage.setItem('oracle_token', data.token);
+    localStorage.setItem('oracle_email', data.email || email);
+
+    // Route based on role — use backend-served URLs to avoid file:// issues
+    if (isDev) {
+      localStorage.setItem('oracle_admin', '1');
+      window.location.href = API + '/sites/oracle/admin/';
+    } else {
+      window.location.href = 'http://localhost:5173';
+    }
+
+  } catch (e) {
+    showError('Could not connect to Oracle backend. Make sure the app is running on your device.');
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+</script>
+</body>
+</html>

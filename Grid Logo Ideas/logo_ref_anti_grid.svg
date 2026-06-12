@@ -1,0 +1,20 @@
+<svg width="512" height="256" viewBox="0 0 512 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Final Geometric 'GRID' - Exact Reference R Construction -->
+  <g stroke="#111111" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- G: Reductive Open Diamond (Reference Style) -->
+    <path d="M90 90L65 128L90 166L115 128H90" /> 
+    
+    <!-- R: EXACT REFERENCE STRUCTURE (Pillar + Detached Zig-Zag) -->
+    <path d="M145 90V166" /> <!-- Standalone Pillar -->
+    <path d="M155 90L180 128H155L180 166" /> <!-- Continuous Reference Zig-Zag (Bowl + Leg) -->
+    
+    <!-- I: Single Pillar -->
+    <path d="M225 90V166" />
+    
+    <!-- D: Geometric Triangle -->
+    <path d="M265 90V166L290 128Z" />
+  </g>
+  
+  <!-- Subtext -->
+  <text x="65" y="200" fill="#111111" font-family="Helvetica, Arial, sans-serif" font-size="10" letter-spacing="8" font-weight="300">SOVEREIGN NETWORK OS</text>
+</svg>

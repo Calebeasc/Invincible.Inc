@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Oracle Admin — Invincible.Inc</title>
+<meta name="theme-color" content="#04080f"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/x-icon" href="../favicon-dark.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-dark-32.png"/>
+<link rel="icon" type="image/x-icon" href="../favicon.ico" media="(prefers-color-scheme: light)"/>
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" media="(prefers-color-scheme: light)"/>
+<link rel="apple-touch-icon" href="../apple-touch-icon.png"/>
+<style>
+:root{
+  --bg:      #04080f;
+  --bg2:     #070e1a;
+  --bg3:     #0b1525;
+  --teal:    #06b6d4;
+  --teal2:   #22d3ee;
+  --green:   #10b981;
+  --green2:  #34d399;
+  --amber:   #f59e0b;
+  --amber2:  #fbbf24;
+  --red:     #f43f5e;
+  --red2:    #fb7185;
+  --purple:  #8b5cf6;
+  --text:    #e2f0f8;
+  --dim:     #4d7090;
+  --card:    rgba(6,182,212,0.04);
+  --border:  rgba(6,182,212,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  line-height:1.6;overflow-x:hidden;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:radial-gradient(circle,rgba(6,182,212,0.06) 1px,transparent 1px);
+  background-size:36px 36px;pointer-events:none;}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(6,182,212,0.3);border-radius:4px;}
+
+/* ── Login wall ── */
+#login-wall{position:fixed;inset:0;z-index:999;background:var(--bg);
+  display:none;align-items:center;justify-content:center;flex-direction:column;}
+.login-box{width:100%;max-width:360px;padding:40px;border-radius:20px;
+  border:1px solid var(--border);background:rgba(7,14,26,0.95);backdrop-filter:blur(20px);
+  text-align:center;}
+.login-mark{width:52px;height:52px;border-radius:14px;margin:0 auto 20px;
+  overflow:hidden;display:grid;place-items:center;}
+.login-mark img{width:52px;height:52px;object-fit:contain;}
+.login-title{font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--dim);margin-bottom:28px;}
+.login-input{width:100%;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(6,182,212,0.15);color:var(--text);font-size:14px;
+  text-align:center;letter-spacing:4px;font-family:monospace;outline:none;margin-bottom:12px;}
+.login-input:focus{border-color:rgba(6,182,212,0.4);}
+.login-btn{width:100%;padding:12px;border-radius:100px;background:linear-gradient(135deg,var(--teal),var(--green));
+  color:#000;font-size:14px;font-weight:800;border:none;cursor:pointer;transition:all .25s;}
+.login-btn:hover{box-shadow:0 8px 24px rgba(6,182,212,0.35);transform:translateY(-1px);}
+.login-error{font-size:12px;color:var(--red2);margin-top:10px;display:none;}
+
+/* ── Admin shell ── */
+#admin-shell{display:none;min-height:100vh;}
+.admin-nav{position:sticky;top:0;z-index:100;padding:0 24px;height:56px;
+  display:flex;align-items:center;gap:16px;
+  background:rgba(4,8,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.admin-nav-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.admin-nav-mark{width:28px;height:28px;border-radius:8px;
+  overflow:hidden;display:grid;place-items:center;}
+.admin-nav-mark img{width:28px;height:28px;object-fit:contain;}
+.admin-nav-name{font-size:14px;font-weight:900;
+  background:linear-gradient(135deg,var(--teal2),var(--green2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.admin-nav-badge{font-size:9px;font-weight:700;letter-spacing:1px;color:var(--amber);
+  background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);
+  border-radius:4px;padding:2px 6px;}
+.admin-logout{margin-left:auto;font-size:12px;color:var(--dim);cursor:pointer;
+  padding:6px 14px;border-radius:100px;border:1px solid rgba(255,255,255,0.06);
+  background:none;transition:all .2s;}
+.admin-logout:hover{color:var(--red2);border-color:rgba(244,63,94,0.3);}
+
+/* ── Tab bar ── */
+.tab-bar{display:flex;gap:2px;padding:16px 24px 0;overflow-x:auto;
+  border-bottom:1px solid var(--border);background:var(--bg);}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{padding:10px 18px;border-radius:8px 8px 0 0;font-size:12px;font-weight:600;
+  color:var(--dim);cursor:pointer;border:none;background:none;transition:all .2s;
+  white-space:nowrap;border-bottom:2px solid transparent;}
+.tab-btn:hover{color:var(--teal2);}
+.tab-btn.active{color:var(--teal2);border-bottom-color:var(--teal);background:rgba(6,182,212,0.05);}
+
+/* ── Content area ── */
+.tab-content{display:none;padding:28px 24px;max-width:1200px;}
+.tab-content.active{display:block;}
+
+/* ── Shared card styles ── */
+.panel-title{font-size:18px;font-weight:900;letter-spacing:-0.5px;margin-bottom:4px;}
+.panel-sub{font-size:13px;color:var(--dim);margin-bottom:24px;}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.card{padding:20px;border-radius:12px;border:1px solid var(--border);background:var(--card);}
+.card-title{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--teal);
+  text-transform:uppercase;margin-bottom:8px;}
+.card-num{font-size:2rem;font-weight:900;line-height:1;}
+.card-label{font-size:11px;color:var(--dim);margin-top:3px;}
+
+/* ── Status dot ── */
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+.dot-green{background:var(--green2);box-shadow:0 0 6px var(--green2);}
+.dot-amber{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.dot-red{background:var(--red);box-shadow:0 0 6px var(--red);}
+
+/* ── Table ── */
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{text-align:left;padding:10px 12px;font-size:10px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--dim);
+  border-bottom:1px solid var(--border);}
+.data-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.03);
+  color:var(--text);vertical-align:middle;}
+.data-table tr:hover td{background:rgba(6,182,212,0.03);}
+
+/* ── Toggle ── */
+.toggle{position:relative;width:36px;height:20px;cursor:pointer;}
+.toggle input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{position:absolute;inset:0;border-radius:100px;background:rgba(255,255,255,0.08);
+  border:1px solid var(--border);transition:all .2s;}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;
+  background:var(--dim);transition:all .2s;}
+.toggle input:checked ~ .toggle-track{background:rgba(6,182,212,0.2);border-color:var(--teal);}
+.toggle input:checked ~ .toggle-thumb{left:19px;background:var(--teal2);}
+
+/* ── Pill badge ── */
+.pill{display:inline-block;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;}
+.pill-green{background:rgba(16,185,129,0.1);color:var(--green2);border:1px solid rgba(16,185,129,0.2);}
+.pill-amber{background:rgba(245,158,11,0.1);color:var(--amber2);border:1px solid rgba(245,158,11,0.2);}
+.pill-red{background:rgba(244,63,94,0.1);color:var(--red2);border:1px solid rgba(244,63,94,0.2);}
+
+/* ── Form elements ── */
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.form-label{font-size:11px;font-weight:700;color:var(--dim);letter-spacing:.5px;}
+.form-input{padding:10px 14px;border-radius:8px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(6,182,212,0.12);color:var(--text);font-size:13px;outline:none;}
+.form-input:focus{border-color:rgba(6,182,212,0.35);}
+.btn-sm{padding:8px 18px;border-radius:100px;font-size:12px;font-weight:700;
+  border:none;cursor:pointer;transition:all .2s;}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--green));color:#000;}
+.btn-primary:hover{box-shadow:0 4px 16px rgba(6,182,212,0.35);transform:translateY(-1px);}
+.btn-danger{background:rgba(244,63,94,0.12);color:var(--red2);border:1px solid rgba(244,63,94,0.2);}
+.btn-danger:hover{background:rgba(244,63,94,0.2);}
+.btn-ghost{background:transparent;color:var(--dim);border:1px solid rgba(255,255,255,0.08);}
+.btn-ghost:hover{color:var(--teal2);border-color:rgba(6,182,212,0.25);}
+
+/* ── Sparkline placeholder ── */
+.sparkline{height:48px;border-radius:6px;background:rgba(6,182,212,0.04);
+  border:1px solid var(--border);overflow:hidden;position:relative;}
+.sparkline-bar{position:absolute;bottom:0;width:3px;border-radius:2px 2px 0 0;
+  background:var(--teal);}
+
+/* ── Health check list ── */
+.health-list{display:flex;flex-direction:column;gap:8px;}
+.health-item{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid var(--border);
+  font-size:13px;}
+.health-status{margin-left:auto;font-size:11px;font-weight:700;}
+
+/* ── Settings sliders ── */
+.setting-row{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.setting-row:last-child{border-bottom:none;}
+.setting-name{font-size:13px;font-weight:600;}
+.setting-desc{font-size:11px;color:var(--dim);margin-top:2px;}
+.setting-val{font-size:13px;font-weight:700;color:var(--teal2);min-width:60px;text-align:right;}
+
+@media(max-width:768px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .tab-btn{padding:8px 12px;font-size:11px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Access denied fallback (redirected from login) ── -->
+<div id="login-wall">
+  <div class="login-box">
+    <div class="login-mark"><picture><source srcset="../logo.png" media="(prefers-color-scheme: light)"/><img src="../logo-dark.png" alt="Oracle"/></picture></div>
+    <div class="login-title">Oracle Admin</div>
+    <div class="login-sub">Administrator access required.</div>
+    <a class="login-btn" href="../login/index.html" style="display:block;text-decoration:none;text-align:center;line-height:1.4;padding:12px 0;">Sign In →</a>
+    <div class="login-error" id="login-error" style="margin-top:10px;">Your account does not have administrator access.</div>
+  </div>
+</div>
+
+<!-- ── Admin Shell ── -->
+<div id="admin-shell">
+  <nav class="admin-nav">
+    <a class="admin-nav-logo" href="../index.html">
+      <div class="admin-nav-mark"><picture><source srcset="../logo.png" media="(prefers-color-scheme: light)"/><img src="../logo-dark.png" alt="Oracle"/></picture></div>
+      <span class="admin-nav-name">Oracle</span>
+    </a>
+    <span class="admin-nav-badge">ADMIN</span>
+    <span id="admin-email" style="font-size:11px;color:var(--dim);margin-left:8px;"></span>
+    <button class="admin-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <!-- ── Tab Bar ── -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('dashboard',this)">📊 Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('scanner',this)">📡 Scanner</button>
+    <button class="tab-btn" onclick="switchTab('users',this)">👥 Users</button>
+    <button class="tab-btn" onclick="switchTab('devices',this)">🔧 Devices</button>
+    <button class="tab-btn" onclick="switchTab('data',this)">🗄️ Data</button>
+    <button class="tab-btn" onclick="switchTab('signal',this)">📈 Signal</button>
+    <button class="tab-btn" onclick="switchTab('replay',this)">⏮️ Replay</button>
+    <button class="tab-btn" onclick="switchTab('targets',this)">🎯 Targets</button>
+    <button class="tab-btn" onclick="switchTab('settings',this)">⚙️ Settings</button>
+    <button class="tab-btn" onclick="switchTab('security',this)">🔐 Security</button>
+  </div>
+
+  <!-- ═══════════ DASHBOARD ═══════════ -->
+  <div class="tab-content active" id="tab-dashboard">
+    <div class="panel-title">System Overview</div>
+    <div class="panel-sub">Live stats, health checks, and GPS accuracy telemetry.</div>
+
+    <div class="grid-4" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">Total Encounters</div>
+        <div class="card-num" id="stat-encounters" style="color:var(--teal2);">—</div>
+        <div class="card-label">all time</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Active Users</div>
+        <div class="card-num" id="stat-users" style="color:var(--green2);">—</div>
+        <div class="card-label">registered devices</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Heatmap Cells</div>
+        <div class="card-num" id="stat-heatmap" style="color:var(--amber);">—</div>
+        <div class="card-label">active grid cells</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Route Points</div>
+        <div class="card-num" id="stat-routes" style="color:var(--purple);">—</div>
+        <div class="card-label">gps fixes stored</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Service Health</div>
+        <div class="health-list" style="margin-top:8px;" id="health-list">
+          <div class="health-item"><span class="dot dot-green"></span>Backend API<span class="health-status" style="color:var(--green2);">ONLINE</span></div>
+          <div class="health-item"><span class="dot dot-amber" id="ble-dot"></span>BLE Scanner<span class="health-status" id="ble-status" style="color:var(--amber);">CHECKING…</span></div>
+          <div class="health-item"><span class="dot dot-amber" id="wifi-dot"></span>Wi-Fi Scanner<span class="health-status" id="wifi-status" style="color:var(--amber);">CHECKING…</span></div>
+          <div class="health-item"><span class="dot dot-green"></span>Database<span class="health-status" style="color:var(--green2);">HEALTHY</span></div>
+          <div class="health-item"><span class="dot dot-green"></span>GPS Engine<span class="health-status" style="color:var(--green2);">ACTIVE</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">GPS Accuracy · Last 60 Fixes</div>
+        <div class="sparkline" id="gps-sparkline" style="margin-top:12px;height:72px;">
+          <!-- JS-generated bars -->
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;">
+          <span style="color:var(--green2);">■ &lt;5m</span>
+          <span style="color:var(--amber);">■ 5–20m</span>
+          <span style="color:var(--red2);">■ &gt;20m</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SCANNER ═══════════ -->
+  <div class="tab-content" id="tab-scanner">
+    <div class="panel-title">Scanner Control</div>
+    <div class="panel-sub">Start, stop, and self-test the WiFi and BLE scanner processes.</div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">BLE Scanner</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <span class="dot dot-amber" id="ble-status-dot"></span>
+          <span style="font-size:13px;" id="ble-state-label">Stopped</span>
+          <label class="toggle" style="margin-left:auto;">
+            <input type="checkbox" id="ble-toggle" onchange="toggleScanner('ble',this)"/>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div style="font-size:12px;color:var(--dim);">Scans for Bluetooth Low Energy advertisements. Detects phones, AirTags, beacons, and other BLE devices within range.</div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px;">Wi-Fi Scanner</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <span class="dot dot-amber" id="wifi-status-dot"></span>
+          <span style="font-size:13px;" id="wifi-state-label">Stopped</span>
+          <label class="toggle" style="margin-left:auto;">
+            <input type="checkbox" id="wifi-toggle" onchange="toggleScanner('wifi',this)"/>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+        <div style="font-size:12px;color:var(--dim);">Scans for nearby 802.11 access points and probe requests. Logs BSSID, SSID, RSSI, channel, and encryption type.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Self-Test</div>
+      <div style="font-size:13px;color:var(--dim);margin-bottom:16px;">Runs a full diagnostic: DB write, GPS check, scanner status, and settings read. Results appear inline.</div>
+      <button class="btn-sm btn-primary" onclick="runSelfTest()">Run Self-Test</button>
+      <div id="selftest-output" style="margin-top:16px;display:none;">
+        <div class="health-list" id="selftest-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ USERS ═══════════ -->
+  <div class="tab-content" id="tab-users">
+    <div class="panel-title">User Management</div>
+    <div class="panel-sub">Control visibility flags and permissions for each registered user.</div>
+    <div class="card">
+      <table class="data-table" id="users-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Device ID</th>
+            <th>Rank</th>
+            <th>XP</th>
+            <th>Visible</th>
+            <th>Can See Others</th>
+            <th>Can Contribute</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-body">
+          <tr><td colspan="9" style="color:var(--dim);text-align:center;padding:32px;">Loading users…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ DEVICES ═══════════ -->
+  <div class="tab-content" id="tab-devices">
+    <div class="panel-title">Device Filter</div>
+    <div class="panel-sub">Label MAC addresses, set custom colors, or mark devices as ignore / target.</div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="margin-bottom:14px;">Add Device Rule</div>
+      <div class="grid-3" style="gap:12px;align-items:end;">
+        <div class="form-row" style="margin:0;">
+          <div class="form-label">MAC Address / Pattern</div>
+          <input class="form-input" id="dev-mac" placeholder="AA:BB:CC:DD:EE:FF or prefix"/>
+        </div>
+        <div class="form-row" style="margin:0;">
+          <div class="form-label">Label</div>
+          <input class="form-input" id="dev-label" placeholder="Custom label"/>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="form-input" id="dev-action" style="flex:1;">
+            <option value="label">Label only</option>
+            <option value="ignore">Ignore (hide from map)</option>
+            <option value="target">Target (highlight)</option>
+          </select>
+          <button class="btn-sm btn-primary" onclick="addDeviceRule()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">Active Rules</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>MAC / Pattern</th><th>Label</th><th>Action</th><th>Added</th><th></th></tr>
+        </thead>
+        <tbody id="device-rules-body">
+          <tr><td colspan="5" style="color:var(--dim);text-align:center;padding:24px;">No rules configured</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ DATA ═══════════ -->
+  <div class="tab-content" id="tab-data">
+    <div class="panel-title">Data Management</div>
+    <div class="panel-sub">View record counts per table and manage route data.</div>
+
+    <div class="grid-4" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">raw_observations</div>
+        <div class="card-num" id="tbl-raw" style="color:var(--teal2);">—</div>
+        <div class="card-label">rows</div>
+      </div>
+      <div class="card">
+        <div class="card-title">encounters</div>
+        <div class="card-num" id="tbl-enc" style="color:var(--green2);">—</div>
+        <div class="card-label">rows</div>
+      </div>
+      <div class="card">
+        <div class="card-title">route_points</div>
+        <div class="card-num" id="tbl-routes" style="color:var(--amber);">—</div>
+        <div class="card-label">rows</div>
+      </div>
+      <div class="card">
+        <div class="card-title">heatmap_cells</div>
+        <div class="card-num" id="tbl-heat" style="color:var(--purple);">—</div>
+        <div class="card-label">rows</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Clear Route Data</div>
+      <div style="font-size:13px;color:var(--dim);margin-bottom:16px;">Permanently deletes route_points for the selected user. This cannot be undone.</div>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <input class="form-input" id="clear-user-id" placeholder="User ID or 'all'" style="max-width:200px;"/>
+        <button class="btn-sm btn-danger" onclick="clearRoutes()">Clear Routes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SIGNAL ═══════════ -->
+  <div class="tab-content" id="tab-signal">
+    <div class="panel-title">Signal Analytics</div>
+    <div class="panel-sub">Average RSSI per 5-minute bucket over the last 6 hours, grouped by source.</div>
+    <div class="card">
+      <div style="display:flex;gap:20px;margin-bottom:20px;font-size:12px;">
+        <span style="color:var(--teal2);">■ Wi-Fi (RSSI avg)</span>
+        <span style="color:var(--purple);">■ BLE (RSSI avg)</span>
+      </div>
+      <div id="signal-chart" style="height:200px;display:flex;align-items:flex-end;gap:2px;
+        border-left:1px solid var(--border);border-bottom:1px solid var(--border);padding:0 4px 4px;">
+        <!-- JS-generated bars -->
+      </div>
+      <div style="font-size:11px;color:var(--dim);margin-top:8px;display:flex;justify-content:space-between;">
+        <span>6h ago</span><span>5h ago</span><span>4h ago</span><span>3h ago</span><span>2h ago</span><span>1h ago</span><span>now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ REPLAY ═══════════ -->
+  <div class="tab-content" id="tab-replay">
+    <div class="panel-title">Session Replay</div>
+    <div class="panel-sub">Scrub through any historical session. Encounters and route path play back on the map.</div>
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:20px;">
+        <input class="form-input" type="date" id="replay-date" style="max-width:180px;"/>
+        <input class="form-input" id="replay-user" placeholder="User ID (optional)" style="max-width:200px;"/>
+        <button class="btn-sm btn-primary" onclick="loadReplay()">Load Session</button>
+      </div>
+      <div id="replay-map" style="width:100%;height:320px;border-radius:10px;background:rgba(0,0,0,0.4);
+        border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+        color:var(--dim);font-size:13px;">
+        Select a date and load a session to begin replay
+      </div>
+      <div style="margin-top:14px;">
+        <input type="range" id="replay-scrubber" min="0" max="100" value="0" style="width:100%;accent-color:var(--teal);" disabled/>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:4px;">
+          <span id="replay-time-start">00:00</span>
+          <button class="btn-sm btn-ghost" id="replay-play" onclick="playReplay()" disabled>▶ Play 10×</button>
+          <span id="replay-time-end">00:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TARGETS ═══════════ -->
+  <div class="tab-content" id="tab-targets">
+    <div class="panel-title">Watchlist</div>
+    <div class="panel-sub">MAC addresses and device names to highlight and extra-log when encountered.</div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title" style="margin-bottom:14px;">Add Target</div>
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <div class="form-row" style="margin:0;flex:1;">
+          <div class="form-label">MAC Address or Device Name</div>
+          <input class="form-input" id="target-id" placeholder="AA:BB:CC:DD:EE:FF or 'iPhone'"/>
+        </div>
+        <div class="form-row" style="margin:0;flex:1;">
+          <div class="form-label">Notes</div>
+          <input class="form-input" id="target-notes" placeholder="Optional note"/>
+        </div>
+        <button class="btn-sm btn-primary" onclick="addTarget()">Add Target</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">Active Targets</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Identifier</th><th>Notes</th><th>Encounters</th><th>Last Seen</th><th></th></tr>
+        </thead>
+        <tbody id="targets-body">
+          <tr><td colspan="5" style="color:var(--dim);text-align:center;padding:24px;">No active targets</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ SETTINGS ═══════════ -->
+  <div class="tab-content" id="tab-settings">
+    <div class="panel-title">Scanner Settings</div>
+    <div class="panel-sub">Tune all scanner parameters. Changes take effect immediately.</div>
+    <div class="card" style="max-width:600px;">
+      <div class="setting-row">
+        <div><div class="setting-name">Scan Interval</div><div class="setting-desc">How often the WiFi/BLE scanner refreshes</div></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="range" min="1" max="30" value="4" id="s-interval"
+            oninput="document.getElementById('s-interval-val').textContent=this.value+'s'"
+            style="width:100px;accent-color:var(--teal);"/>
+          <div class="setting-val" id="s-interval-val">4s</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-name">RSSI Floor</div><div class="setting-desc">Ignore signals weaker than this threshold</div></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="range" min="-120" max="-40" value="-85" id="s-rssi"
+            oninput="document.getElementById('s-rssi-val').textContent=this.value+'dBm'"
+            style="width:100px;accent-color:var(--teal);"/>
+          <div class="setting-val" id="s-rssi-val">-85dBm</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-name">Accuracy Gate</div><div class="setting-desc">Reject GPS fixes worse than this</div></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="range" min="10" max="200" value="80" id="s-accuracy"
+            oninput="document.getElementById('s-accuracy-val').textContent=this.value+'m'"
+            style="width:100px;accent-color:var(--teal);"/>
+          <div class="setting-val" id="s-accuracy-val">80m</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-name">Heatmap Decay</div><div class="setting-desc">Days before a heatmap cell fades</div></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="range" min="1" max="30" value="7" id="s-decay"
+            oninput="document.getElementById('s-decay-val').textContent=this.value+'d'"
+            style="width:100px;accent-color:var(--teal);"/>
+          <div class="setting-val" id="s-decay-val">7d</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-name">GPS Poll Rate</div><div class="setting-desc">GPS fix request frequency</div></div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input type="range" min="500" max="5000" step="500" value="1000" id="s-gps"
+            oninput="document.getElementById('s-gps-val').textContent=this.value+'ms'"
+            style="width:100px;accent-color:var(--teal);"/>
+          <div class="setting-val" id="s-gps-val">1000ms</div>
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:10px;">
+        <button class="btn-sm btn-primary" onclick="saveSettings()">Save Settings</button>
+        <button class="btn-sm btn-ghost" onclick="resetSettings()">Reset to Defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ SECURITY ═══════════ -->
+  <div class="tab-content" id="tab-security">
+    <div class="panel-title">Security</div>
+    <div class="panel-sub">Audit log, device bans, and connection history.</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px;">Audit Log</div>
+        <div id="audit-log" style="display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto;">
+          <div style="color:var(--dim);font-size:12px;text-align:center;padding:24px;">Loading audit log…</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px;">Banned Devices</div>
+        <table class="data-table">
+          <thead><tr><th>Device / IP</th><th>Reason</th><th>Banned At</th><th></th></tr></thead>
+          <tbody id="bans-body">
+            <tr><td colspan="4" style="color:var(--dim);text-align:center;padding:20px;">No bans active</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <input class="form-input" id="ban-target" placeholder="Device ID or IP" style="flex:1;"/>
+          <input class="form-input" id="ban-reason" placeholder="Reason" style="flex:1;"/>
+          <button class="btn-sm btn-danger" onclick="addBan()">Ban</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /admin-shell -->
+
+<script>
+const API = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8742'
+  : window.location.origin;
+
+// ── Auth gate ─────────────────────────────────────────────────────────────
+function parseJwt(t) {
+  try {
+    const b = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(b.padEnd(b.length + (4 - b.length % 4) % 4, '=')));
+  } catch { return {}; }
+}
+
+function getToken() { return localStorage.getItem('oracle_token'); }
+
+function isAdminToken(token) {
+  if (!token) return false;
+  const payload = parseJwt(token);
+  return payload.is_developer === true && payload.exp * 1000 > Date.now();
+}
+
+(function checkAuth() {
+  const token = getToken();
+  if (!isAdminToken(token)) {
+    // Not logged in or not admin — show access wall and redirect
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('login-wall').style.display = 'flex';
+      document.getElementById('admin-shell').style.display = 'none';
+      document.getElementById('login-error').style.display = 'block';
+    });
+    // Redirect after 1.5s to login
+    setTimeout(() => { window.location.href = API + '/sites/oracle/login/'; }, 1500);
+    return;
+  }
+  // Valid admin token — show admin shell
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('login-wall').style.display = 'none';
+    document.getElementById('admin-shell').style.display = 'block';
+    // Show email in nav
+    const p = parseJwt(token);
+    const emailEl = document.getElementById('admin-email');
+    if (emailEl && p.sub) emailEl.textContent = p.sub;
+    initAdmin();
+  });
+})();
+
+function logout() {
+  localStorage.removeItem('oracle_token');
+  localStorage.removeItem('oracle_admin');
+  localStorage.removeItem('oracle_email');
+  window.location.href = API + '/sites/oracle/login/';
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+async function apiFetch(path, opts={}) {
+  try {
+    const token = getToken();
+    const headers = { ...(opts.headers || {}) };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const r = await fetch(API + path, {credentials:'omit', ...opts, headers});
+    if (r.status === 401 || r.status === 403) {
+      // Token expired or revoked — boot to login
+      localStorage.removeItem('oracle_token');
+      window.location.href = API + '/sites/oracle/login/';
+      return null;
+    }
+    if (!r.ok) return null;
+    return r.json();
+  } catch { return null; }
+}
+
+function fmtNum(n) {
+  if (n == null) return '—';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1) + 'k';
+  return String(n);
+}
+
+async function initAdmin() {
+  loadDashboard();
+  loadUsers();
+}
+
+async function loadDashboard() {
+  // Try to fetch stats from backend
+  const stats = await apiFetch('/admin/stats');
+  if (stats) {
+    document.getElementById('stat-encounters').textContent = fmtNum(stats.encounters);
+    document.getElementById('stat-users').textContent = fmtNum(stats.users);
+    document.getElementById('stat-heatmap').textContent = fmtNum(stats.heatmap_cells);
+    document.getElementById('stat-routes').textContent = fmtNum(stats.route_points);
+  }
+  // Draw mock GPS sparkline
+  const container = document.getElementById('gps-sparkline');
+  container.innerHTML = '';
+  const heights = Array.from({length: 60}, () => Math.random());
+  const maxH = 72;
+  heights.forEach(h => {
+    const bar = document.createElement('div');
+    const pct = h;
+    const accuracy = pct < 0.6 ? 4 : pct < 0.85 ? 12 : 30; // m
+    bar.style.cssText = `position:absolute;bottom:0;height:${Math.round(h * maxH)}px;width:calc(${100/60}% - 1px);
+      border-radius:2px 2px 0 0;background:${accuracy<5?'var(--green2)':accuracy<20?'var(--amber)':'var(--red2)'};`;
+    // distribute across width
+    container.appendChild(bar);
+  });
+  // Reflow sparkline as flex
+  container.style.display='flex';
+  container.style.alignItems='flex-end';
+  container.style.gap='1px';
+  container.style.padding='0 2px 2px';
+}
+
+async function loadUsers() {
+  const data = await apiFetch('/users');
+  const tbody = document.getElementById('users-body');
+  if (!data || !data.length) {
+    tbody.innerHTML = '<tr><td colspan="9" style="color:var(--dim);text-align:center;padding:32px;">No users found — backend may be offline</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(u => `
+    <tr>
+      <td><strong>${u.username || u.id}</strong></td>
+      <td style="font-family:monospace;font-size:11px;color:var(--dim);">${(u.device_id||'').slice(0,12)}…</td>
+      <td><span class="pill pill-green">${u.rank || 'Rookie'}</span></td>
+      <td style="color:var(--amber);">${fmtNum(u.xp || 0)}</td>
+      <td><label class="toggle"><input type="checkbox" ${u.visible?'checked':''} onchange="patchUser(${u.id},'visible',this.checked)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></td>
+      <td><label class="toggle"><input type="checkbox" ${u.can_see?'checked':''} onchange="patchUser(${u.id},'can_see',this.checked)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></td>
+      <td><label class="toggle"><input type="checkbox" ${u.can_contribute?'checked':''} onchange="patchUser(${u.id},'can_contribute',this.checked)"/><div class="toggle-track"></div><div class="toggle-thumb"></div></label></td>
+      <td><span class="pill ${u.status==='active'?'pill-green':u.status==='suspended'?'pill-amber':'pill-red'}">${u.status||'active'}</span></td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn-sm btn-ghost" onclick="suspendUser(${u.id})">Suspend</button>
+        <button class="btn-sm btn-danger" onclick="banUser(${u.id})">Ban</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function patchUser(id, field, val) {
+  await apiFetch(`/users/${id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({[field]:val})});
+}
+async function suspendUser(id) { await apiFetch(`/users/${id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:'suspended'})}); loadUsers(); }
+async function banUser(id) { if(confirm('Ban this user?')) { await apiFetch(`/users/${id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:'banned'})}); loadUsers(); } }
+
+function toggleScanner(type, el) {
+  const action = el.checked ? 'start' : 'stop';
+  const dot = document.getElementById(type+'-status-dot');
+  const label = document.getElementById(type+'-state-label');
+  apiFetch('/scan/'+type+'/'+action, {method:'POST'}).then(r => {
+    if (r) {
+      dot.className = 'dot ' + (el.checked ? 'dot-green' : 'dot-red');
+      label.textContent = el.checked ? 'Running' : 'Stopped';
+    }
+  });
+}
+
+async function runSelfTest() {
+  const output = document.getElementById('selftest-output');
+  const results = document.getElementById('selftest-results');
+  output.style.display = 'block';
+  results.innerHTML = '<div style="color:var(--dim);padding:8px;">Running tests…</div>';
+
+  const checks = [
+    {label:'Database write', path:'/admin/test/db'},
+    {label:'GPS engine active', path:'/admin/test/gps'},
+    {label:'BLE scanner', path:'/scan/ble/status'},
+    {label:'Wi-Fi scanner', path:'/scan/wifi/status'},
+    {label:'Settings read', path:'/settings'},
+  ];
+  results.innerHTML = '';
+  for (const c of checks) {
+    const r = await apiFetch(c.path);
+    const ok = r !== null;
+    const div = document.createElement('div');
+    div.className = 'health-item';
+    div.innerHTML = `<span class="dot ${ok?'dot-green':'dot-red'}"></span>${c.label}<span class="health-status" style="color:${ok?'var(--green2)':'var(--red2)'};">${ok?'✓ PASS':'✗ FAIL'}</span>`;
+    results.appendChild(div);
+    await new Promise(r => setTimeout(r, 250));
+  }
+}
+
+function addDeviceRule() {
+  const mac = document.getElementById('dev-mac').value.trim();
+  const label = document.getElementById('dev-label').value.trim();
+  const action = document.getElementById('dev-action').value;
+  if (!mac) return;
+  apiFetch('/device-filter', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({mac, label, action})})
+    .then(() => { document.getElementById('dev-mac').value=''; document.getElementById('dev-label').value=''; });
+}
+
+function clearRoutes() {
+  const userId = document.getElementById('clear-user-id').value.trim();
+  if (!userId) return;
+  if (!confirm(`Clear route_points for "${userId}"? This cannot be undone.`)) return;
+  const path = userId === 'all' ? '/admin/data/routes' : `/admin/data/routes/${userId}`;
+  apiFetch(path, {method:'DELETE'}).then(r => alert(r ? 'Done.' : 'Failed — backend offline?'));
+}
+
+function addTarget() {
+  const id = document.getElementById('target-id').value.trim();
+  const notes = document.getElementById('target-notes').value.trim();
+  if (!id) return;
+  apiFetch('/targets', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({identifier:id, notes})})
+    .then(() => { document.getElementById('target-id').value=''; document.getElementById('target-notes').value=''; });
+}
+
+function addBan() {
+  const target = document.getElementById('ban-target').value.trim();
+  const reason = document.getElementById('ban-reason').value.trim();
+  if (!target) return;
+  apiFetch('/admin/bans', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({target, reason})});
+}
+
+// Draw signal chart with mock data
+function drawSignalChart() {
+  const container = document.getElementById('signal-chart');
+  if (!container) return;
+  const buckets = 72; // 6h × 5-min buckets
+  container.innerHTML = '';
+  for (let i = 0; i < buckets; i++) {
+    const wifiH = Math.random() * 0.7 + 0.1;
+    const bleH = Math.random() * 0.5 + 0.05;
+    const group = document.createElement('div');
+    group.style.cssText = 'display:flex;gap:1px;align-items:flex-end;flex:1;height:100%;';
+    const w = document.createElement('div');
+    w.style.cssText = `flex:1;height:${Math.round(wifiH*100)}%;background:var(--teal);border-radius:2px 2px 0 0;opacity:0.7;`;
+    const b = document.createElement('div');
+    b.style.cssText = `flex:1;height:${Math.round(bleH*100)}%;background:var(--purple);border-radius:2px 2px 0 0;opacity:0.7;`;
+    group.appendChild(w); group.appendChild(b);
+    container.appendChild(group);
+  }
+}
+document.addEventListener('DOMContentLoaded', drawSignalChart);
+
+function saveSettings() {
+  const payload = {
+    scan_interval: parseInt(document.getElementById('s-interval').value),
+    rssi_floor: parseInt(document.getElementById('s-rssi').value),
+    accuracy_gate: parseInt(document.getElementById('s-accuracy').value),
+    heatmap_decay_days: parseInt(document.getElementById('s-decay').value),
+    gps_poll_ms: parseInt(document.getElementById('s-gps').value),
+  };
+  apiFetch('/settings', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)})
+    .then(r => alert(r ? 'Settings saved.' : 'Failed — is the backend running?'));
+}
+
+function resetSettings() {
+  document.getElementById('s-interval').value = 4; document.getElementById('s-interval-val').textContent = '4s';
+  document.getElementById('s-rssi').value = -85; document.getElementById('s-rssi-val').textContent = '-85dBm';
+  document.getElementById('s-accuracy').value = 80; document.getElementById('s-accuracy-val').textContent = '80m';
+  document.getElementById('s-decay').value = 7; document.getElementById('s-decay-val').textContent = '7d';
+  document.getElementById('s-gps').value = 1000; document.getElementById('s-gps-val').textContent = '1000ms';
+}
+
+function loadReplay() {
+  document.getElementById('replay-map').textContent = 'Session loaded. Replay controls active.';
+  document.getElementById('replay-scrubber').disabled = false;
+  document.getElementById('replay-play').disabled = false;
+}
+function playReplay() { alert('Replay at 10× — connect to backend for live session data.'); }
+</script>
+</body>
+</html>

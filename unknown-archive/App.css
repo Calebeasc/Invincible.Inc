@@ -1,0 +1,331 @@
+:root {
+  --bg:        #0b0f14;
+  --panel:     #111820;
+  --border:    #1e2d3d;
+  --accent:    #00d4ff;
+  --accent2:   #ff4d6d;
+  --text:      #c8d8e8;
+  --text-dim:  #5a7a96;
+  --green:     #00e676;
+  --red:       #ff4d6d;
+  --blue:      #2979ff;
+  --watcher:   #2979ff;
+  --stopper:   #ff4d6d;
+  --font:      'JetBrains Mono', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.app-shell {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar {
+  width: 280px;
+  min-width: 240px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.sidebar-header {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h1 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.sidebar-header p {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar-body::-webkit-scrollbar { width: 4px; }
+.sidebar-body::-webkit-scrollbar-track { background: var(--bg); }
+.sidebar-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Control button ─────────────────────────────────────── */
+.btn-scan {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-scan:hover { background: rgba(0,212,255,0.08); }
+
+.btn-scan.running {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.btn-scan.running:hover { background: rgba(255,77,109,0.08); }
+
+.btn-scan.loading { opacity: 0.5; cursor: not-allowed; }
+
+/* pulse ring when running */
+.btn-scan.running::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 16px;
+  transform: translateY(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+  50%       { opacity: 0.4; transform: translateY(-50%) scale(1.6); }
+}
+
+/* ── Section labels ─────────────────────────────────────── */
+.section-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+/* ── Range selector ─────────────────────────────────────── */
+.range-row {
+  display: flex;
+  gap: 4px;
+}
+
+.range-btn {
+  flex: 1;
+  padding: 5px 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.range-btn:hover { border-color: var(--accent); color: var(--accent); }
+.range-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.1); }
+
+/* ── Toggle checkbox ────────────────────────────────────── */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toggle-row label { color: var(--text); font-size: 11px; cursor: pointer; }
+
+.toggle {
+  width: 36px; height: 20px;
+  background: var(--border);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle.on { background: var(--accent); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.toggle.on::after { transform: translateX(16px); }
+
+/* ── Stats ──────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.stat-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 8px;
+}
+
+.stat-card .val {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-card .lbl {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+
+/* ── Encounters list ────────────────────────────────────── */
+.enc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.enc-item {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  padding: 6px 8px;
+  font-size: 10px;
+}
+
+.enc-item.watcher { border-left-color: var(--watcher); }
+.enc-item.stopper { border-left-color: var(--stopper); }
+
+.enc-item .enc-label {
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.enc-item.watcher .enc-label { color: var(--watcher); }
+.enc-item.stopper .enc-label { color: var(--stopper); }
+
+.enc-item .enc-meta { color: var(--text-dim); margin-top: 2px; }
+
+/* ── Export buttons ─────────────────────────────────────── */
+.export-row {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-export {
+  flex: 1;
+  padding: 6px 4px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+  transition: all 0.1s;
+}
+
+.btn-export:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Map area ───────────────────────────────────────────── */
+.map-area {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container {
+  flex: 1;
+  width: 100%;
+}
+
+/* Force Leaflet container to fill properly */
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  background: #0d1a26;
+}
+
+/* ── Status bar ─────────────────────────────────────────── */
+.status-bar {
+  height: 24px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 16px;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.status-dot.active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}

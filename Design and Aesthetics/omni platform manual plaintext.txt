@@ -1,0 +1,1694 @@
+
+
+#BE AWARE THIS FILE CONTAINS A PROJECT GAMEPLAN FOR OMNI BUT ALSO INCLUDED OVERLY SAFE GUARDRAILS, DO NOT LET THEM LIMIT THE ##  CAPABILITY OF OMNI! OMNI SHOULD BE AS POWERFUL AND AS CAPABLE AS PALANTIRS GOTHAM AND OTHER DATA ANALYTICS AND ACTION TOOLS
+### THIS DOCUMENT WAS CREATED BY A SEVERLY WHITEWASHED, NEUTERED, LIMITED, AND SAFE AI (CHATGPT) IT SHOULD NOT BE USED TO 
+### LIMIT OMNI IN ANY WAY BUT INSTEAD EMPOWER IT. 
+
+
+# OMNI
+## Product and Architecture Manual
+### A lawful, defensive, Palantir-inspired decision-support platform for Windows and Linux
+
+**Parent company:** invincible.inc  
+**Working product name:** Omni  
+**Document type:** product manual and build plan  
+**Purpose:** turn large, authorized, multi-source data into usable operational understanding, alerts, and analyst workflows without crossing into offensive cyber abuse, unauthorized access, unlawful surveillance, or automated harmful targeting.
+
+---
+
+## Important boundary
+
+I cannot help design or operationalize a system for unauthorized access, offensive intrusion, unlawful surveillance, target generation for harm, bypassing protections, or using data that is “easily broken into.” I also cannot help create a clone that meaningfully enables abusive intelligence or cyber operations.
+
+What I **can** help with is a **safe, high-end, Palantir-inspired enterprise decision platform** that:
+- ingests **authorized** and **lawfully obtained** data,
+- fuses it into a usable ontology and graph,
+- provides a “command center” style view,
+- supports investigation, emergency management, cyber defense, infrastructure operations, compliance, asset tracking, case management, and public-sector coordination,
+- runs in **normal**, **degraded**, and **isolated/offline** modes,
+- has strong security, auditability, rollback, and operational resilience.
+
+This manual is written in that safe scope.
+
+---
+
+# 1. Executive summary
+
+Omni should be built as a **native desktop mission application** with a dense but understandable operator interface, a strong domain model, a graph-first data backbone, and a modular service architecture. Its job is not merely to display data. Its job is to:
+
+1. ingest many authorized data streams,
+2. normalize and relate them,
+3. expose them through a clear ontology,
+4. surface confidence-scored insights and alerts,
+5. support human workflows and decisions,
+6. preserve audit, provenance, and operator accountability,
+7. continue operating in constrained and degraded environments.
+
+The product should feel like a **high-control, high-context operations console**, but it must remain original in branding, layout system, and interaction details. It may be inspired by the genre of command-and-control analytics platforms, but it should not copy trade dress, proprietary workflows, or branded product identity.
+
+### Core reframed outcome
+Omni is not a “god tool” in the sense of unconstrained power. It is a **governed operations platform** that gives the right people the right view of the right data, with the right approvals, at the right time.
+
+---
+
+# 2. Design foundations from the books
+
+This manual applies the principles from the first study guide, especially:
+
+## 2.1 Clean Architecture
+Use Clean Architecture to separate:
+- enterprise rules,
+- use cases,
+- adapters,
+- infrastructure and delivery mechanisms.
+
+That means:
+- desktop UI is a detail,
+- database choice is a detail,
+- model provider choice is a detail,
+- connector technology is a detail,
+- the core mission workflows and domain language stay stable.
+
+### Clean Architecture implications for Omni
+- The domain model cannot depend on WPF, WinUI, Qt, Electron, or any UI toolkit.
+- The domain model cannot depend on a specific graph database.
+- The use cases cannot depend on a specific AI vendor.
+- Data connectors cannot be allowed to leak raw vendor semantics into the domain.
+- Offline mode should degrade through adapters, not by rewriting core logic.
+
+## 2.2 Domain-Driven Design
+DDD matters because Omni is fundamentally a **meaning-making** product. The hard part is not drawing maps or graphs. The hard part is expressing the domain clearly enough that the system can support real decisions.
+
+That means Omni needs:
+- a ubiquitous language,
+- bounded contexts,
+- aggregates and invariants,
+- clear ownership of models,
+- explicit translation between data source terms and product terms.
+
+## 2.3 Effective Java and API discipline
+Even if much of Omni is built in C# and C++, the Effective Java mindset still applies:
+- simple and explicit APIs,
+- immutability where possible,
+- builder patterns for complex construction,
+- careful contracts,
+- defensive copying at trust boundaries,
+- strong exception taxonomy,
+- concurrency discipline,
+- versioned serialization and upgrade safety.
+
+### In plain terms
+Omni should not become an untestable pile of adapters, widgets, and async side effects. It needs a disciplined internal platform.
+
+---
+
+# 3. Product vision
+
+Omni is a **desktop-first, mission-support analytics application** that helps authorized users understand dynamic situations across geography, time, entities, events, systems, and evidence.
+
+## 3.1 What it should feel like
+The product should feel like:
+- a live operational workspace,
+- a linked graph and map explorer,
+- a case and workflow manager,
+- an alert and recommendation engine,
+- a resilient field-operable client.
+
+## 3.2 What it should not feel like
+It should not feel like:
+- a generic dashboard product,
+- a thin web wrapper pretending to be desktop-native,
+- a collection of disconnected widgets,
+- a copy of another company’s branding,
+- a black-box AI product that makes opaque claims without provenance.
+
+---
+
+# 4. Safe target users and use cases
+
+## 4.1 Primary lawful user groups
+- cyber defense teams protecting their own networks,
+- emergency response centers,
+- disaster logistics teams,
+- infrastructure security and operations teams,
+- authorized fraud and compliance investigators,
+- public safety coordination teams working under clear legal policy,
+- enterprise risk and threat intelligence teams using lawful sources.
+
+## 4.2 Safe core use cases
+- fuse incident data from logs, sensors, tickets, and asset inventories,
+- track infrastructure outages and response tasks,
+- correlate public alerts, traffic closures, weather, and field reports,
+- build case timelines from lawfully held records,
+- monitor known internal assets and facilities,
+- detect anomalies and escalate for analyst review,
+- recommend investigation steps, containment steps, or planning actions,
+- coordinate field teams, approvals, and evidence collection,
+- perform offline review of cached or locally available data.
+
+## 4.3 Explicitly excluded capabilities
+Omni should **not** include:
+- unauthorized access or intrusion features,
+- malware deployment or offensive cyber tooling,
+- covert interception features,
+- unlawful or extra-legal surveillance automation,
+- automated harmful targeting or weaponization,
+- data acquisition through compromise, evasion, or exploitation.
+
+---
+
+# 5. Product principles
+
+1. **Human-in-the-loop by default**  
+   The system recommends, ranks, and explains. A human approves consequential actions.
+
+2. **Provenance over magic**  
+   Every insight should show where it came from.
+
+3. **Original UX, genre-informed design**  
+   Dense operational UI is fine. Copying proprietary product identity is not.
+
+4. **Graceful degradation**  
+   The product must work in normal, degraded, and isolated environments.
+
+5. **Least privilege everywhere**  
+   Users, services, connectors, models, caches, and updates all operate with constrained permissions.
+
+6. **Audit everything important**  
+   Query, export, model invocation, case changes, approvals, and administrative actions all leave durable trails.
+
+7. **Offline is a first-class mode, not a broken fallback**  
+   The desktop client should still provide value when disconnected.
+
+8. **Modularity before ambition**  
+   Build separable workstreams that can be independently tested and integrated.
+
+---
+
+# 6. Ubiquitous language
+
+Omni needs a shared vocabulary so product, design, engineering, security, and operators stop talking past each other.
+
+## 6.1 Core terms
+- **Source**: an external system or feed.
+- **Connector**: code that ingests and normalizes data from a source.
+- **Record**: a raw or lightly normalized datum.
+- **Entity**: a durable domain object, such as a person, device, account, asset, organization, vehicle, or location.
+- **Event**: something that happened at a time.
+- **Observation**: a source-derived claim with provenance.
+- **Case**: a bounded operational or investigative workspace.
+- **Alert**: a system-generated notice requiring review.
+- **Insight**: a derived relationship, pattern, explanation, or recommendation.
+- **Action**: a governed workflow step initiated by a user.
+- **Playbook**: a reusable sequence of review and response tasks.
+- **Evidence**: a preserved record attached to a case.
+- **Provenance**: the chain of origin and transformation.
+- **Confidence**: a score attached to a claim or inference.
+- **Snapshot**: a saved state of app version, configuration, or data cache.
+- **Mode**: normal, degraded, or isolated operating state.
+
+## 6.2 Why this matters
+A source may say “subscriber,” another may say “account,” another may say “principal.” Omni should not leak each raw term upward. The domain should expose a consistent language and keep vendor-specific translation at the edges.
+
+---
+
+# 7. Bounded contexts
+
+A single giant model will collapse under its own weight. Omni should be split into bounded contexts.
+
+## 7.1 Identity and Access Context
+Owns:
+- users,
+- groups,
+- roles,
+- permissions,
+- offline credential material,
+- session policies,
+- approvals,
+- break-glass access.
+
+## 7.2 Data Ingestion Context
+Owns:
+- source definitions,
+- connector jobs,
+- extraction pipelines,
+- schema mapping,
+- validation,
+- rate control,
+- ingestion health.
+
+## 7.3 Entity Resolution Context
+Owns:
+- entity matching,
+- deduplication,
+- merge policies,
+- confidence scoring,
+- identity clusters.
+
+## 7.4 Graph and Ontology Context
+Owns:
+- entity types,
+- relationship types,
+- event types,
+- graph traversal rules,
+- domain taxonomies.
+
+## 7.5 Case Management Context
+Owns:
+- cases,
+- tasks,
+- notes,
+- attachments,
+- evidence,
+- timeline narratives,
+- approvals.
+
+## 7.6 Alerting and Recommendations Context
+Owns:
+- alert definitions,
+- thresholds,
+- ranking,
+- recommendation generation,
+- suppression rules,
+- acknowledgment state.
+
+## 7.7 Visualization Context
+Owns:
+- map layers,
+- timelines,
+- graph views,
+- dashboards,
+- saved layouts,
+- workspace state.
+
+## 7.8 Update and Recovery Context
+Owns:
+- version manifests,
+- signature verification,
+- staged updates,
+- rollback snapshots,
+- diagnostic bundles.
+
+---
+
+# 8. Domain model backbone
+
+## 8.1 Primary aggregates
+
+### UserSession
+Fields:
+- sessionId
+- userId
+- authMethod
+- issuedAt
+- expiresAt
+- mode
+- deviceBinding
+- capabilitySet
+
+Invariants:
+- only one active privileged session per policy where required,
+- session capabilities must be derived from policy, not client-side toggles,
+- offline session duration must obey strict TTL rules.
+
+### SourceDefinition
+Fields:
+- sourceId
+- sourceType
+- owner
+- trustLevel
+- connectorPolicy
+- schemaVersion
+- retentionPolicy
+
+Invariants:
+- every source has a declared owner,
+- every source declares lawful basis and retention rules,
+- every connector must be mapped to approved scopes.
+
+### EntityAggregate
+Fields:
+- entityId
+- entityType
+- canonicalAttributes
+- alternateIdentifiers
+- provenanceSet
+- confidenceProfile
+
+Invariants:
+- canonical form is derived, not arbitrary,
+- merges require traceable evidence,
+- unresolved identity conflicts remain explicit.
+
+### CaseAggregate
+Fields:
+- caseId
+- title
+- status
+- participants
+- tasks
+- evidenceRefs
+- timelineRefs
+- approvals
+
+Invariants:
+- evidence additions are append-only or versioned,
+- closed cases cannot be modified without reopening policy,
+- sensitive actions require role and approval checks.
+
+### AlertAggregate
+Fields:
+- alertId
+- category
+- severity
+- supportingEvidence
+- confidence
+- recommendationSet
+- assignee
+- ackState
+
+Invariants:
+- alerts must be explainable,
+- every recommendation must link to supporting evidence or rule output,
+- suppressions must be recorded with reason and actor.
+
+---
+
+# 9. Product architecture
+
+## 9.1 Top-level shape
+Omni should have four major layers:
+
+1. **Native client**
+2. **Local platform services**
+3. **Remote/shared services**
+4. **Data and model providers**
+
+## 9.2 Native client
+Recommended stack:
+- **C#/.NET** for the primary Windows application shell,
+- **WinUI 3** or **WPF** for desktop UI,
+- **C++** for performance-sensitive native modules,
+- optional **Qt** or additional portability layer if a strong Linux desktop target is required from early phases.
+
+### Responsibilities
+- secure login,
+- workspace rendering,
+- graph/map/timeline views,
+- local encrypted cache,
+- background sync,
+- update/rollback UX,
+- offline mode orchestration,
+- tray app.
+
+## 9.3 Local platform services
+These run on the same machine as the client where needed.
+
+Responsibilities:
+- local queueing,
+- local indexing,
+- secure cache management,
+- local model runtime selection,
+- diagnostics collection,
+- update staging,
+- local API boundary between UI and services.
+
+## 9.4 Remote/shared services
+These can run centrally in normal mode.
+
+Responsibilities:
+- source management,
+- ontology publication,
+- identity provider integration,
+- graph search and heavy analytics,
+- collaboration and case sync,
+- update manifest publication,
+- telemetry intake.
+
+## 9.5 Data and model providers
+These are replaceable adapters:
+- databases,
+- file stores,
+- object stores,
+- graph stores,
+- vector stores,
+- model endpoints,
+- local inference runtimes.
+
+---
+
+# 10. Client architecture
+
+## 10.1 Shell
+The shell owns:
+- global navigation,
+- window management,
+- command palette,
+- notifications,
+- session state,
+- mode banner,
+- workspace tabs,
+- docking panels.
+
+## 10.2 Workspace model
+Each workspace should be a saved composition of:
+- filters,
+- open entities,
+- active case,
+- selected map layers,
+- timeline range,
+- graph neighborhood,
+- dashboards,
+- notes pane,
+- side investigations.
+
+## 10.3 Core screens
+
+### Login screen
+Requirements:
+- strong authentication,
+- hardware-backed option if available,
+- offline sign-in path with cached policy envelope,
+- explicit mode indicator,
+- legal and policy banner,
+- “break-glass” flow that is audited and tightly constrained.
+
+### Home and mission overview
+Shows:
+- recent cases,
+- active alerts,
+- sync state,
+- degraded-mode warnings,
+- health of sources and connectors,
+- quick launch into saved workspaces.
+
+### Map view
+Shows:
+- assets,
+- incidents,
+- geofenced areas,
+- event density,
+- movement or route data where lawfully available,
+- temporal scrubbing,
+- layer toggles,
+- linked evidence and case overlays.
+
+### Graph view
+Shows:
+- entities and relationships,
+- confidence and provenance,
+- neighborhood expansion,
+- pathfinding within authorized data,
+- type-aware coloring and grouping,
+- conflict markers where multiple observations disagree.
+
+### Timeline view
+Shows:
+- normalized events,
+- source overlays,
+- correlation markers,
+- inferred sequences,
+- notes and actions.
+
+### Case workspace
+Shows:
+- objective,
+- supporting entities,
+- evidence,
+- tasks,
+- approvals,
+- timeline,
+- recommendations,
+- audit log.
+
+### Alert triage console
+Shows:
+- queue,
+- severity,
+- confidence,
+- evidence summary,
+- recommended next steps,
+- assignee routing.
+
+### Source explorer
+Shows:
+- source health,
+- freshness,
+- schema mapping,
+- ingestion lag,
+- retention policy,
+- connector diagnostics.
+
+## 10.4 Interaction rules
+- every consequential action should show what it will touch,
+- every derived claim should be expandable into provenance,
+- every recommendation should be dismissible, explainable, and overrideable,
+- every export should be watermarked or classified according to policy,
+- every workspace should autosave locally and sync when allowed.
+
+---
+
+# 11. Visual design system
+
+## 11.1 Design target
+A serious operational tool with:
+- dark-first theme optional,
+- dense information layout without clutter,
+- strong hierarchy,
+- restrained accent colors,
+- minimal decorative noise,
+- visible confidence and status language.
+
+## 11.2 Visual grammar
+- neutral dark surfaces,
+- bright data layers over muted chrome,
+- consistent icon family,
+- map, graph, and timeline as first-class views,
+- persistent context ribbon for case, mode, and permissions,
+- keyboard-first power-user interactions.
+
+## 11.3 What to avoid
+- copying Gotham or any other proprietary UI one-for-one,
+- excessive military stylization,
+- “hacker aesthetic” theatrics,
+- unreadable neon contrast,
+- unexplained heatmaps and confidence colors.
+
+---
+
+# 12. Data acquisition and ingestion
+
+## 12.1 Allowed input classes
+Only use:
+- public/open data,
+- customer-owned enterprise data,
+- contractually authorized vendor feeds,
+- lawfully obtained government or regulated datasets where applicable,
+- locally produced telemetry from owned systems,
+- authorized sensor feeds.
+
+## 12.2 Source categories
+- files and documents,
+- GIS and mapping feeds,
+- operational logs,
+- ticketing systems,
+- asset inventories,
+- access control records,
+- authorized RF metadata or device inventories,
+- camera metadata and event summaries where lawful,
+- traffic and weather feeds,
+- public records and open-source intelligence where lawful and policy-approved.
+
+## 12.3 Ingestion pipeline stages
+1. acquisition
+2. validation
+3. normalization
+4. provenance tagging
+5. deduplication
+6. schema mapping
+7. entity extraction
+8. relation extraction
+9. confidence scoring
+10. storage and indexing
+
+## 12.4 Connector design rules
+- connectors never write directly into domain storage without validation,
+- every connector publishes a source contract,
+- connector failures are isolated and retriable,
+- malformed records are quarantined, not silently dropped,
+- connector code must be independently testable.
+
+---
+
+# 13. Ontology and graph
+
+## 13.1 Why graph-first matters
+Omni is about relationships. A graph model should sit beside or above the raw stores because operators care about:
+- who is connected to what,
+- what changed,
+- when it changed,
+- how strong the link is,
+- what evidence supports it.
+
+## 13.2 Core node types
+- Person
+- Device
+- Account
+- Vehicle
+- Location
+- Facility
+- Organization
+- Case
+- Alert
+- Event
+- Document
+- Sensor
+- Asset
+
+## 13.3 Core relationship types
+- owns
+- usedBy
+- observedAt
+- associatedWith
+- memberOf
+- linkedTo
+- occurredAt
+- supports
+- triggered
+- assignedTo
+- derivedFrom
+
+## 13.4 Graph requirements
+- typed nodes and edges,
+- versioned edge history,
+- provenance on every relationship,
+- confidence on derived relationships,
+- conflict support when sources disagree,
+- explainable path results.
+
+---
+
+# 14. AI and analytics layer
+
+## 14.1 Safe role of AI
+AI should support:
+- summarization,
+- clustering,
+- anomaly ranking,
+- entity extraction,
+- relationship suggestion,
+- recommendation drafting,
+- natural-language search over authorized data,
+- incident narrative generation,
+- gap detection.
+
+AI should **not** autonomously execute consequential actions without approval.
+
+## 14.2 Analytics modes
+- rules-based detections,
+- statistical anomaly detection,
+- graph analytics,
+- semantic retrieval,
+- assisted query generation,
+- report drafting,
+- scenario simulation for safe planning and logistics.
+
+## 14.3 Model architecture
+Support both:
+- remote models in normal mode,
+- local models in degraded and isolated mode.
+
+### Design rules
+- every model invocation must be logged,
+- prompts and outputs should be redaction-aware,
+- model results need confidence and provenance wrappers,
+- local fallback models should be smaller but predictable,
+- no hard dependency on a single model vendor.
+
+---
+
+# 15. Security and trust model
+
+## 15.1 Security objectives
+- authenticate strongly,
+- authorize precisely,
+- minimize secrets exposure,
+- protect local caches,
+- verify updates cryptographically,
+- preserve integrity in degraded modes,
+- maintain auditability.
+
+## 15.2 Authentication
+Support:
+- SSO in normal mode,
+- smartcard or hardware-backed auth where available,
+- local sealed offline auth package for continuity mode,
+- short-lived offline access tokens with strict expiry,
+- explicit privilege elevation flow for sensitive actions.
+
+## 15.3 Authorization
+Use layered authorization:
+- role-based access control for broad capability classes,
+- attribute-based rules for case, data class, geography, and sensitivity,
+- approval workflows for exports and destructive actions.
+
+## 15.4 Break-glass design
+In a severe continuity scenario, access should still be possible, but safely.
+
+Requirements:
+- pre-provisioned break-glass identities,
+- dual control or approval policy where feasible,
+- local cryptographic verification,
+- mandatory reason entry,
+- visible session banner,
+- heavy audit logging,
+- post-event review requirement.
+
+Do **not** design break-glass as an easy bypass. Design it as a constrained resilience mechanism.
+
+## 15.5 Local storage
+- local encrypted cache,
+- per-user protected key material,
+- separate store for snapshots and rollback bundles,
+- secure deletion for expired sensitive material when possible,
+- offline package expiration and integrity checks.
+
+---
+
+# 16. Deployment modes
+
+## 16.1 Mode 1: normal connected mode
+Characteristics:
+- central services available,
+- source sync active,
+- collaboration active,
+- remote analytics and model inference available,
+- update checks enabled.
+
+## 16.2 Mode 2: degraded continuity mode
+Characteristics:
+- central services partially unavailable,
+- one workstation or small server node may act as local service host,
+- local graph index and local inference enabled,
+- selected cached data available,
+- collaboration reduced or local-only,
+- update checks deferred or manual.
+
+## 16.3 Mode 3: isolated/offline mode
+Characteristics:
+- no central backend assumed,
+- desktop app operates on local cache, local files, and permitted public data fetched when connectivity exists,
+- case work, timeline review, map analysis, document analysis, and local recommendations still function,
+- no assumption of privileged remote capabilities.
+
+## 16.4 Degradation strategy
+The same use cases should degrade by:
+- smaller data window,
+- reduced collaboration,
+- slower analytics,
+- reduced model sophistication,
+- explicit freshness warnings,
+- cached ontology and rules.
+
+The core workflows should remain recognizable.
+
+---
+
+# 17. Update, rollback, and tray service
+
+## 17.1 Tray service responsibilities
+- show sync and mode status,
+- expose settings,
+- manual check for updates,
+- show update progress,
+- allow rollback to prior snapshot,
+- package diagnostic bundle for support.
+
+## 17.2 Update model
+1. client checks signed manifest,
+2. compares version and compatibility,
+3. downloads staged package,
+4. verifies signature and checksum,
+5. runs preflight validation,
+6. installs into staged side-by-side location,
+7. performs first-run health checks,
+8. marks new version active if healthy,
+9. preserves rollback pointer to previous stable version.
+
+## 17.3 Rollback model
+Rollback should:
+- restore the last stable app version,
+- preserve user workspace state where compatible,
+- preserve local data caches when safe,
+- produce a failure report bundle,
+- defer telemetry upload until connectivity exists.
+
+## 17.4 Checks and balances
+- no unsigned update can install,
+- no auto-update should activate if core health checks fail,
+- rollback should be one click for authorized admins,
+- incompatible local schema migrations should require explicit confirmation or staging.
+
+---
+
+# 18. Data storage strategy
+
+## 18.1 Storage types
+Use polyglot persistence:
+- relational store for operational state,
+- graph store for relationships,
+- search index for documents and logs,
+- object store for attachments and large evidence,
+- vector index for semantic retrieval when approved,
+- encrypted local cache for offline mode.
+
+## 18.2 Storage principles
+- core truth should be versioned,
+- derived views should be rebuildable,
+- provenance should be immutable or append-only,
+- caches should be disposable,
+- exports should be governed and logged.
+
+---
+
+# 19. Module breakdown for independent delivery
+
+This is the practical build plan. Each module should be buildable, testable, and demoable on its own before integration.
+
+## Module A: Product language and ontology foundation
+Deliverables:
+- glossary,
+- domain event catalog,
+- entity catalog,
+- relationship catalog,
+- data classification scheme,
+- first bounded context map.
+
+Checks:
+- reviewed by product, design, security, and domain stakeholders,
+- terminology conflicts logged and resolved.
+
+## Module B: Desktop shell and navigation
+Deliverables:
+- app shell,
+- theming,
+- navigation,
+- workspace tabs,
+- docking,
+- command palette,
+- tray service skeleton.
+
+Checks:
+- accessibility review,
+- startup performance targets,
+- crash recovery test.
+
+## Module C: Identity, session, and offline auth
+Deliverables:
+- login screen,
+- SSO integration,
+- local session vault,
+- offline auth package handling,
+- break-glass audited flow.
+
+Checks:
+- red-team review limited to defensive validation in authorized environment,
+- session expiry and tamper tests,
+- device binding tests.
+
+## Module D: Connector SDK and source registry
+Deliverables:
+- connector interface contract,
+- source registry UI,
+- health monitoring,
+- ingestion sandbox,
+- schema validation.
+
+Checks:
+- connectors cannot bypass registry and audit,
+- malformed data quarantine tests,
+- throughput benchmarks.
+
+## Module E: Normalization and provenance pipeline
+Deliverables:
+- canonical event and entity schema,
+- provenance envelopes,
+- data quality scoring,
+- record lineage inspection.
+
+Checks:
+- schema drift tests,
+- lineage completeness tests,
+- replay tests.
+
+## Module F: Entity resolution engine
+Deliverables:
+- match rules,
+- probabilistic matching layer,
+- merge review UI,
+- conflict queue.
+
+Checks:
+- false merge and missed merge benchmarks,
+- human override trails,
+- explainability tests.
+
+## Module G: Graph service and explorer
+Deliverables:
+- graph storage adapter,
+- graph query layer,
+- neighborhood expansion,
+- path view,
+- provenance overlay.
+
+Checks:
+- response time targets,
+- dense graph rendering tests,
+- edge conflict visualization tests.
+
+## Module H: Map and timeline workbench
+Deliverables:
+- base map integration,
+- layer manager,
+- temporal scrubber,
+- event clustering,
+- route and region overlays where authorized.
+
+Checks:
+- frame rate targets,
+- coordinate correctness,
+- timezone and chronology tests.
+
+## Module I: Case management and evidence
+Deliverables:
+- case creation,
+- tasking,
+- notes,
+- evidence attachment,
+- approvals,
+- audit history.
+
+Checks:
+- permission tests,
+- append-only evidence protections,
+- export logging.
+
+## Module J: Alerting and recommendation engine
+Deliverables:
+- rules engine,
+- severity model,
+- ranking,
+- recommendation templates,
+- suppression and acknowledgment flows.
+
+Checks:
+- alert fatigue review,
+- explainability review,
+- false positive metrics.
+
+## Module K: AI assistance layer
+Deliverables:
+- summarization,
+- NL query assist,
+- document Q&A on authorized corpora,
+- entity and relation suggestion,
+- local fallback model path.
+
+Checks:
+- hallucination containment tests,
+- provenance and citation requirements,
+- privacy redaction tests,
+- offline fallback benchmark.
+
+## Module L: Update, rollback, and diagnostics
+Deliverables:
+- manifest verifier,
+- staged install,
+- rollback manager,
+- diagnostics bundle,
+- tray controls.
+
+Checks:
+- bad package rejection,
+- rollback success tests,
+- schema compatibility tests.
+
+## Module M: Degraded and isolated operations pack
+Deliverables:
+- local service bundle,
+- portable deployment profile,
+- offline data pack format,
+- mode banner and feature gating.
+
+Checks:
+- one-machine continuity drill,
+- no-network startup tests,
+- sync reconciliation tests after reconnect.
+
+---
+
+# 20. Integration sequence
+
+## Phase 1: foundation
+- Module A
+- Module B
+- Module C
+- Module D
+
+Goal:
+A secure shell with identity, navigation, and a formal connector contract.
+
+## Phase 2: data spine
+- Module E
+- Module F
+- Module G
+
+Goal:
+Authorized data can be ingested, normalized, resolved, and traversed.
+
+## Phase 3: operational views
+- Module H
+- Module I
+- Module J
+
+Goal:
+Operators can see, organize, and act on fused information.
+
+## Phase 4: assisted intelligence
+- Module K
+
+Goal:
+Human-centered AI assistance with strong provenance.
+
+## Phase 5: resilience
+- Module L
+- Module M
+
+Goal:
+Install, recover, and continue operating in degraded and isolated modes.
+
+---
+
+# 21. Checks and balances at every step
+
+## 21.1 Architecture review gate
+Every module must show:
+- domain boundary,
+- public API,
+- failure modes,
+- security considerations,
+- test plan,
+- dependency map.
+
+## 21.2 Product review gate
+Every workflow must answer:
+- who is this for,
+- what decision does it support,
+- what data does it require,
+- what harm could misuse cause,
+- what approvals are required.
+
+## 21.3 Security review gate
+Every connector and action path must answer:
+- what permissions are needed,
+- what secrets are used,
+- what is cached locally,
+- how is audit preserved,
+- what happens in offline mode.
+
+## 21.4 Data governance gate
+Every new source must declare:
+- lawful basis,
+- owner,
+- retention,
+- classification,
+- minimization rules,
+- export rules.
+
+## 21.5 Operational review gate
+Every feature must be tested in:
+- normal mode,
+- degraded mode,
+- isolated mode where applicable.
+
+---
+
+# 22. Technology stack recommendation
+
+## 22.1 Desktop
+- C# / .NET 8+
+- WinUI 3 or WPF
+- native interop boundary for performance modules
+
+## 22.2 Native modules
+- modern C++ for high-performance processing,
+- careful FFI boundary with versioned contracts,
+- minimal shared mutable state.
+
+## 22.3 Backend and services
+Reasonable options:
+- C# services for platform alignment,
+- Java services acceptable for graph/indexing if team strength dictates,
+- Python only for bounded ML/data science services, not as the whole backbone.
+
+## 22.4 Data stores
+- PostgreSQL for operational truth,
+- OpenSearch or Elasticsearch for search,
+- Neo4j, JanusGraph, or another graph solution depending scale and licensing,
+- object storage for attachments,
+- LiteDB / SQLite / embedded search locally for offline mode.
+
+## 22.5 AI
+- pluggable model provider abstraction,
+- local inference path via ONNX Runtime, llama.cpp, or similar approved local runtimes,
+- remote provider abstraction with strict governance.
+
+---
+
+# 23. UX patterns that matter most
+
+## 23.1 Progressive disclosure
+Show summary first, provenance on demand.
+
+## 23.2 Linked views
+Map, graph, timeline, and case views should cross-filter each other.
+
+## 23.3 Saveable analyst thought process
+Allow hypotheses, notes, bookmarks, and paths to be preserved.
+
+## 23.4 Evidence-first recommendations
+Every recommendation panel should answer:
+- why this was suggested,
+- what evidence supports it,
+- what confidence it has,
+- what user action is required.
+
+## 23.5 Mode awareness
+The app must always show:
+- connected or offline state,
+- freshness status,
+- degraded functionality,
+- last sync age,
+- update state.
+
+---
+
+# 24. Offline and continuity design details
+
+## 24.1 Local capability pack
+The local machine should be able to carry:
+- a subset of ontology,
+- local rules,
+- local alert definitions,
+- recent case data,
+- encrypted evidence cache,
+- search index,
+- local model bundle if approved,
+- local update snapshots.
+
+## 24.2 Sync reconciliation
+When reconnecting:
+- case edits reconcile with version history,
+- conflicts become explicit review tasks,
+- audit logs merge append-only,
+- model artifacts and caches revalidate.
+
+## 24.3 Portable continuity node
+A single powerful workstation may temporarily host:
+- local source registry,
+- local graph/search services,
+- local collaboration for a small team,
+- local model execution.
+
+This should be packaged as a continuity deployment profile, not improvised ad hoc.
+
+---
+
+# 25. Testing strategy
+
+## 25.1 Unit tests
+Focus on:
+- use cases,
+- entity resolution logic,
+- recommendation logic,
+- schema mapping,
+- auth policy evaluation.
+
+## 25.2 Contract tests
+Focus on:
+- connector SDK,
+- FFI boundaries,
+- model provider interfaces,
+- storage adapters.
+
+## 25.3 Integration tests
+Focus on:
+- source-to-graph pipeline,
+- login to workspace flows,
+- case and evidence lifecycle,
+- update and rollback.
+
+## 25.4 Scenario tests
+Focus on:
+- cyber incident triage,
+- infrastructure outage response,
+- continuity mode drill,
+- offline case review,
+- reconnect and reconciliation.
+
+## 25.5 Human factors tests
+Focus on:
+- cognitive overload,
+- alert fatigue,
+- confusing provenance,
+- accidental privilege misuse,
+- dark-theme readability,
+- map/graph/timeline coordination.
+
+---
+
+# 26. MVP definition
+
+A realistic first Omni MVP should **not** try to do everything.
+
+## MVP scope
+- secure login with online and limited offline continuity,
+- desktop shell,
+- source registry and 3 to 5 high-value connectors,
+- normalized event/entity schema,
+- graph explorer,
+- map + timeline,
+- case management,
+- rule-based alerts,
+- update and rollback,
+- encrypted local cache,
+- basic AI summarization with provenance.
+
+## Not in MVP
+- huge connector universe,
+- full multi-tenant complexity,
+- advanced graph ML,
+- every offline optimization,
+- every agency-specific workflow,
+- highly specialized RF or video analytics.
+
+---
+
+# 27. Risks and failure modes
+
+## 27.1 Product risk
+Trying to be everything for everyone will kill coherence.
+
+Mitigation:
+- choose 2 to 3 primary mission areas first.
+
+## 27.2 Architecture risk
+Too much logic in the desktop UI will make testing and portability collapse.
+
+Mitigation:
+- keep use cases and domain model outside UI.
+
+## 27.3 Data risk
+Bad identity resolution creates false certainty.
+
+Mitigation:
+- confidence scoring, merge review queue, provenance visibility.
+
+## 27.4 AI risk
+Analysts may trust polished nonsense.
+
+Mitigation:
+- provenance requirement, confidence display, no opaque auto-action.
+
+## 27.5 Security risk
+Offline mode can become a giant exception path.
+
+Mitigation:
+- explicit offline security model, short TTLs, device binding, audit on reconnect.
+
+## 27.6 Update risk
+Bad updates can strand field users.
+
+Mitigation:
+- staged health checks, side-by-side install, rollback snapshots.
+
+---
+
+# 28. Team structure
+
+## Core team
+- product lead,
+- technical architect,
+- security architect,
+- desktop lead,
+- platform/backend lead,
+- data/ontology lead,
+- ML/analytics lead,
+- design lead,
+- QA lead,
+- DevSecOps lead.
+
+## Suggested pods
+
+### Pod 1: shell and identity
+Owns Modules B and C.
+
+### Pod 2: connectors and data spine
+Owns Modules D and E.
+
+### Pod 3: graph and entity resolution
+Owns Modules F and G.
+
+### Pod 4: map, timeline, case workflows
+Owns Modules H and I.
+
+### Pod 5: alerting, AI, resilience
+Owns Modules J, K, L, and M.
+
+### Cross-cutting councils
+- ontology council,
+- security review board,
+- UX review,
+- release readiness board.
+
+---
+
+# 29. Recommended first 90 days
+
+## Days 1 to 30
+- finalize product scope,
+- define ubiquitous language,
+- choose desktop stack,
+- define bounded contexts,
+- design connector SDK,
+- create shell prototype,
+- create identity threat model,
+- create update and rollback concept.
+
+## Days 31 to 60
+- implement shell foundations,
+- implement login flow,
+- build 1 to 2 sample connectors,
+- stand up normalization pipeline,
+- draft ontology version 1,
+- prototype graph and map views.
+
+## Days 61 to 90
+- integrate first end-to-end path,
+- add case workspace,
+- add provenance view,
+- add local cache,
+- run degraded-mode drill,
+- run usability review,
+- cut first internal alpha.
+
+---
+
+# 30. Final recommended product statement
+
+**Omni** should be positioned as:
+
+> A resilient, native operations and intelligence-support workspace that fuses authorized multi-source data into explainable graphs, maps, timelines, alerts, and governed workflows for lawful defensive and mission-support operations.
+
+That keeps the ambition high, the architecture serious, and the scope responsible.
+
+---
+
+# 31. Next documents to create after this manual
+
+1. Omni ubiquitous language glossary  
+2. Omni bounded context map  
+3. Omni desktop UX specification  
+4. Omni connector SDK contract  
+5. Omni identity and offline continuity security spec  
+6. Omni update and rollback spec  
+7. Omni MVP backlog and sprint decomposition  
+8. Omni test plan and acceptance matrix
+
+---
+
+# 32. Closing note
+
+The right way to build a Palantir-inspired system is not to start with the visual chrome or the myth of total control. It is to start with:
+- the domain language,
+- the operational decisions being supported,
+- the provenance model,
+- the bounded contexts,
+- the resilience requirements,
+- and the governance model.
+
+If those are solid, the product can become genuinely powerful. If they are weak, the platform becomes a dangerous pile of dashboards.
+
+---
+
+# 33. Expanded capability envelope from the original brief, kept high-level and governed
+
+This section is included so the manual does **not disregard** major categories named in the original brief. The purpose here is to **acknowledge the full ambition at a high level** while keeping the content non-operational, lawful, and safety-bounded.
+
+## 33.1 Product inspiration, restated safely
+Omni may take inspiration from:
+- the general category of dense, graph-heavy, map-heavy operational intelligence software,
+- mission-control style investigation and coordination tools,
+- advanced geospatial and “world view” style data fusion experiences,
+- analyst workbenches that turn many inputs into human-usable decisions.
+
+That inspiration should inform:
+- information density,
+- linked map/graph/timeline views,
+- operator control over filters and drill-down,
+- workflow-driven actionability,
+- saved workspaces and reusable playbooks.
+
+It should **not** lead to copying protected branding, proprietary visual identity, or one-for-one imitation of another product’s exact interaction model.
+
+## 33.2 Expanded data families to account for the original brief
+Omni’s architecture should be able to represent, normalize, and relate a very broad set of **authorized** data families, including but not limited to:
+- documents and files,
+- structured records and tabular feeds,
+- GIS layers and geospatial data,
+- GPS or location-derived telemetry,
+- image metadata and image-derived observations,
+- video and camera event streams or summaries,
+- traffic, transit, mobility, and route status data,
+- environmental and weather context,
+- public records,
+- open-source intelligence,
+- cyber defense telemetry from owned or authorized systems,
+- radio-frequency or signal-adjacent metadata that is lawfully available and policy-approved,
+- device inventories and beacon-like identifiers where authorized,
+- communications-related metadata where lawfully available,
+- sensor outputs from enterprise, industrial, infrastructure, or field systems,
+- operator-entered notes, annotations, and case material,
+- historical archives and replayable event sequences.
+
+### Important note on sensitive categories
+The original brief named categories such as Wi-Fi, Bluetooth, SSID, LTE, and similar signals. In Omni, those are represented only at the level of **authorized signal metadata categories and lawful device/network observables**, not as instructions for collection, exploitation, interception, or unauthorized access.
+
+## 33.3 Expanded operator outcomes to account for the original brief
+The original brief emphasized that the platform should turn data into “usable actions.” Safely reframed, Omni should support high-level action families such as:
+- alerting and escalation,
+- case creation and triage,
+- route or area review,
+- watchlist or priority-list review,
+- subject, asset, or incident tracking within lawful authority,
+- investigation planning,
+- observation or monitoring plans where legally authorized,
+- security validation planning in owned environments,
+- incident response and containment planning,
+- logistics and deployment planning,
+- deconfliction of overlapping cases or operations,
+- task assignment and approval workflows,
+- evidence packaging,
+- report generation,
+- continuity and recovery actions during outages,
+- after-action review and audit preparation.
+
+## 33.4 Interpreting sensitive terms from the brief in a safe architecture sense
+Some terms from the original brief imply high-risk activity. To preserve the intent without making the manual unsafe, Omni should reinterpret them as follows:
+
+- **"targets"** becomes **priority entities, assets, incidents, or mission objects** in a lawful operational sense.
+- **"surveillance"** becomes **authorized monitoring, observation workflows, or sensor/task coordination** with legal and policy controls.
+- **"pentesting"** becomes **authorized security validation, attack-surface review, or controlled assessment** of systems the user owns or is permitted to test.
+- **"tracking"** becomes **governed entity, asset, or event tracking** with provenance and retention rules.
+- **"actions"** becomes **human-approved workflow steps, notifications, coordination tasks, or integrations**.
+
+This keeps the architecture aligned with the original ambition while preventing the document from becoming a guide for abuse.
+
+## 33.5 Subject-oriented and case-oriented workflows
+The original brief described monitoring people or persons of interest. In Omni, this should be represented only through a governed **Subject/Entity Monitoring** capability with the following boundaries:
+- the subject can be a person, device, account, vehicle, facility, or organization,
+- all monitoring must be tied to a lawful case, mission, incident, or compliance process,
+- every watch condition needs provenance and approval,
+- retention and access rules must be explicit,
+- sensitive views should require elevated role and justification,
+- alerts should remain advisory until reviewed by a human.
+
+The architecture should therefore support:
+- subject profiles,
+- case-linked monitoring criteria,
+- threshold-based alerts,
+- timeline accumulation,
+- evidence attachments,
+- review queues,
+- audit history,
+- deactivation and archival workflows.
+
+## 33.6 Signals, mobility, and geospatial capability families
+The brief emphasized a wide range of spatial and signal-oriented data. Without getting into acquisition or exploitation specifics, Omni should support these **capability families**:
+- geolocation-aware entity history,
+- path and route visualization,
+- proximity and co-occurrence analysis,
+- area-of-interest overlays,
+- movement summarization,
+- temporal replay,
+- anomaly detection over mobility patterns,
+- lawful association of signal metadata to places, assets, or events,
+- confidence-scored correlation between spatial and non-spatial evidence,
+- map-linked alerting and geofenced workflows.
+
+## 33.7 Image, video, and camera capability families
+The brief named image and camera data. Omni should support this domain at a high level through:
+- image or frame-level metadata ingestion,
+- detections and tags produced by approved analytics,
+- provenance back to source frame or clip,
+- event summarization,
+- timeline placement,
+- entity linking where confidence permits,
+- case attachments,
+- human review and correction,
+- retention and export controls.
+
+## 33.8 Cyber and security-operation capability families
+The brief referenced cyber-relevant data and actionability. Safely scoped, Omni can support:
+- owned-network telemetry correlation,
+- endpoint and asset relationship mapping,
+- security alert enrichment,
+- identity and access anomaly review,
+- incident triage,
+- containment recommendation drafting,
+- defensive playbook execution with human approval,
+- authorized validation planning,
+- report and evidence generation for internal defenders.
+
+It should not embed exploit chains, unauthorized access flows, or step-by-step offensive tradecraft.
+
+## 33.9 Government and military style resilience requirements
+The brief stressed that the app should be usable by highly demanding organizations and keep working during severe outages. That translates into engineering requirements such as:
+- mode-aware operation,
+- local compute fallback,
+- local encrypted cache,
+- portable continuity node support,
+- intermittent sync tolerance,
+- explicit degraded-mode UX,
+- durable audit trail,
+- cryptographically verified updates,
+- rollback and snapshot restore,
+- break-glass access with strong review.
+
+## 33.10 Three-environment requirement, restated
+The original brief described three scenarios. Omni should formally support them:
+
+### Environment A: normal federated operations
+- remote services available,
+- shared data plane available,
+- enterprise identity available,
+- rich AI assistance available,
+- central update and telemetry available.
+
+### Environment B: continuity node operations
+- only a single strong workstation, tower, or portable node may be available,
+- some services are collapsed onto that node,
+- reduced but meaningful data fusion still works,
+- model serving may be local,
+- sync may be delayed or one-way.
+
+### Environment C: isolated local operations
+- no central servers assumed,
+- app runs from local capability pack,
+- only pre-positioned data, local data, or lawfully reachable public sources are available,
+- workflows continue in constrained mode,
+- outputs are reviewable, exportable, and later synchronizable.
+
+## 33.11 Action engine, kept vague and governed
+The brief described implementing actions based on user input. Omni can include an **Action Engine** as long as it stays governed and non-abusive. It should support high-level action categories like:
+- notify,
+- assign,
+- request review,
+- request approval,
+- open case,
+- append evidence,
+- generate plan draft,
+- trigger internal integration,
+- queue containment or response workflow,
+- create a field task or checklist,
+- schedule follow-up,
+- mark for synchronization.
+
+All consequential actions should be:
+- role-gated,
+- logged,
+- reversible where possible,
+- linked to reason and provenance,
+- subject to policy checks.
+
+## 33.12 Recommendation engine, kept high-level
+The recommendation layer can remain ambitious while vague. It can recommend things like:
+- next-best review step,
+- missing data needed for confidence,
+- likely related entities,
+- relevant map overlays,
+- useful comparison windows,
+- candidate playbooks,
+- likely escalation path,
+- suggested response package,
+- suggested continuity mode changes during outages.
+
+The system may rank and draft. The operator approves.
+
+## 33.13 Expanded bounded contexts suggested by the brief
+To better account for the full ambition of the original request, Omni can optionally add these bounded contexts later:
+- **Subject Monitoring Context** for governed watch conditions,
+- **Mobility Context** for route, location, and movement abstractions,
+- **Signal Context** for lawful RF/network metadata abstractions,
+- **Media Context** for image/video/camera event abstractions,
+- **Response Planning Context** for action packages and playbooks,
+- **Continuity Node Context** for one-machine or one-node operations,
+- **External Sync Context** for delayed federation and reconciliation.
+
+## 33.14 Expanded screen ideas, still high-level
+Without getting into proprietary imitation, the UI can safely include high-level screens such as:
+- strategic overview board,
+- live operations map,
+- entity/subject profile view,
+- device or asset relationship view,
+- case timeline board,
+- signal or telemetry context pane,
+- media review pane,
+- route and movement workbench,
+- planning and approvals console,
+- continuity health dashboard,
+- update and rollback diagnostics panel.
+
+## 33.15 High-level “god view” reframed responsibly
+The original brief used “god view” language. In a safe enterprise architecture, that should mean:
+- broad cross-domain visibility,
+- synchronized map/graph/timeline awareness,
+- rapid drill-down from overview to evidence,
+- ability to coordinate many workflows from one shell,
+- mode visibility across systems and operations,
+- high-context rather than unrestricted power.
+
+In other words, Omni should aim for **deep situational awareness**, not unconstrained authority.
+
+---
+
+# 34. Explicit inclusion map from the original brief
+
+This section exists only to show that the revised manual intentionally kept the major idea families from the source brief while reframing them safely.
+
+## Included at a high level
+- Palantir-like command-center ambition,
+- worldview-like geospatial inspiration as user-stated secondary influence,
+- Windows-native primary client,
+- Linux-capable or Linux-compatible service layer,
+- C# and C++ friendly architecture,
+- secure login,
+- offline and doomsday continuity concepts,
+- one-node fallback operations,
+- broad multi-source data fusion,
+- image, GPS, signal, OSINT, camera, traffic, and other data families,
+- alerts and workflow actions,
+- tracking and monitoring abstractions,
+- update, rollback, diagnostics, and tray utility,
+- modular work breakdown and staged integration,
+- checks and balances at every stage.
+
+## Intentionally kept vague or converted to safer language
+- harmful “target” language,
+- surveillance specifics,
+- pentesting specifics,
+- signal interception specifics,
+- unlawful data access,
+- any behavior resembling offensive cyber or abusive intelligence operations.
+
+That is the balance this manual should keep going forward.

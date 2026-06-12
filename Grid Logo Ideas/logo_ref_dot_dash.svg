@@ -1,0 +1,13 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dashes -->
+  <path d="M128 48C172.183 48 208 83.8172 208 128" stroke="#111111" stroke-width="16" stroke-linecap="square" stroke-dasharray="32 16" fill="none"/>
+  <path d="M128 208C83.8172 208 48 172.183 48 128" stroke="#111111" stroke-width="16" stroke-linecap="square" stroke-dasharray="32 16" fill="none"/>
+  <!-- Dots -->
+  <circle cx="128" cy="48" r="8" fill="#111111"/>
+  <circle cx="208" cy="128" r="8" fill="#111111"/>
+  <circle cx="128" cy="208" r="8" fill="#111111"/>
+  <circle cx="48" cy="128" r="8" fill="#111111"/>
+  
+  <!-- Center dot -->
+  <rect x="120" y="120" width="16" height="16" fill="#111111"/>
+</svg>

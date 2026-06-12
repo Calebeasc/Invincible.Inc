@@ -1,0 +1,8 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#000000"/>
+  <path d="M140 80L160 100L140 120L120 100L140 80Z" fill="#60A5FA"/>
+  <path d="M100 80L120 100L100 120L80 100L100 80Z" fill="#60A5FA" fill-opacity="0.6"/>
+  <path d="M100 120L120 140L100 160L80 140L100 120Z" fill="#60A5FA" fill-opacity="0.6"/>
+  <path d="M140 120L160 140L140 160L120 140L140 120Z" fill="#60A5FA" fill-opacity="0.6"/>
+  <path d="M180 120L200 140L180 160L160 140L180 120Z" fill="#F59E0B"/>
+</svg>

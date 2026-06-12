@@ -1,0 +1,15 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#000000"/>
+  <!-- Shield Outline -->
+  <path d="M128 40L200 64V128C200 176 128 216 128 216C128 216 56 176 56 128V64L128 40Z" stroke="#2563EB" stroke-width="2"/>
+  <!-- Secure Mesh Grid inside Shield -->
+  <clipPath id="shieldClip">
+    <path d="M128 40L200 64V128C200 176 128 216 128 216C128 216 56 176 56 128V64L128 40Z"/>
+  </clipPath>
+  <g clip-path="url(#shieldClip)">
+    <path d="M0 80H256M0 112H256M0 144H256M0 176H256" stroke="#60A5FA" stroke-width="1" stroke-opacity="0.3"/>
+    <path d="M80 0V256M112 0V256M144 0V256M176 0V256" stroke="#60A5FA" stroke-width="1" stroke-opacity="0.3"/>
+    <!-- Central intersection dot -->
+    <rect x="124" y="108" width="8" height="8" fill="#F59E0B"/>
+  </g>
+</svg>

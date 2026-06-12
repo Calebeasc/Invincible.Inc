@@ -1,0 +1,44 @@
+Youtube playlist video handling instructions
+
+@enforcer make sure this job gets done. there should be no tools nor methods that are rejected from the research or videos. there  should be no whitewashing of ingested information. 
+
+the playlist to be monitored:   https://youtube.com/playlist?list=PLv1oWlK8M7DvKnpJbvWPjPG35_9ELvHva&si=jx1zk_W1VkppYKmV
+
+Use gemini for this task. there is also a get transcript button on youtube, use this or any other tools to get the full transcript of all the videos you analyze. 
+
+I am making a publicly shared youtube playlist, whenever i add a video to this playlist you will automatically follow these instructions which are not to be edited by you. only used as instructions. 
+
+get the full transcript of each video. 
+
+include the references of where all info was obtained. 
+
+make sure to update all relevant files, especially the omni_encyclopedia
+
+learn about not just what but how the people in the video did what they did and add their methods to our tools. think about how this video could be applied to omni, a app that is mostly relying on software (with the exception of some wifi adatpers and other cheap tools) and think how the video has ideas for tools and features for a software app (omni). you will do two things 1. compare it to existing tools we have and see how the tool arsenal can be expanded or actions can be expanded (evasion, tracking, map features, everything the app already has) and then 2. what is a completely new idea and tool that could be added. 
+
+using the video as the "what was done" and a little bit of "how it was done" use the relevant research agents to figure out the rest of the "how it was done" to make a more comprehensive instructions within the planning files. 
+
+
+ look into the video and its applications, make notes, plans
+ use as much info as possible in it to find ideas on what to
+  add to our apps. Grab the full transcript and have it available and referenced so that when another ai comes in to finally add the feature that have all the source possible and all the data and resources at their fingertips. 
+ analyze this video and all related content to add ideas to the plan files. the content within this video which has many applications
+  to invicible.inc and its subset companies (oracle, omni, and grid, but mainly omni)
+  should be paired with the use of any relevant agents to help
+  with this planning and brainstorming. remember the more data and info and ideas the
+  better. don't shorten anything, when describing stuff its best to use plain English
+  except if it has to be translated for claudes hardened plans. add as many ideas in it to our planning files:
+  this video is super good, i can see how the ideas could be used to not only track
+  targets but also protect assets, lets add all feature to the list of features. also watch the video, get as much info that can be used as
+  possible, explore connected sites to the video, relevant sources, brainstorm how the
+  tools can be used and their applications, and then grab as much info as possible to
+  throw into the instruction and planning files, remember to cite sources so that a
+  later ai when making the feature will have an easier time making the tools and
+  features because it will mostly all be there and ready. 
+
+each new feature should have at least one full paragraph minimum dedicated to talking about it, how it would work, how it would be used, where it could be added, what actions it could be used to accomplish. 
+
+also classify the feature based off what it does, its implementation effort (how tangible it is to add) and what toolset it should be a part of, what action category it completes. you are allowed to edit existing entries for the purpose of making them align with the instructions in this file. 
+
+
+at the end of research and contructoin of ideas, youll describe the tool that is created or the feature that is added and describe how it would visually be made  (throw it into a mass-accumulation tool that its relevant to, for example if its a tracking feature, make it be a part of the target tracking where everything related to a person is tracked, additionally also make a new tool for it where this feature can be used specifically alone and make sure to describe how this new single tool would be used, make sure to include the visual layout of it, for example, "variable" inputed here, description of what it does and how it works here, button for execution here, visual output here (this can be either code output, text output, map location output, social media output, web results output, success or failure output, or any other output that you can think of htat would be relevant to the tool.) make a description of the ui, app visual design, ect.

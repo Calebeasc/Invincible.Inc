@@ -1,0 +1,20 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#111111">
+    <rect x="124" y="44" width="8" height="8" transform="rotate(45 128 48)"/>
+    <rect x="100" y="68" width="8" height="8" transform="rotate(45 104 72)"/>
+    <rect x="148" y="68" width="8" height="8" transform="rotate(45 152 72)"/>
+    <rect x="76" y="92" width="8" height="8" transform="rotate(45 80 96)"/>
+    <rect x="124" y="92" width="8" height="8" transform="rotate(45 128 96)"/>
+    <rect x="172" y="92" width="8" height="8" transform="rotate(45 176 96)"/>
+    <rect x="52" y="116" width="8" height="8" transform="rotate(45 56 120)"/>
+    <rect x="100" y="116" width="8" height="8" transform="rotate(45 104 120)"/>
+    <rect x="148" y="116" width="8" height="8" transform="rotate(45 152 120)"/>
+    <rect x="196" y="116" width="8" height="8" transform="rotate(45 200 120)"/>
+    <rect x="76" y="140" width="8" height="8" transform="rotate(45 80 144)"/>
+    <rect x="124" y="140" width="8" height="8" transform="rotate(45 128 144)"/>
+    <rect x="172" y="140" width="8" height="8" transform="rotate(45 176 144)"/>
+    <rect x="100" y="164" width="8" height="8" transform="rotate(45 104 168)"/>
+    <rect x="148" y="164" width="8" height="8" transform="rotate(45 152 168)"/>
+    <rect x="124" y="188" width="8" height="8" transform="rotate(45 128 192)"/>
+  </g>
+</svg>

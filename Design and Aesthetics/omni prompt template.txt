@@ -1,0 +1,31 @@
+prompt template
+
+
+then based off that file which were going to keep and save for later, lets make a second massive, long, comprehensive in every way, text file/book/manual but this one is focused on using the skills we learned in the books to make a palantir look alike app that has a god view level of control, view and actions, like gotham and other palantir apps that take tons of data and turn it into useable actions.
+
+
+
+ You should act as a initial planner of a product/app developer, also with input from the product designer, a specialist in app making and design. 
+
+We want to make a palantir look alike app visually and functionally that has a god view level of control, view and actions, like gotham and other palantir apps that take tons of data and turn it into useable actions, the main focus will be on making it a palantir clone but you can use bilawa sidhus app worldview that he made also as a reference of lesser authority.  
+
+The users of this app will be military and government personel, meaning they will be taking tons of data from every sector, image data, gps data, signals (wifi, bluetooth, ssid, lte and all other types of signals) osint, camera data, traffic data, literally every type of data imaginable and this app will process it and make the palantir type of app (visually and functionally identical) described earlier which will turn that data into useable actions. 
+The output will follow the structure given from the books that we learned and will be made into a windows app that can be downloaded and used by military and government agencys such as the airforce, or any other military branch, intelligence agencies like nsa, fbi, and CIA. this native windows app will have tools relevant for all of those branches, and it will be able to do this because it has such a large and diverse pool of data and access to data.
+
+the purpose of this app will be to use the massive amount of data and intuitively use it to provide targets, generate plans of action, such as surveillance, pentesting, tracking, alerts, and others that will be intuitively created based on the target and the data, and implement those actions based on the user input. it will also be used to monitor personal of interest (the CIA, NSA and FBI will use a lot of this function)  
+
+This apps primary platform will be on windows as a native windows app built with c#, c++, and all other languages needed for it to fully complete its task. The limitation will be that this app must be able to function on any windows or Linux computer meaning, that the data will not be stored directly on board the device for the most part, rather the app will grab information from the internet and process it using artificial intelligence. 
+
+you will also create a course of plan that breaks the creation of this app into smaller bits attainable by the developer team. you will flesh out the full structure of the app using the skills and knowledge from the books, your knowledge of Palantir and how they did it, and also how bilawa sidhu did it. 
+
+the app will once downloaded have a secure login required before the actual app can be accessed. this login screen which protects access to this state secret level app will work fully and be able to function in a doomsday scenario when all servers are down and a laptop or a single separate pc tower is forced to be made into a makeshift server. 
+
+speaking of services being down, this app though it will periodically check for updates from a GitHub repo, will be able to function even when the servers are down, since it is a native windows app and has the tools to analyze the data built into it and natively stored on the device and it grabs the data from the internet making it have the capability to function without servers being online. there will also be a tray icon in windows bottom menu which has options like settings of the app and "check for updates where it will check for  a new release of the app and once it has fully downloaded the new release, and it knows the code is functioning and that is isn't missing anything it will implement the update and install it. there will also be a revert option in the icon tray next to the check for updates to revert it to the older version in case a bad update goes through. this will  revert it to one of the saved older versions (like a snapshot) and will also provide error diagnostics on what errors happened with the new update and what went wrong, this will be forwarded to the server so it can have knowledge of the errors in the update. 
+
+ the app will be named omni and will be owned by a parent company invincible.inc
+
+each step of the way in the development plan make sure that there is checks and balances. 
+
+break up the work into attainable sections that can be made independently before being integrated into the windows app. that way these smaller bits can be tested if they work and then can be added and then the whole app with the new section addition can be tested for functionality. 
+
+remember this is a military/government grade data analytics and actions tool but its also made to be able to run on a computer in the case of three scenarois, 1. all is well and there are servers and machines running the backend. 2. a severe outage where there is only one pc tower or laptop running with a powerful gpu, 4tb of storage max, and a decent cpu running the backed. and 3. a doomsday event where the program is required to run off of just the one computers hardware and use only data publicly available on the internet, osint, or data easily broken into to complete the same data analytics and actions available in Palantir's Gotham, (and only for the sake of more feature ideas and features for the app, bilawa sidhus worldview app.) 

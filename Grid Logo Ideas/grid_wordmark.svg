@@ -1,0 +1,14 @@
+<svg width="240" height="80" viewBox="0 0 240 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- GRID GEOMETRIC WORDMARK -->
+  <g stroke="#111111" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- G -->
+    <path d="M30 10L10 40L30 70L50 40H30" /> 
+    <!-- R -->
+    <path d="M70 10V70" /> 
+    <path d="M80 10L100 40H80L100 70" /> 
+    <!-- I -->
+    <path d="M120 10V70" />
+    <!-- D -->
+    <path d="M140 10V70L165 40Z" />
+  </g>
+</svg>

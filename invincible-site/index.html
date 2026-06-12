@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Invincible.Inc — The company behind Oracle, Omni, and Grid. Consumer driving intelligence, sovereign SIGINT platforms, and enterprise network security tools."/>
+<title>Invincible.Inc — The Platform Behind the Platforms</title>
+<meta name="theme-color" content="#030609"/>
+<style>
+:root{
+  --bg:      #030609;
+  --bg2:     #060c12;
+  --bg3:     #0a1018;
+  --text:    #c8d4e0;
+  --dim:     #3d5060;
+  --border:  rgba(255,255,255,0.06);
+  --card:    rgba(255,255,255,0.025);
+  /* Brand colors */
+  --oracle:  #06b6d4;
+  --oracle2: #22d3ee;
+  --omni:    #2563eb;
+  --omni2:   #60a5fa;
+  --grid:    #0ea5e9;
+  --grid2:   #00f0ff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);
+  font-family:'Segoe UI Variable',Inter,-apple-system,system-ui,sans-serif;
+  line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:72px 72px;pointer-events:none;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:58px;
+  display:flex;align-items:center;gap:32px;
+  background:rgba(3,6,9,0.94);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);}
+.nav-wordmark{font-size:16px;font-weight:800;color:#e8f0fa;letter-spacing:-0.5px;text-decoration:none;}
+.nav-wordmark span{color:rgba(255,255,255,0.3);}
+.nav-links{display:flex;gap:28px;margin-left:auto;}
+nav a.nl{color:var(--dim);text-decoration:none;font-size:12px;font-weight:500;transition:color .2s;letter-spacing:.3px;}
+nav a.nl:hover{color:var(--text);}
+.nav-divider{width:1px;height:16px;background:var(--border);}
+.nav-product{font-size:12px;font-weight:600;text-decoration:none;padding:4px 12px;
+  border-radius:4px;transition:all .2s;}
+.nav-oracle{color:var(--oracle);border:1px solid rgba(6,182,212,.2);}
+.nav-oracle:hover{background:rgba(6,182,212,.08);}
+.nav-omni{color:var(--omni2);border:1px solid rgba(37,99,235,.2);}
+.nav-omni:hover{background:rgba(37,99,235,.08);}
+.nav-grid{color:var(--grid2);border:1px solid rgba(14,165,233,.2);}
+.nav-grid:hover{background:rgba(14,165,233,.08);}
+
+section{position:relative;z-index:1;}
+
+/* ── Hero ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:120px 24px 80px;}
+.hero-kicker{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.3);margin-bottom:28px;}
+.hero h1{font-size:clamp(2.4rem,6vw,5rem);font-weight:800;line-height:1.08;letter-spacing:-2px;
+  color:#e8f0fa;max-width:800px;margin-bottom:20px;}
+.hero h1 .sub-head{display:block;font-weight:300;font-size:.7em;letter-spacing:-1px;color:var(--dim);}
+.hero p.lead{font-size:1rem;color:var(--dim);max-width:520px;margin:0 auto 48px;line-height:1.75;}
+canvas#heroCanvas{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.45;}
+.hero>*:not(canvas){position:relative;z-index:1;}
+
+/* ── Product cards ── */
+.products{padding:80px 24px 120px;max-width:1200px;margin:0 auto;}
+.products-intro{text-align:center;margin-bottom:64px;}
+.products-intro h2{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;letter-spacing:-1px;
+  color:#e8f0fa;margin-bottom:12px;}
+.products-intro p{font-size:14px;color:var(--dim);max-width:520px;margin:0 auto;}
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.prod-card{border-radius:16px;padding:36px 32px;border:1px solid var(--border);
+  background:var(--card);display:flex;flex-direction:column;gap:20px;
+  position:relative;overflow:hidden;transition:all .3s;}
+.prod-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;pointer-events:none;}
+.prod-card:hover{transform:translateY(-4px);}
+.prod-card.oracle-card::before{background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(6,182,212,0.08),transparent);}
+.prod-card.omni-card::before{background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(37,99,235,0.08),transparent);}
+.prod-card.grid-card::before{background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(0,240,255,0.06),transparent);}
+.prod-card:hover::before{opacity:1;}
+.prod-card.oracle-card{border-color:rgba(6,182,212,0.18);}
+.prod-card.omni-card{border-color:rgba(37,99,235,0.18);}
+.prod-card.grid-card{border-color:rgba(14,165,233,0.18);}
+.prod-mark{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;
+  font-size:20px;font-weight:900;}
+.oracle-mark{background:linear-gradient(135deg,rgba(6,182,212,.2),rgba(34,211,238,.1));
+  color:var(--oracle2);border:1px solid rgba(6,182,212,.25);}
+.omni-mark{background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(96,165,250,.1));
+  color:var(--omni2);border:1px solid rgba(37,99,235,.25);}
+.grid-mark{background:linear-gradient(135deg,rgba(14,165,233,.2),rgba(0,240,255,.1));
+  color:var(--grid2);border:1px solid rgba(14,165,233,.25);}
+.prod-name{font-size:1.5rem;font-weight:900;letter-spacing:-0.5px;}
+.oracle-card .prod-name{background:linear-gradient(135deg,var(--oracle),var(--oracle2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.omni-card .prod-name{background:linear-gradient(135deg,var(--omni),var(--omni2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.grid-card .prod-name{background:linear-gradient(135deg,var(--grid),var(--grid2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.prod-tagline{font-size:13px;font-weight:600;opacity:.7;margin-top:-14px;}
+.prod-desc{font-size:13px;color:var(--dim);line-height:1.7;flex:1;}
+.prod-pills{display:flex;flex-wrap:wrap;gap:6px;}
+.prod-pill{padding:3px 10px;border-radius:100px;font-size:10px;font-weight:600;}
+.oracle-pill{background:rgba(6,182,212,.08);color:var(--oracle2);border:1px solid rgba(6,182,212,.15);}
+.omni-pill{background:rgba(37,99,235,.08);color:var(--omni2);border:1px solid rgba(37,99,235,.15);}
+.grid-pill{background:rgba(14,165,233,.08);color:var(--grid2);border:1px solid rgba(14,165,233,.15);}
+.prod-cta{display:block;text-align:center;padding:12px 24px;border-radius:8px;
+  font-size:13px;font-weight:700;text-decoration:none;transition:all .25s;margin-top:auto;}
+.oracle-cta{background:rgba(6,182,212,.1);color:var(--oracle2);border:1px solid rgba(6,182,212,.25);}
+.oracle-cta:hover{background:rgba(6,182,212,.2);transform:translateY(-1px);}
+.omni-cta{background:rgba(37,99,235,.1);color:var(--omni2);border:1px solid rgba(37,99,235,.25);}
+.omni-cta:hover{background:rgba(37,99,235,.2);transform:translateY(-1px);}
+.grid-cta{background:rgba(14,165,233,.1);color:var(--grid2);border:1px solid rgba(14,165,233,.25);}
+.grid-cta:hover{background:rgba(14,165,233,.2);transform:translateY(-1px);}
+
+/* ── Mission statement ── */
+.mission{padding:80px 48px;max-width:880px;margin:0 auto;text-align:center;}
+.mission h2{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;letter-spacing:-0.5px;
+  color:#e8f0fa;margin-bottom:20px;line-height:1.4;}
+.mission h2 strong{font-weight:800;}
+.mission p{font-size:14px;color:var(--dim);max-width:600px;margin:0 auto;line-height:1.8;}
+
+/* ── Stack overview ── */
+.stack{padding:80px 48px;max-width:1100px;margin:0 auto;}
+.stack-row{display:flex;gap:80px;align-items:flex-start;flex-wrap:wrap;margin-bottom:64px;}
+.stack-row:last-child{margin-bottom:0;}
+.stack-label{width:200px;flex-shrink:0;}
+.stack-label h3{font-size:14px;font-weight:700;color:#e8f0fa;margin-bottom:6px;}
+.stack-label p{font-size:12px;color:var(--dim);line-height:1.6;}
+.stack-items{flex:1;display:flex;flex-direction:column;gap:8px;}
+.stack-item{padding:14px 20px;border:1px solid var(--border);background:var(--card);
+  border-radius:6px;display:flex;align-items:center;gap:16px;font-size:12px;}
+.stack-item-name{font-weight:700;min-width:100px;color:#e8f0fa;}
+.stack-item-desc{color:var(--dim);}
+.stack-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── Footer ── */
+footer{padding:48px;border-top:1px solid var(--border);max-width:1200px;margin:0 auto;}
+.footer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap;margin-bottom:40px;}
+.footer-brand h3{font-size:18px;font-weight:900;color:#e8f0fa;letter-spacing:-0.5px;margin-bottom:6px;}
+.footer-brand p{font-size:12px;color:var(--dim);max-width:300px;line-height:1.6;}
+.footer-products{display:flex;gap:40px;}
+.footer-col h4{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:12px;}
+.footer-col a{display:block;color:var(--dim);text-decoration:none;font-size:12px;margin-bottom:8px;transition:color .2s;}
+.footer-col a:hover{color:var(--text);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  padding-top:24px;border-top:1px solid var(--border);}
+.footer-bottom p{font-size:11px;color:var(--dim);}
+
+/* Responsive */
+@media(max-width:900px){
+  .prod-grid{grid-template-columns:1fr;}
+  nav{padding:0 20px;} nav .nav-links{gap:12px;}
+  .products,.stack{padding:60px 24px;}
+  .mission{padding:60px 24px;}
+  footer{padding:32px 24px;}
+  .footer-top{flex-direction:column;}
+}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease;}
+.reveal.visible{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-wordmark" href="#">Invincible<span>.Inc</span></a>
+  <div class="nav-links">
+    <a class="nl" href="#products">Products</a>
+    <a class="nl" href="#mission">Mission</a>
+    <a class="nl" href="#stack">Platform</a>
+    <div class="nav-divider"></div>
+    <a class="nav-product nav-oracle" href="../oracle-site/index.html">Oracle</a>
+    <a class="nav-product nav-omni" href="../omni-site/index.html">Omni</a>
+    <a class="nav-product nav-grid" href="../grid-site/index.html">Grid</a>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────── -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-kicker">Invincible.Inc — Founded 2024</div>
+  <h1>The Platform<br>Behind the Platforms.<span class="sub-head">Intelligence infrastructure for the next era.</span></h1>
+  <p class="lead">We build tools at the intersection of geospatial intelligence, signal analysis, and network security. Three products. One mission.</p>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;">
+    <a href="#products" style="padding:13px 28px;border-radius:8px;background:rgba(255,255,255,.08);color:#e8f0fa;text-decoration:none;font-size:14px;font-weight:600;border:1px solid rgba(255,255,255,.12);transition:all .2s;">Explore Products</a>
+    <a href="mailto:hello@invincible.inc" style="padding:13px 28px;border-radius:8px;color:var(--dim);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;">Contact Us →</a>
+  </div>
+</section>
+
+<!-- ── Products ──────────────────────────────────────────────────── -->
+<section class="products" id="products">
+  <div class="products-intro reveal">
+    <h2>Three Products. Three Missions.</h2>
+    <p>From consumer driving safety to sovereign intelligence operations to enterprise network security — each product stands alone and is stronger together.</p>
+  </div>
+  <div class="prod-grid">
+
+    <div class="prod-card oracle-card reveal">
+      <div class="prod-mark oracle-mark">◎</div>
+      <div class="prod-name">Oracle</div>
+      <div class="prod-tagline">Drive Aware. Drive Smart.</div>
+      <div class="prod-desc">The everyday driver's co-pilot. Real-time Stopper alerts, ALPR Watcher detection, Kalman-filtered GPS accuracy, community heatmaps, and a gamified rank system. Built for fun and safety on the road.</div>
+      <div class="prod-pills">
+        <span class="prod-pill oracle-pill">Consumer</span>
+        <span class="prod-pill oracle-pill">iOS + Android</span>
+        <span class="prod-pill oracle-pill">Web Platform</span>
+        <span class="prod-pill oracle-pill">Windows App</span>
+      </div>
+      <a class="prod-cta oracle-cta" href="../oracle-site/index.html">Explore Oracle →</a>
+    </div>
+
+    <div class="prod-card omni-card reveal">
+      <div class="prod-mark omni-mark">⬡</div>
+      <div class="prod-name">Omni</div>
+      <div class="prod-tagline">Total Operational Awareness.</div>
+      <div class="prod-desc">The sovereign intelligence platform for vetted operators. Multi-domain SIGINT, identity resolution, geospatial COP, blockchain forensics, surveillance integration, and threat triage — all under a five-tier access model.</div>
+      <div class="prod-pills">
+        <span class="prod-pill omni-pill">Enterprise</span>
+        <span class="prod-pill omni-pill">Invite Only</span>
+        <span class="prod-pill omni-pill">Native Windows</span>
+        <span class="prod-pill omni-pill">T-2 Minimum</span>
+      </div>
+      <a class="prod-cta omni-cta" href="../omni-site/index.html">Explore Omni →</a>
+    </div>
+
+    <div class="prod-card grid-card reveal">
+      <div class="prod-mark grid-mark">⬛</div>
+      <div class="prod-name">Grid</div>
+      <div class="prod-tagline">Map Every Node. Own Every Layer.</div>
+      <div class="prod-desc">Network topology mapping and penetration testing for enterprise security teams. Live topology graphs, CVE-matched vulnerability scanning, rogue device detection, and automated client-ready reports.</div>
+      <div class="prod-pills">
+        <span class="prod-pill grid-pill">Enterprise</span>
+        <span class="prod-pill grid-pill">Pentesting</span>
+        <span class="prod-pill grid-pill">SaaS</span>
+        <span class="prod-pill grid-pill">On-Premise</span>
+      </div>
+      <a class="prod-cta grid-cta" href="../grid-site/index.html">Explore Grid →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Mission ───────────────────────────────────────────────────── -->
+<section class="mission" id="mission">
+  <div class="reveal">
+    <h2>We believe <strong>awareness is the first line of defense</strong> — whether you're a driver avoiding a speed trap, an analyst tracking a threat, or a security engineer mapping your attack surface.</h2>
+    <p>Invincible.Inc builds infrastructure that turns raw signals into clear, actionable intelligence. Every product we build runs on the same Lattice engine — typed objects, confidence-weighted links, and tiered access enforced at every layer.</p>
+  </div>
+</section>
+
+<!-- ── Platform stack ────────────────────────────────────────────── -->
+<section class="stack" id="stack">
+  <h2 class="reveal" style="font-size:1.8rem;font-weight:700;letter-spacing:-1px;color:#e8f0fa;margin-bottom:48px;">One Lattice Engine. Three Surfaces.</h2>
+
+  <div class="stack-row reveal">
+    <div class="stack-label"><h3>Signal Ingest</h3><p>Raw RF, Wi-Fi, BLE, ADS-B, and GPS observations feed the Lattice graph in real time.</p></div>
+    <div class="stack-items">
+      <div class="stack-item"><div class="stack-dot" style="background:#0ea5e9;"></div><div class="stack-item-name">BLE Scanner</div><div class="stack-item-desc">Apple/Google/MS/Samsung/Tile manufacturer fingerprinting via BluetoothLEAdvertisementWatcher</div></div>
+      <div class="stack-item"><div class="stack-dot" style="background:#0ea5e9;"></div><div class="stack-item-name">Wi-Fi Scanner</div><div class="stack-item-desc">Windows.Devices.WiFi BSSID/SSID sweep on 4s interval with channel + signal metadata</div></div>
+      <div class="stack-item"><div class="stack-dot" style="background:#6366f1;"></div><div class="stack-item-name">ADS-B Ingest</div><div class="stack-item-desc">dump1090 socket client with LEA callsign classification and ICAO hex correlation</div></div>
+    </div>
+  </div>
+
+  <div class="stack-row reveal">
+    <div class="stack-label"><h3>Intelligence Backend</h3><p>FastAPI + SQLite stack with tier-enforced routing and the Lattice object graph.</p></div>
+    <div class="stack-items">
+      <div class="stack-item"><div class="stack-dot" style="background:#2563eb;"></div><div class="stack-item-name">FastAPI</div><div class="stack-item-desc">Sovereign mode registers T-2+ routes — surveillance, sigint, identity, triage, malware modules</div></div>
+      <div class="stack-item"><div class="stack-dot" style="background:#2563eb;"></div><div class="stack-item-name">SQLite WAL</div><div class="stack-item-desc">oracle_objects/links views filter sensitivity_tier ≤ 1 — Oracle never touches T-2+ data</div></div>
+      <div class="stack-item"><div class="stack-dot" style="background:#2563eb;"></div><div class="stack-item-name">Named Pipe IPC</div><div class="stack-item-desc">\\.\pipe\InvincibleBackend — zero HTTP overhead, zero exposed port for native shell</div></div>
+    </div>
+  </div>
+
+  <div class="stack-row reveal">
+    <div class="stack-label"><h3>Frontend Surfaces</h3><p>Three distinct products built from the same codebase — separated at build time, not runtime.</p></div>
+    <div class="stack-items">
+      <div class="stack-item"><div class="stack-dot" style="background:#06b6d4;"></div><div class="stack-item-name">Oracle Web + App</div><div class="stack-item-desc">dist-user Vite build — Omni code tree-shaken at compile time via TierGate.null.jsx stub</div></div>
+      <div class="stack-item"><div class="stack-dot" style="background:#2563eb;"></div><div class="stack-item-name">Omni Native Shell</div><div class="stack-item-desc">WinUI 3 (C#) + LatticeSignalEngine.dll — no webview, MSIX packaged, sovereign mode required</div></div>
+      <div class="stack-item"><div class="stack-dot" style="background:#0ea5e9;"></div><div class="stack-item-name">Grid SaaS</div><div class="stack-item-desc">Standalone web platform — multi-tenant, REST API, Splunk/Elastic integration, PDF reports</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-top reveal">
+    <div class="footer-brand">
+      <h3>Invincible.Inc</h3>
+      <p>Building the intelligence infrastructure layer — from the road to the operations center to the SOC.</p>
+    </div>
+    <div class="footer-products">
+      <div class="footer-col">
+        <h4>Products</h4>
+        <a href="../oracle-site/index.html" style="color:var(--oracle);">Oracle</a>
+        <a href="../omni-site/index.html" style="color:var(--omni2);">Omni</a>
+        <a href="../grid-site/index.html" style="color:var(--grid2);">Grid</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="mailto:hello@invincible.inc">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Security</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Invincible.Inc · All rights reserved</p>
+    <p>Oracle · Omni · Grid</p>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Hero canvas — three-brand constellation
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, t = 0;
+function resize(){canvas.width=W=window.innerWidth;canvas.height=H=window.innerHeight;}
+resize();
+window.addEventListener('resize', resize);
+
+// Three node clusters — one per product
+const BRANDS = [
+  {color:'#06b6d4',cx:.25,cy:.4},
+  {color:'#2563eb',cx:.5,cy:.55},
+  {color:'#0ea5e9',cx:.75,cy:.4},
+];
+// Generate nodes
+const nodes = [];
+BRANDS.forEach((b,bi)=>{
+  for(let i=0;i<12;i++){
+    const angle = (i/12)*Math.PI*2;
+    const r = 60+Math.random()*80;
+    nodes.push({
+      bx: b.cx, by: b.cy, r,
+      angle: angle + bi*0.5,
+      speed: (0.003+Math.random()*0.004)*(Math.random()>.5?1:-1),
+      size: 1.5+Math.random()*2.5,
+      color: b.color,
+      opacity: 0.3+Math.random()*0.4,
+    });
+  }
+});
+
+function draw(){
+  requestAnimationFrame(draw);
+  t+=.008;
+  ctx.clearRect(0,0,W,H);
+
+  // Draw edges between nearby nodes
+  for(let i=0;i<nodes.length;i++){
+    const a = nodes[i];
+    const ax = a.bx*W + Math.cos(a.angle+t*a.speed*100)*a.r;
+    const ay = a.by*H + Math.sin(a.angle+t*a.speed*100)*a.r;
+    for(let j=i+1;j<nodes.length;j++){
+      const b = nodes[j];
+      if(a.color!==b.color) continue;
+      const bx = b.bx*W + Math.cos(b.angle+t*b.speed*100)*b.r;
+      const by = b.by*H + Math.sin(b.angle+t*b.speed*100)*b.r;
+      const dist = Math.hypot(ax-bx,ay-by);
+      if(dist>120) continue;
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);
+      ctx.strokeStyle = a.color+Math.floor((1-dist/120)*30).toString(16).padStart(2,'0');
+      ctx.lineWidth=.5;ctx.stroke();
+    }
+  }
+
+  // Draw nodes
+  nodes.forEach(n=>{
+    const x = n.bx*W + Math.cos(n.angle+t*n.speed*100)*n.r;
+    const y = n.by*H + Math.sin(n.angle+t*n.speed*100)*n.r;
+    ctx.beginPath();ctx.arc(x,y,n.size,0,Math.PI*2);
+    ctx.fillStyle = n.color+Math.floor(n.opacity*255).toString(16).padStart(2,'0');
+    ctx.fill();
+  });
+}
+draw();
+</script>
+</body>
+</html>

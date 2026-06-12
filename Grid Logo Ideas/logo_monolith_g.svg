@@ -1,0 +1,10 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#000000"/>
+  <!-- Stylized G as a Grid Segment -->
+  <path d="M180 80H80V176H170V136H130" stroke="#00E5FF" stroke-width="16" stroke-linejoin="miter" stroke-linecap="square"/>
+  <!-- Accent Node at 'G' Terminal -->
+  <rect x="122" y="128" width="16" height="16" fill="#F59E0B"/>
+  <!-- Faint background grid lines -->
+  <path d="M40 40H216M40 80H216M40 120H216M40 160H216M40 200H216" stroke="white" stroke-width="0.5" stroke-opacity="0.1"/>
+  <path d="M40 40V216M80 40V216M120 40V216M160 40V216M200 40V216" stroke="white" stroke-width="0.5" stroke-opacity="0.1"/>
+</svg>

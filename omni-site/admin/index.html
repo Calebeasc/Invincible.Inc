@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Omni Operator Console</title>
+<meta name="theme-color" content="#000000"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" href="../favicon.ico"/>
+<style>
+:root{
+  --bg:#000000; --bg1:#040408; --bg2:#07070d; --bg3:#0c0c14;
+  --rule:rgba(255,255,255,0.055); --border:rgba(255,255,255,0.07);
+  --card:rgba(255,255,255,0.025);
+  --white:#f0f4f8; --text:#c8d3e0; --mid:#8899aa; --dim:#4a5568;
+  --blue:#2563eb; --ice:#60a5fa; --mist:#bfdbfe;
+  --red:#ef4444; --red-dim:rgba(239,68,68,0.12);
+  --green:#22c55e; --green-dim:rgba(34,197,94,0.1);
+  --amber:#f59e0b; --amber-dim:rgba(245,158,11,0.1);
+  --sidebar:176px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:160px 100%;
+}
+
+/* ── Classification bar ── */
+.classbar{
+  flex-shrink:0;height:22px;background:#000;
+  border-bottom:1px solid rgba(239,68,68,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Courier New',monospace;font-size:9px;
+  font-weight:700;letter-spacing:3px;
+  color:rgba(239,68,68,0.55);text-transform:uppercase;
+  z-index:200;
+}
+
+/* ── Top nav bar ── */
+.topbar{
+  flex-shrink:0;height:48px;
+  display:flex;align-items:center;padding:0 20px 0 0;
+  background:rgba(0,0,0,0.95);border-bottom:1px solid var(--rule);
+  z-index:100;gap:0;
+}
+.topbar-logo{
+  width:var(--sidebar);flex-shrink:0;
+  display:flex;align-items:center;gap:9px;
+  padding:0 20px;border-right:1px solid var(--rule);height:100%;
+}
+.topbar-logo img{width:24px;height:24px;object-fit:contain;}
+.topbar-logo-name{font-size:14px;font-weight:800;letter-spacing:1.5px;color:var(--white);text-transform:uppercase;}
+.topbar-logo-sub{font-size:8px;color:var(--dim);font-family:'Courier New',monospace;letter-spacing:1px;}
+
+.topbar-module-name{
+  flex:1;padding:0 24px;
+  font-family:'Courier New',monospace;font-size:10px;
+  font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mid);
+}
+.topbar-status{
+  display:flex;align-items:center;gap:6px;margin-right:20px;
+  font-family:'Courier New',monospace;font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);
+}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.status-dot.offline{background:var(--red);}
+
+.topbar-user{
+  display:flex;align-items:center;gap:10px;
+  padding:0 0 0 16px;border-left:1px solid var(--rule);height:100%;
+}
+.user-tier{
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  letter-spacing:1.5px;padding:2px 8px;
+  background:rgba(37,99,235,0.12);color:var(--ice);
+  border:1px solid rgba(37,99,235,0.2);
+}
+.user-email{font-size:11px;color:var(--mid);}
+.logout-btn{
+  padding:5px 12px;font-size:10px;font-weight:600;
+  font-family:'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;
+  border:1px solid var(--rule);color:var(--dim);
+  background:transparent;cursor:pointer;font-family:inherit;
+  transition:all .15s;
+}
+.logout-btn:hover{color:var(--text);border-color:var(--border);}
+
+/* ── Layout ── */
+.layout{flex:1;display:flex;overflow:hidden;}
+
+/* ── Sidebar ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--bg1);
+  border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:2px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);}
+
+.sidebar-section-label{
+  padding:14px 16px 6px;
+  font-family:'Courier New',monospace;font-size:8px;
+  font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);border-bottom:1px solid var(--rule);
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,0.02);
+  transition:background .15s;
+  text-decoration:none;color:inherit;
+}
+.nav-item:hover{background:rgba(255,255,255,0.025);}
+.nav-item.active{background:rgba(37,99,235,0.08);border-right:2px solid var(--blue);}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.nav-dot.online{background:var(--green);}
+.nav-dot.offline{background:rgba(100,116,139,0.4);}
+.nav-dot.restricted{background:var(--amber);}
+.nav-label{font-size:11px;font-weight:500;color:var(--text);}
+.nav-item.active .nav-label{color:var(--white);}
+.nav-tier{
+  margin-left:auto;font-family:'Courier New',monospace;
+  font-size:8px;color:var(--dim);letter-spacing:.5px;
+}
+
+/* ── Main panel ── */
+.main{
+  flex:1;overflow-y:auto;background:var(--bg);
+  display:flex;flex-direction:column;
+}
+.main::-webkit-scrollbar{width:2px;}
+.main::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+
+/* Module panels — hidden by default */
+.panel{display:none;flex:1;flex-direction:column;}
+.panel.active{display:flex;}
+
+/* Panel header */
+.panel-header{
+  padding:28px 32px 20px;
+  border-bottom:1px solid var(--rule);flex-shrink:0;
+}
+.panel-eyebrow{
+  display:flex;align-items:center;gap:10px;margin-bottom:8px;
+}
+.panel-eyebrow-line{width:20px;height:1px;background:var(--blue);}
+.panel-tag{
+  font-family:'Courier New',monospace;font-size:8px;
+  font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--ice);
+}
+.panel-title{font-size:1.2rem;font-weight:800;letter-spacing:-.5px;color:var(--white);}
+.panel-desc{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.6;max-width:560px;}
+
+/* Panel body */
+.panel-body{padding:28px 32px;flex:1;}
+
+/* Form components */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-grid.single{grid-template-columns:1fr;}
+.form-field{display:flex;flex-direction:column;gap:6px;}
+.form-label{
+  font-family:'Courier New',monospace;font-size:8px;
+  font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);
+}
+.form-input,.form-select,.form-textarea{
+  padding:9px 12px;font-size:12px;font-family:inherit;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--rule);color:var(--text);
+  outline:none;transition:border-color .15s;
+  resize:vertical;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:rgba(37,99,235,0.35);}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--dim);}
+.form-select option{background:#07070d;}
+
+.action-row{display:flex;gap:10px;align-items:center;margin-bottom:24px;flex-wrap:wrap;}
+.btn{
+  padding:9px 20px;font-size:11px;font-weight:700;
+  font-family:'Courier New',monospace;letter-spacing:1px;text-transform:uppercase;
+  border:none;cursor:pointer;transition:background .15s;
+}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn-blue:hover{background:#1d4ed8;}
+.btn-ghost{background:transparent;color:var(--mid);border:1px solid var(--rule);}
+.btn-ghost:hover{color:var(--text);border-color:var(--border);}
+.btn-green{background:rgba(34,197,94,0.12);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.btn-green:hover{background:rgba(34,197,94,0.2);}
+.btn-amber{background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.btn-amber:hover{background:rgba(245,158,11,0.18);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* Response viewer */
+.response-box{
+  background:var(--bg2);border:1px solid var(--rule);
+  padding:16px;margin-top:8px;min-height:80px;max-height:340px;overflow-y:auto;
+  font-family:'Courier New','Cascadia Code',Consolas,monospace;
+  font-size:11px;line-height:1.7;color:var(--mid);
+  white-space:pre-wrap;word-break:break-all;
+}
+.response-box::-webkit-scrollbar{width:2px;}
+.response-box::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);}
+.response-box .ok{color:var(--green);}
+.response-box .err{color:var(--red);}
+.response-box .key{color:var(--ice);}
+.response-box .val{color:var(--mist);}
+.response-box .dim{color:var(--dim);}
+.response-label{
+  font-family:'Courier New',monospace;font-size:8px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;
+}
+
+/* Two-column layout for panels */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.two-col .col{}
+
+/* Stat cards */
+.stat-row{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
+.stat-card{
+  flex:1;min-width:120px;padding:16px 20px;
+  border:1px solid var(--rule);background:var(--card);
+}
+.stat-card-num{font-size:1.6rem;font-weight:900;color:var(--white);letter-spacing:-1px;font-variant:tabular-nums;}
+.stat-card-label{font-family:'Courier New',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-top:4px;}
+
+/* Ghost Protocol */
+.ghost-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.ghost-card{
+  padding:20px 22px;border:1px solid var(--rule);background:var(--card);
+  display:flex;flex-direction:column;gap:12px;
+  transition:border-color .15s;
+}
+.ghost-card:hover{border-color:rgba(239,68,68,0.2);}
+.ghost-card-header{display:flex;align-items:center;justify-content:space-between;}
+.ghost-card-num{
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--dim);
+}
+.ghost-card-risk{
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  letter-spacing:1.5px;padding:2px 7px;
+}
+.ghost-card-risk.low{background:rgba(34,197,94,0.08);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.ghost-card-risk.high{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.ghost-card-name{font-size:13px;font-weight:800;color:var(--white);letter-spacing:-.3px;}
+.ghost-card-desc{font-size:11px;color:var(--dim);line-height:1.6;}
+.ghost-card-status{
+  font-family:'Courier New',monospace;font-size:9px;letter-spacing:1px;
+  color:var(--dim);min-height:16px;
+}
+.ghost-card-status.ok{color:var(--green);}
+.ghost-card-status.err{color:var(--red);}
+.ghost-card-status.running{color:var(--amber);}
+.btn-red{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2);}
+.btn-red:hover{background:rgba(239,68,68,0.18);}
+
+/* ── Gotham: Command search bar ── */
+.topbar-search{
+  flex:1;display:flex;align-items:center;gap:8px;
+  margin:0 20px;padding:0 14px;height:30px;
+  background:rgba(255,255,255,0.025);
+  border:1px solid var(--rule);
+  transition:border-color .15s;
+}
+.topbar-search:focus-within{border-color:rgba(37,99,235,0.35);}
+.topbar-search-ctx{
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  letter-spacing:2px;color:var(--blue);white-space:nowrap;flex-shrink:0;
+}
+.topbar-search-sep{color:var(--dim);font-size:10px;flex-shrink:0;margin:0 2px;}
+.topbar-search-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Courier New',monospace;font-size:11px;color:var(--text);
+  letter-spacing:.3px;min-width:0;
+}
+.topbar-search-input::placeholder{color:rgba(74,85,104,0.6);font-size:10px;letter-spacing:.5px;}
+.topbar-search-kbd{
+  font-family:'Courier New',monospace;font-size:8px;color:var(--dim);
+  padding:2px 6px;border:1px solid var(--rule);letter-spacing:.5px;flex-shrink:0;
+}
+
+/* ── Gotham: Visual mode switcher ── */
+.topbar-modes{display:flex;gap:1px;margin-right:14px;flex-shrink:0;}
+.mode-btn{
+  padding:4px 9px;background:transparent;
+  border:1px solid var(--rule);border-right:none;
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  letter-spacing:1.5px;color:var(--dim);cursor:pointer;transition:all .15s;
+}
+.mode-btn:last-child{border-right:1px solid var(--rule);}
+.mode-btn:hover{color:var(--text);border-color:var(--border);}
+.mode-btn.active{background:rgba(37,99,235,0.12);color:var(--ice);border-color:rgba(37,99,235,0.25);}
+.mode-btn.nvg-active{background:rgba(74,222,128,0.08);color:#4ade80;border-color:rgba(74,222,128,0.25);}
+.mode-btn.flir-active{background:rgba(251,146,60,0.08);color:#fb923c;border-color:rgba(251,146,60,0.25);}
+
+/* Visual mode CSS filters applied to .layout */
+.layout.mode-nvg{filter:sepia(1) hue-rotate(65deg) saturate(3.5) brightness(0.7) contrast(1.1);}
+.layout.mode-flir{filter:sepia(1) hue-rotate(290deg) saturate(3) brightness(0.75) contrast(1.15);}
+
+/* ── Gotham: Entity type badge system (Blueprint colors) ── */
+.etype{
+  display:inline-flex;align-items:center;
+  padding:1px 7px;font-family:'Courier New',monospace;
+  font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  flex-shrink:0;
+}
+.etype-person  {background:rgba(138,187,255,0.08);color:#8ABBFF;border:1px solid rgba(138,187,255,0.2);}
+.etype-device  {background:rgba(54,209,220,0.08); color:#36D1DC;border:1px solid rgba(54,209,220,0.2);}
+.etype-vehicle {background:rgba(217,130,43,0.1);  color:#D9822B;border:1px solid rgba(217,130,43,0.25);}
+.etype-location{background:rgba(61,204,145,0.08); color:#3DCC91;border:1px solid rgba(61,204,145,0.2);}
+
+/* ── Gotham: Entity stat counter strip ── */
+.ent-stat-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--rule);margin-bottom:24px;
+}
+.ent-stat{background:var(--bg1);padding:14px 18px;}
+.ent-stat-num{
+  font-size:1.5rem;font-weight:900;color:var(--white);
+  letter-spacing:-1px;font-variant:tabular-nums;line-height:1;
+}
+.ent-stat-label{
+  font-family:'Courier New',monospace;font-size:8px;
+  letter-spacing:2px;text-transform:uppercase;margin-top:5px;
+}
+
+/* ── Gotham: Overview split layout ── */
+.ov-split{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:4px;}
+.ov-section-hd{
+  font-family:'Courier New',monospace;font-size:8px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--dim);
+  padding-bottom:8px;border-bottom:1px solid var(--rule);margin-bottom:10px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ov-section-count{color:var(--blue);}
+
+/* ── Gotham: Live object feed ── */
+.object-feed{display:flex;flex-direction:column;gap:1px;max-height:340px;overflow-y:auto;}
+.object-feed::-webkit-scrollbar{width:2px;}
+.object-feed::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);}
+.object-card{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  background:var(--bg1);border-left:2px solid transparent;
+  cursor:default;transition:background .12s;
+}
+.object-card:hover{background:rgba(255,255,255,0.03);}
+.object-card-id{
+  font-family:'Courier New',monospace;font-size:10px;
+  color:var(--text);flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.object-card-rssi{font-family:'Courier New',monospace;font-size:9px;color:var(--dim);}
+.object-card-age{font-family:'Courier New',monospace;font-size:8px;color:rgba(74,85,104,0.7);white-space:nowrap;}
+.object-card-pulse{width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--green);}
+
+/* ── Gotham: Module list (right column of split) ── */
+.mod-list{display:flex;flex-direction:column;gap:1px;}
+.mod-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;background:var(--bg1);cursor:pointer;
+  border-left:2px solid transparent;transition:background .12s;
+}
+.mod-row:hover{background:rgba(37,99,235,0.05);border-left-color:var(--blue);}
+.mod-row-id{font-family:'Courier New',monospace;font-size:8px;color:var(--dim);width:28px;flex-shrink:0;}
+.mod-row-name{font-size:12px;font-weight:600;color:var(--text);flex:1;}
+.mod-row-tier{font-family:'Courier New',monospace;font-size:8px;color:var(--dim);white-space:nowrap;}
+
+/* File drop zone */
+.drop-zone{
+  border:1px dashed rgba(255,255,255,0.12);
+  padding:32px;text-align:center;margin-bottom:16px;
+  cursor:pointer;transition:border-color .15s;
+}
+.drop-zone:hover,.drop-zone.drag-over{border-color:rgba(37,99,235,0.4);}
+.drop-zone-text{font-family:'Courier New',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);}
+
+/* Download section */
+.download-card{
+  border:1px solid var(--rule);padding:32px;background:var(--card);
+  margin-bottom:20px;
+}
+.download-card-title{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:6px;}
+.download-card-meta{font-family:'Courier New',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:16px;line-height:1.7;}
+.download-progress{
+  display:none;margin-top:12px;height:2px;
+  background:rgba(255,255,255,0.06);overflow:hidden;
+}
+.download-progress-bar{height:100%;background:var(--blue);width:0%;transition:width .3s;}
+
+/* Overview grid */
+.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);margin-bottom:32px;}
+.ov-cell{
+  background:var(--bg1);padding:20px;cursor:pointer;
+  transition:background .2s;
+}
+.ov-cell:hover{background:var(--bg2);}
+.ov-cell-id{font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:2px;color:var(--blue);margin-bottom:8px;}
+.ov-cell-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.ov-cell-desc{font-size:11px;color:var(--dim);line-height:1.5;}
+.ov-cell-tier{font-family:'Courier New',monospace;font-size:8px;color:var(--dim);letter-spacing:1px;margin-top:8px;}
+.ov-status{display:flex;align-items:center;gap:5px;margin-top:10px;}
+.ov-status-dot{width:5px;height:5px;border-radius:50%;}
+
+/* System health table */
+.health-table{width:100%;border-collapse:collapse;font-size:11px;}
+.health-table td,.health-table th{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;}
+.health-table th{font-family:'Courier New',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--rule);}
+.health-table tr:hover td{background:rgba(255,255,255,0.015);}
+.badge{display:inline-block;padding:1px 8px;font-family:'Courier New',monospace;font-size:9px;font-weight:700;letter-spacing:.5px;}
+.badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.2);}
+.badge-red{background:var(--red-dim);color:#fca5a5;border:1px solid rgba(239,68,68,0.2);}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2);}
+.badge-blue{background:rgba(37,99,235,0.1);color:var(--ice);border:1px solid rgba(37,99,235,0.2);}
+
+/* ── Access Requests ── */
+.ar-filter-btn { background:none; border:1px solid rgba(255,255,255,0.08); color:#3d5270; font-family:'Courier New',monospace; font-size:9px; letter-spacing:0.15em; padding:4px 12px; cursor:pointer; margin-right:4px; }
+.ar-filter-btn.active { border-color:#2563eb; color:#c8d3e0; }
+.ar-approve-btn { background:#2563eb; border:none; color:#fff; font-family:'Courier New',monospace; font-size:9px; letter-spacing:0.12em; padding:4px 10px; cursor:pointer; margin-right:4px; }
+.ar-deny-btn { background:none; border:1px solid rgba(239,68,68,0.4); color:#ef4444; font-family:'Courier New',monospace; font-size:9px; letter-spacing:0.12em; padding:4px 10px; cursor:pointer; }
+.ar-status-badge { font-family:'Courier New',monospace; font-size:9px; letter-spacing:0.12em; padding:2px 8px; }
+.ar-status-approved { color:#22c55e; }
+.ar-status-denied { color:#3d5270; }
+</style>
+</head>
+<body>
+
+<div class="classbar">OMNI OPERATOR CONSOLE · T-2+ CLEARANCE · RESTRICTED</div>
+
+<!-- Top nav -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <img src="../logo.png" alt="Omni"/>
+    <div>
+      <div class="topbar-logo-name">Omni</div>
+      <div class="topbar-logo-sub">Operator Console</div>
+    </div>
+  </div>
+  <div class="topbar-search">
+    <span class="topbar-search-ctx" id="active-module-label">OVERVIEW</span>
+    <span class="topbar-search-sep">›</span>
+    <input class="topbar-search-input" id="cmd-search" type="text"
+      placeholder="SEARCH OBJECTS · SIGNALS · ENTITIES"
+      autocomplete="off" spellcheck="false"/>
+    <span class="topbar-search-kbd">⌘K</span>
+  </div>
+  <div class="topbar-modes">
+    <button class="mode-btn active" id="mode-std" onclick="setViewMode('std')">STD</button>
+    <button class="mode-btn"        id="mode-nvg" onclick="setViewMode('nvg')">NVG</button>
+    <button class="mode-btn"        id="mode-flir" onclick="setViewMode('flir')">FLIR</button>
+  </div>
+  <div class="topbar-status">
+    <div class="status-dot" id="api-status-dot"></div>
+    <span id="api-status-text">CHECKING</span>
+  </div>
+  <div class="topbar-user">
+    <div class="user-tier" id="user-tier-badge">T-?</div>
+    <div class="user-email" id="user-email">—</div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section-label">Navigation</div>
+    <div class="nav-item active" onclick="showPanel('overview',this)" data-label="OVERVIEW">
+      <div class="nav-dot online"></div>
+      <div class="nav-label">Overview</div>
+    </div>
+
+    <div class="sidebar-section-label">Intelligence</div>
+    <div class="nav-item" onclick="showPanel('sigint',this)" data-label="MODULE 02 · SIGINT">
+      <div class="nav-dot online" id="dot-sigint"></div>
+      <div class="nav-label">SIGINT Engine</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('identity',this)" data-label="MODULE 03 · IDENTITY">
+      <div class="nav-dot online" id="dot-identity"></div>
+      <div class="nav-label">Identity Resolution</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('surveillance',this)" data-label="MODULE 04 · SURVEILLANCE">
+      <div class="nav-dot online" id="dot-surveillance"></div>
+      <div class="nav-label">Surveillance</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('blockchain',this)" data-label="MODULE 05 · BLOCKCHAIN">
+      <div class="nav-dot online" id="dot-blockchain"></div>
+      <div class="nav-label">Blockchain Forensics</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('easm',this)" data-label="MODULE 06 · EASM">
+      <div class="nav-dot online" id="dot-easm"></div>
+      <div class="nav-label">EASM</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('triage',this)" data-label="MODULE 07 · THREAT TRIAGE">
+      <div class="nav-dot online" id="dot-triage"></div>
+      <div class="nav-label">Threat Triage</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('malware',this)" data-label="MODULE 08 · MALWARE">
+      <div class="nav-dot online" id="dot-malware"></div>
+      <div class="nav-label">Malware Sandbox</div>
+      <div class="nav-tier">T-3</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('ghost',this)" data-label="MODULE 10 · GHOST PROTOCOL">
+      <div class="nav-dot restricted"></div>
+      <div class="nav-label">Ghost Protocol</div>
+      <div class="nav-tier">T-3</div>
+    </div>
+
+    <div class="sidebar-section-label">Live Data</div>
+    <div class="nav-item" onclick="showPanel('adsb',this)" data-label="MODULE 09 · ADS-B">
+      <div class="nav-dot online" id="dot-adsb"></div>
+      <div class="nav-label">ADS-B Intercept</div>
+      <div class="nav-tier">T-1</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('geospatial',this)" data-label="MODULE 01 · GEOSPATIAL">
+      <div class="nav-dot online"></div>
+      <div class="nav-label">Geospatial COP</div>
+      <div class="nav-tier">T-1</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('temporal',this)" data-label="MODULE 10 · TEMPORAL LAYER">
+      <span class="nav-label">TEMPORAL</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('deflock',this)" data-label="MODULE 13 · DEFLOCK ALPR">
+      <span class="nav-label">DEFLOCK</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('maplab',this)" data-label="MAPS · MAP LAB">
+      <span class="nav-label">MAPS</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('aip',this)" data-label="MODULE 11 · AIP TERMINAL">
+      <span class="nav-label">AIP</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('legoliath',this)" data-label="MODULE 12 · LE-GOLIATH">
+      <span class="nav-label">LE-GOLIATH</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('alerts',this)" data-label="MODULE 14 · ALERT ENGINE">
+      <span class="nav-label">ALERTS</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('reports',this)" data-label="MODULE 15 · REPORT BUILDER">
+      <span class="nav-label">REPORTS</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('nodes',this)" data-label="MODULE 16 · NODE HEALTH">
+      <span class="nav-label">NODES</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('review',this)" data-label="MODULE 17 · REVIEW HUB">
+      <span class="nav-label">REVIEW</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('orchestrator',this)" data-label="MODULE 18 · ORCHESTRATOR">
+      <span class="nav-label">ORCHESTRATOR</span>
+    </div>
+
+    <div class="sidebar-section-label">System</div>
+    <div class="nav-item" onclick="showPanel('access-requests',this)" data-label="ACCESS REQUESTS">
+      <div class="nav-dot restricted"></div>
+      <div class="nav-label">Access Requests</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('download',this)" data-label="DISTRIBUTION · OMNI WINDOWS">
+      <div class="nav-dot restricted"></div>
+      <div class="nav-label">Download</div>
+      <div class="nav-tier">T-2</div>
+    </div>
+    <div class="nav-item" onclick="showPanel('health',this)" data-label="SYSTEM HEALTH">
+      <div class="nav-dot online"></div>
+      <div class="nav-label">System Health</div>
+    </div>
+  </div>
+
+  <!-- Main panels -->
+  <div class="main">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="panel active" id="panel-overview">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Operator Console</span></div>
+        <div class="panel-title">Omni Intelligence Dashboard</div>
+        <div class="panel-desc">All ten intelligence modules. Select a module from the sidebar to begin operations. All routes require T-2 minimum clearance.</div>
+      </div>
+      <div class="panel-body">
+
+        <!-- Session stats strip -->
+        <div class="stat-row" id="overview-stats" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-card-num" id="ov-modules">10</div><div class="stat-card-label">Modules Active</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ov-session-tier">T-?</div><div class="stat-card-label">Session Tier</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ov-uptime">—</div><div class="stat-card-label">Backend Uptime</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ov-version">—</div><div class="stat-card-label">Platform Version</div></div>
+        </div>
+
+        <!-- Entity type counters (Gotham-style object type strip) -->
+        <div class="ent-stat-row">
+          <div class="ent-stat">
+            <div class="ent-stat-num" id="ov-persons">—</div>
+            <div class="ent-stat-label" style="color:#8ABBFF;">&#9632; Persons</div>
+          </div>
+          <div class="ent-stat">
+            <div class="ent-stat-num" id="ov-devices">—</div>
+            <div class="ent-stat-label" style="color:#36D1DC;">&#9632; Devices</div>
+          </div>
+          <div class="ent-stat">
+            <div class="ent-stat-num" id="ov-vehicles">—</div>
+            <div class="ent-stat-label" style="color:#D9822B;">&#9632; Vehicles</div>
+          </div>
+          <div class="ent-stat">
+            <div class="ent-stat-num" id="ov-locations">—</div>
+            <div class="ent-stat-label" style="color:#3DCC91;">&#9632; Locations</div>
+          </div>
+        </div>
+
+        <!-- Split: live object feed + module list -->
+        <div class="ov-split">
+
+          <!-- LEFT: Live object feed -->
+          <div>
+            <div class="ov-section-hd">
+              <span>LIVE OBJECT FEED</span>
+              <span class="ov-section-count" id="feed-count">0 OBJECTS</span>
+            </div>
+            <div class="object-feed" id="live-object-feed">
+              <div class="object-card" style="opacity:.5;">
+                <div class="object-card-pulse" style="background:var(--dim);"></div>
+                <span class="object-card-id" style="color:var(--dim);">AWAITING SIGNAL INGESTION…</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Module list -->
+          <div>
+            <div class="ov-section-hd"><span>MODULES</span><span class="ov-section-count">10 ACTIVE</span></div>
+            <div class="mod-list">
+              <div class="mod-row" onclick="showPanelById('geospatial')"><span class="mod-row-id">M-01</span><span class="mod-row-name">3D Geospatial COP</span><span class="etype etype-location">GEO</span><span class="mod-row-tier">T-1</span></div>
+              <div class="mod-row" onclick="showPanelById('sigint')"><span class="mod-row-id">M-02</span><span class="mod-row-name">SIGINT Engine</span><span class="etype etype-device">RF</span><span class="mod-row-tier">T-2</span></div>
+              <div class="mod-row" onclick="showPanelById('identity')"><span class="mod-row-id">M-03</span><span class="mod-row-name">Identity Resolution</span><span class="etype etype-person">PII</span><span class="mod-row-tier">T-2</span></div>
+              <div class="mod-row" onclick="showPanelById('surveillance')"><span class="mod-row-id">M-04</span><span class="mod-row-name">Surveillance</span><span class="etype etype-vehicle">ALPR</span><span class="mod-row-tier">T-2</span></div>
+              <div class="mod-row" onclick="showPanelById('blockchain')"><span class="mod-row-id">M-05</span><span class="mod-row-name">Blockchain Forensics</span><span class="etype etype-person">CHAIN</span><span class="mod-row-tier">T-2</span></div>
+              <div class="mod-row" onclick="showPanelById('easm')"><span class="mod-row-id">M-06</span><span class="mod-row-name">EASM</span><span class="etype etype-device">NET</span><span class="mod-row-tier">T-2</span></div>
+              <div class="mod-row" onclick="showPanelById('triage')"><span class="mod-row-id">M-07</span><span class="mod-row-name">Threat Triage</span><span class="etype etype-location">INTEL</span><span class="mod-row-tier">T-2</span></div>
+              <div class="mod-row" onclick="showPanelById('malware')"><span class="mod-row-id">M-08</span><span class="mod-row-name">Malware Sandbox</span><span class="etype etype-device">BIN</span><span class="mod-row-tier">T-3</span></div>
+              <div class="mod-row" onclick="showPanelById('adsb')"><span class="mod-row-id">M-09</span><span class="mod-row-name">ADS-B Intercept</span><span class="etype etype-vehicle">AIR</span><span class="mod-row-tier">T-1</span></div>
+              <div class="mod-row" onclick="showPanelById('ghost')" style="border-left-color:rgba(239,68,68,0.3)"><span class="mod-row-id">M-10</span><span class="mod-row-name">Ghost Protocol</span><span class="etype" style="background:rgba(239,68,68,0.08);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)">OPSEC</span><span class="mod-row-tier">T-3</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SIGINT ── -->
+    <div class="panel" id="panel-sigint">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 02 · T-2</span></div>
+        <div class="panel-title">SIGINT Engine</div>
+        <div class="panel-desc">BLE manufacturer fingerprinting, Wi-Fi BSSID tracking, ADS-B callsign LEA classification, and passive RF observation ingestion.</div>
+      </div>
+      <div class="panel-body">
+        <div class="two-col">
+          <div class="col">
+            <div class="response-label">Signal Classifier</div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label">Signal Type</label>
+                <select class="form-select" id="sigint-type">
+                  <option value="ble">BLE Advertisement</option>
+                  <option value="wifi">Wi-Fi BSSID</option>
+                  <option value="adsb">ADS-B Frame</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Raw Signal Data (hex / JSON)</label>
+                <textarea class="form-textarea" id="sigint-payload" rows="4" placeholder='{"mac":"AA:BB:CC:DD:EE:FF","rssi":-72,"manufacturer":"Apple Inc"}'></textarea>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-blue" onclick="runSigint()">Classify Signal</button>
+              <button class="btn btn-ghost" onclick="clearResponse('sigint-resp')">Clear</button>
+            </div>
+            <div class="response-label">Classification Result</div>
+            <div class="response-box" id="sigint-resp">— awaiting signal input —</div>
+          </div>
+          <div class="col">
+            <div class="response-label">Spectrum Heatmap Data</div>
+            <div class="action-row">
+              <button class="btn btn-ghost" onclick="fetchHeatmap()">Fetch Heatmap</button>
+            </div>
+            <div class="response-box" id="sigint-heatmap" style="max-height:280px;">— click Fetch Heatmap to load —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── IDENTITY ── -->
+    <div class="panel" id="panel-identity">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 03 · T-2</span></div>
+        <div class="panel-title">Identity Resolution</div>
+        <div class="panel-desc">Cross-domain entity disambiguation linking device signals, location patterns, and behavioral fingerprints to Lattice Person objects with confidence scoring.</div>
+      </div>
+      <div class="panel-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">Query Type</label>
+            <select class="form-select" id="id-query-type">
+              <option value="mac">MAC Address</option>
+              <option value="imsi">IMSI</option>
+              <option value="plate">License Plate</option>
+              <option value="phone">Phone Number</option>
+              <option value="email">Email Address</option>
+              <option value="name">Full Name</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Query Value</label>
+            <input class="form-input" id="id-query-val" type="text" placeholder="AA:BB:CC:DD:EE:FF"/>
+          </div>
+        </div>
+        <div class="form-grid single">
+          <div class="form-field">
+            <label class="form-label">Additional Context (optional JSON)</label>
+            <textarea class="form-textarea" id="id-context" rows="3" placeholder='{"location":"37.7749,-122.4194","timestamp":"2025-04-02T12:00:00Z"}'></textarea>
+          </div>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-blue" onclick="runIdentity()">Run Entity Lookup</button>
+          <button class="btn btn-ghost" onclick="clearResponse('id-resp')">Clear</button>
+        </div>
+        <div class="response-label">Entity Resolution Result</div>
+        <div class="response-box" id="id-resp">— awaiting query —</div>
+      </div>
+    </div>
+
+    <!-- ── SURVEILLANCE ── -->
+    <div class="panel" id="panel-surveillance">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 04 · T-2</span></div>
+        <div class="panel-title">Surveillance Integration</div>
+        <div class="panel-desc">Flock Safety ALPR camera network ingestion with geocoded positions, plate read correlation, and spatiotemporal trajectory reconstruction.</div>
+      </div>
+      <div class="panel-body">
+        <div class="two-col">
+          <div class="col">
+            <div class="response-label">Sensor Fusion Engine</div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label">Fusion Payload (JSON)</label>
+                <textarea class="form-textarea" id="surv-payload" rows="6" placeholder='{"plate":"ABC1234","camera_id":"FLK-001","lat":37.77,"lng":-122.41,"timestamp":"2025-04-02T08:30:00Z"}'></textarea>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-blue" onclick="runSurveillanceFuse()">Fuse Observation</button>
+              <button class="btn btn-ghost" onclick="clearResponse('surv-resp')">Clear</button>
+            </div>
+            <div class="response-box" id="surv-resp">— awaiting fusion data —</div>
+          </div>
+          <div class="col">
+            <div class="response-label">Entity Graph Links</div>
+            <div class="form-field" style="margin-bottom:10px;">
+              <label class="form-label">Entity ID</label>
+              <input class="form-input" id="surv-entity-id" type="text" placeholder="entity_abc123"/>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-ghost" onclick="fetchEntityGraph()">Fetch Graph</button>
+            </div>
+            <div class="response-box" id="surv-graph" style="max-height:220px;">— enter entity ID above —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BLOCKCHAIN ── -->
+    <div class="panel" id="panel-blockchain">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 05 · T-2</span></div>
+        <div class="panel-title">Blockchain Forensics</div>
+        <div class="panel-desc">On-chain transaction tracing, wallet clustering, and cross-chain entity resolution. Links crypto addresses to real-world identities via the Lattice object graph.</div>
+      </div>
+      <div class="panel-body">
+        <div class="two-col">
+          <div class="col">
+            <div class="response-label">Transaction Trace</div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label">Wallet Address or TX Hash</label>
+                <input class="form-input" id="bc-address" type="text" placeholder="0xABCDEF..."/>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Chain</label>
+                <select class="form-select" id="bc-chain">
+                  <option value="ethereum">Ethereum</option>
+                  <option value="bitcoin">Bitcoin</option>
+                  <option value="solana">Solana</option>
+                  <option value="polygon">Polygon</option>
+                  <option value="bnb">BNB Chain</option>
+                </select>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-blue" onclick="runBlockchainTrace()">Trace</button>
+              <button class="btn btn-ghost" onclick="clearResponse('bc-resp')">Clear</button>
+            </div>
+            <div class="response-box" id="bc-resp">— awaiting address input —</div>
+          </div>
+          <div class="col">
+            <div class="response-label">Attribution Lookup</div>
+            <div class="form-field" style="margin-bottom:10px;">
+              <label class="form-label">Address</label>
+              <input class="form-input" id="bc-attr-addr" type="text" placeholder="0x..."/>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-ghost" onclick="fetchAttribution()">Get Attribution</button>
+            </div>
+            <div class="response-box" id="bc-attr-resp" style="max-height:220px;">— enter address above —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EASM ── -->
+    <div class="panel" id="panel-easm">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 06 · T-2</span></div>
+        <div class="panel-title">External Attack Surface Management</div>
+        <div class="panel-desc">Continuous discovery of internet-exposed assets, certificate transparency monitoring, and subdomain enumeration for target organizations.</div>
+      </div>
+      <div class="panel-body">
+        <div class="two-col">
+          <div class="col">
+            <div class="response-label">Asset Discovery</div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label">Target Domain</label>
+                <input class="form-input" id="easm-domain" type="text" placeholder="example.com"/>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Discovery Scope</label>
+                <select class="form-select" id="easm-scope">
+                  <option value="subdomains">Subdomains Only</option>
+                  <option value="full">Full Surface Scan</option>
+                  <option value="certs">Certificate Transparency</option>
+                  <option value="ports">Port Enumeration</option>
+                </select>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-blue" onclick="runEasmDiscover()">Discover</button>
+              <button class="btn btn-ghost" onclick="clearResponse('easm-resp')">Clear</button>
+            </div>
+            <div class="response-box" id="easm-resp">— awaiting target domain —</div>
+          </div>
+          <div class="col">
+            <div class="response-label">Credential Leak Check</div>
+            <div class="form-field" style="margin-bottom:10px;">
+              <label class="form-label">Domain</label>
+              <input class="form-input" id="easm-leak-domain" type="text" placeholder="example.com"/>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-ghost" onclick="fetchLeaks()">Check Leaks</button>
+            </div>
+            <div class="response-box" id="easm-leaks" style="max-height:220px;">— enter domain above —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TRIAGE ── -->
+    <div class="panel" id="panel-triage">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 07 · T-2</span></div>
+        <div class="panel-title">Threat Triage</div>
+        <div class="panel-desc">Automated encounter classification, anomaly scoring against historical baselines, and threat dossier generation for analyst review.</div>
+      </div>
+      <div class="panel-body">
+        <div class="two-col">
+          <div class="col">
+            <div class="response-label">Threat Dossier Generator</div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label">Subject Identifier</label>
+                <input class="form-input" id="triage-subject" type="text" placeholder="entity_id, MAC, plate, or name"/>
+              </div>
+              <div class="form-field">
+                <label class="form-label">Context / Observations (JSON)</label>
+                <textarea class="form-textarea" id="triage-context" rows="5" placeholder='{"encounters":3,"locations":["37.77,-122.41"],"signals":["AA:BB:CC:DD:EE:FF"]}'></textarea>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-blue" onclick="runTriage()">Generate Dossier</button>
+              <button class="btn btn-ghost" onclick="clearResponse('triage-resp')">Clear</button>
+            </div>
+            <div class="response-box" id="triage-resp">— awaiting subject data —</div>
+          </div>
+          <div class="col">
+            <div class="response-label">Subject Asset Lookup</div>
+            <div class="form-field" style="margin-bottom:10px;">
+              <label class="form-label">Subject ID</label>
+              <input class="form-input" id="triage-asset-id" type="text" placeholder="subject_abc123"/>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-ghost" onclick="fetchAssets()">Fetch Assets</button>
+            </div>
+            <div class="response-box" id="triage-assets" style="max-height:220px;">— enter subject ID above —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MALWARE ── -->
+    <div class="panel" id="panel-malware">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 08 · T-3</span></div>
+        <div class="panel-title">Malware Sandbox</div>
+        <div class="panel-desc">Static and dynamic analysis pipeline for submitted artifacts. Behavioral classification, IOC extraction, and MITRE ATT&CK technique mapping.</div>
+      </div>
+      <div class="panel-body">
+        <div class="two-col">
+          <div class="col">
+            <div class="response-label">Artifact Submission</div>
+            <div class="drop-zone" id="malware-drop" onclick="document.getElementById('malware-file').click()">
+              <input type="file" id="malware-file" style="display:none" onchange="handleMalwareFile(this)"/>
+              <div class="drop-zone-text">DROP FILE HERE OR CLICK TO SELECT<br><span style="font-size:8px;opacity:.5">PE, ELF, APK, ZIP, PDF, DOCX, JS, PY</span></div>
+            </div>
+            <div class="form-grid single">
+              <div class="form-field">
+                <label class="form-label">Analysis Mode</label>
+                <select class="form-select" id="malware-mode">
+                  <option value="static">Static Analysis</option>
+                  <option value="dynamic">Dynamic (Sandbox)</option>
+                  <option value="both">Full (Static + Dynamic)</option>
+                </select>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-blue" id="malware-submit-btn" onclick="runMalwareAnalysis()" disabled>Submit for Analysis</button>
+              <button class="btn btn-ghost" onclick="clearResponse('malware-resp')">Clear</button>
+            </div>
+            <div class="response-box" id="malware-resp">— drop artifact to begin —</div>
+          </div>
+          <div class="col">
+            <div class="response-label">YARA Scan by File ID</div>
+            <div class="form-field" style="margin-bottom:10px;">
+              <label class="form-label">File ID (from prior submission)</label>
+              <input class="form-input" id="yara-file-id" type="text" placeholder="file_abc123"/>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-ghost" onclick="runYaraScan()">Run YARA Scan</button>
+            </div>
+            <div class="response-box" id="yara-resp" style="max-height:220px;">— enter file ID above —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADS-B ── -->
+    <div class="panel" id="panel-adsb">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 09 · T-1</span></div>
+        <div class="panel-title">ADS-B Intercept</div>
+        <div class="panel-desc">Real-time aircraft tracking with LEA classification by callsign prefix and ICAO hex. Police, military, and surveillance aircraft flagged and correlated to ground activity.</div>
+      </div>
+      <div class="panel-body">
+        <div class="stat-row" id="adsb-stats">
+          <div class="stat-card"><div class="stat-card-num" id="adsb-count">—</div><div class="stat-card-label">Aircraft Tracked</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="adsb-lea">—</div><div class="stat-card-label">LEA Flagged</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="adsb-status-txt">—</div><div class="stat-card-label">Scanner Status</div></div>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-blue" onclick="fetchAdsb()">Fetch Live Feed</button>
+          <button class="btn btn-ghost" onclick="openIntelMap()">Open Intelligence Map →</button>
+        </div>
+        <div class="response-label">Live Aircraft Feed</div>
+        <div class="response-box" id="adsb-resp" style="max-height:340px;">— click Fetch Live Feed —</div>
+      </div>
+    </div>
+
+    <!-- ── GEOSPATIAL ── -->
+    <div class="panel" id="panel-geospatial">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Module 01 · T-1</span></div>
+        <div class="panel-title">3D Geospatial COP</div>
+        <div class="panel-desc">CesiumJS globe with terrain, 3D Tiles, ADS-B aircraft, satellite TLE tracks, and real-time signal heatmaps. 10,000+ entity rendering via PointPrimitiveCollection.</div>
+      </div>
+      <div class="panel-body" style="display:flex;flex-direction:column;align-items:flex-start;gap:16px;">
+        <p style="font-size:13px;color:var(--dim);max-width:520px;line-height:1.7;">The 3D Geospatial COP runs as the primary React interface. Launch the full map to view live signal heatmaps, ADS-B tracks, ALPR overlays, and Lattice entity pins in 3D globe view.</p>
+        <div class="action-row">
+          <button class="btn btn-blue" onclick="openIntelMap()">Launch Intelligence Map</button>
+          <button class="btn btn-ghost" onclick="openIntelMap('#dev')">Dev Console View</button>
+        </div>
+        <div style="margin-top:8px;border:1px solid var(--rule);padding:20px;background:var(--card);max-width:560px;">
+          <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px;">Capabilities</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:7px;">
+            <li style="font-size:12px;color:var(--text);">→ CesiumJS globe with photorealistic terrain</li>
+            <li style="font-size:12px;color:var(--text);">→ Real-time ADS-B aircraft tracks</li>
+            <li style="font-size:12px;color:var(--text);">→ Signal heatmap overlay (BLE + Wi-Fi)</li>
+            <li style="font-size:12px;color:var(--text);">→ ALPR camera network layer (Flock Safety)</li>
+            <li style="font-size:12px;color:var(--text);">→ 10,000+ Lattice entity PointPrimitiveCollection</li>
+            <li style="font-size:12px;color:var(--text);">→ Satellite TLE track rendering</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TEMPORAL LAYER ── -->
+    <div class="panel" id="panel-temporal" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MODULE 10 · T-3 · TEMPORAL LAYER</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Temporal Layer</div>
+        <div style="font-size:12px;color:var(--dim)">Historical pattern-of-life analysis, signal timeline reconstruction, and target breadcrumbing.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Temporal Layer interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINT</div>
+        <code style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice)">GET /scan/timeline</code>
+      </div>
+    </div>
+
+    <!-- ── DEFLOCK ALPR ── -->
+    <div class="panel" id="panel-deflock" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--amber)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--amber);text-transform:uppercase">MODULE 13 · T-2 · DEFLOCK ALPR</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">DeFlock ALPR</div>
+        <div style="font-size:12px;color:var(--dim)">Automated License Plate Reader camera inventory and blindspot mapping.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the DeFlock ALPR interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINT</div>
+        <code style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice)">GET /flock/cameras</code>
+      </div>
+    </div>
+
+    <!-- ── MAP LAB ── -->
+    <div class="panel" id="panel-maplab" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MAPS · T-1 · MAP LAB</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Map Lab</div>
+        <div style="font-size:12px;color:var(--dim)">Multi-engine geospatial mapping — Mapsui, Cesium/OSM, ArcGIS, and BingHybrid with entity overlays.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Map Lab interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">MAP ENGINES</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--text);line-height:1.8">
+          A · Mapsui (vector tiles)<br>
+          B · Cesium / OSM<br>
+          C · ArcGIS REST<br>
+          D · BingHybrid (Mapsui)
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AIP TERMINAL ── -->
+    <div class="panel" id="panel-aip" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MODULE 11 · T-3 · AIP TERMINAL</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">AIP Terminal</div>
+        <div style="font-size:12px;color:var(--dim)">AI-powered intelligence processing — chat-to-action via the Alfred bridge and UnfilteredSAM engine.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the AIP Terminal interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINTS</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice);line-height:1.8">
+          <code>POST /assistant/unfiltered</code><br>
+          <code>GET /assistant/unfiltered/status</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LE-GOLIATH ── -->
+    <div class="panel" id="panel-legoliath" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--red)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--red);text-transform:uppercase">MODULE 12 · T-3 · LE-GOLIATH</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">LE-GOLIATH</div>
+        <div style="font-size:12px;color:var(--dim)">Law enforcement unified tracking — ADS-B ground monitoring, threat level assessment, and CAD/AVL integration.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the LE-GOLIATH interface.</div>
+      </div>
+      <div style="background:var(--red-dim);border:1px solid rgba(239,68,68,0.2);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:6px">CLASSIFICATION · T-3 RESTRICTED</div>
+        <div style="font-size:11px;color:var(--mid)">Access requires Tier 3 sovereign authority. All actions are logged.</div>
+      </div>
+    </div>
+
+    <!-- ── ALERT ENGINE ── -->
+    <div class="panel" id="panel-alerts" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MODULE 14 · T-3 · ALERT ENGINE</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Alert Engine</div>
+        <div style="font-size:12px;color:var(--dim)">Rule-based event notifications across all active modules.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Alert Engine interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINTS</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice);line-height:1.8">
+          <code>POST /api/alerts/rules</code><br>
+          <code>GET /api/alerts/rules</code><br>
+          <code>GET /api/alerts/log</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REPORT BUILDER ── -->
+    <div class="panel" id="panel-reports" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MODULE 15 · T-3 · REPORT BUILDER</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Report Builder</div>
+        <div style="font-size:12px;color:var(--dim)">Compile and export structured intelligence reports across active modules.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Report Builder interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINT</div>
+        <code style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice)">POST /api/reports/generate</code>
+      </div>
+    </div>
+
+    <!-- ── NODE HEALTH ── -->
+    <div class="panel" id="panel-nodes" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--amber)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--amber);text-transform:uppercase">MODULE 16 · T-2 · NODE HEALTH</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Node Health</div>
+        <div style="font-size:12px;color:var(--dim)">Real-time telemetry for connected hardware nodes (SDR, field devices, mesh).</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Node Health interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINTS</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice);line-height:1.8">
+          <code>GET /api/nodes/status</code><br>
+          <code>POST /api/nodes/ping</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REVIEW HUB ── -->
+    <div class="panel" id="panel-review" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MODULE 17 · T-3 · REVIEW HUB</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Review Hub</div>
+        <div style="font-size:12px;color:var(--dim)">Human-in-the-loop review queue for AI-generated recommendations.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Review Hub interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINTS</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice);line-height:1.8">
+          <code>GET /api/review/queue</code><br>
+          <code>POST /api/review/action</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ORCHESTRATOR ── -->
+    <div class="panel" id="panel-orchestrator" style="display:none">
+      <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--rule)">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div style="width:20px;height:1px;background:var(--blue)"></div>
+          <span style="font-family:'Courier New',monospace;font-size:8px;font-weight:700;letter-spacing:3px;color:var(--ice);text-transform:uppercase">MODULE 18 · T-3 · ORCHESTRATOR</span>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--white,#f0f4f8);margin-bottom:4px">Orchestrator</div>
+        <div style="font-size:12px;color:var(--dim)">Long-running mission management with checkpoint and resume.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px;margin-bottom:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">NATIVE MODULE</div>
+        <div style="font-size:12px;color:var(--text)">This module runs in the Omni native application. Launch the Omni desktop client to access the Orchestrator interface.</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--rule);padding:16px">
+        <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:2px;color:var(--mid);text-transform:uppercase;margin-bottom:8px">BACKEND ENDPOINTS</div>
+        <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ice);line-height:1.8">
+          <code>GET /api/missions</code><br>
+          <code>POST /api/missions</code><br>
+          <code>POST /api/missions/{id}/control</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DOWNLOAD ── -->
+    <div class="panel" id="panel-download">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">Distribution · T-2+ Operators</span></div>
+        <div class="panel-title">Omni — Windows Application</div>
+        <div class="panel-desc">Sovereign-mode Windows build of the Omni intelligence platform. Requires T-2 contributor credentials. A signed download ticket is generated server-side and expires after a single use.</div>
+      </div>
+      <div class="panel-body">
+        <div class="download-card">
+          <div class="download-card-title">Omni — Windows Sovereign Build</div>
+          <div class="download-card-meta">
+            PLATFORM: Windows 10/11 x64<br>
+            MODE: INVINCIBLE_APP_MODE=sovereign<br>
+            BUILD: Native WinUI 3 + FastAPI backend<br>
+            INCLUDES: All T-2/T-3 intelligence modules, Named Pipe IPC, BLE+WiFi scanning<br>
+            ACCESS: T-2 CONTRIBUTOR and above
+          </div>
+          <div class="action-row" style="margin-bottom:0;">
+            <button class="btn btn-blue" id="download-btn" onclick="initiateDownload()">
+              Download Omni for Windows
+            </button>
+            <span id="download-status" style="font-family:'Courier New',monospace;font-size:10px;color:var(--dim);letter-spacing:1px;"></span>
+          </div>
+          <div class="download-progress" id="download-progress">
+            <div class="download-progress-bar" id="download-progress-bar"></div>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--rule);padding:20px;background:var(--card);margin-top:20px;">
+          <div style="font-family:'Courier New',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px;">Security Notes</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+            <li style="font-size:11px;color:var(--dim);">→ Download tickets are single-use and expire immediately after use</li>
+            <li style="font-size:11px;color:var(--dim);">→ Ticket issuance is logged with operator email and timestamp</li>
+            <li style="font-size:11px;color:var(--dim);">→ Sovereign build requires INVINCIBLE_APP_MODE=sovereign on the host</li>
+            <li style="font-size:11px;color:var(--dim);">→ All T-2+ API routes disabled if mode is not sovereign</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SYSTEM HEALTH ── -->
+    <div class="panel" id="panel-health">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">System</span></div>
+        <div class="panel-title">System Health</div>
+        <div class="panel-desc">Backend API status, module availability, and platform diagnostics.</div>
+      </div>
+      <div class="panel-body">
+        <div class="action-row">
+          <button class="btn btn-blue" onclick="runHealthCheck()">Refresh</button>
+        </div>
+        <table class="health-table" id="health-table">
+          <thead><tr><th>Component</th><th>Endpoint</th><th>Status</th><th>Response</th></tr></thead>
+          <tbody id="health-tbody"><tr><td colspan="4" style="color:var(--dim);font-family:'Courier New',monospace;font-size:10px;">— click Refresh —</td></tr></tbody>
+        </table>
+        <div style="margin-top:24px;">
+          <div class="response-label">Raw Health Payload</div>
+          <div class="response-box" id="health-raw" style="max-height:200px;">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GHOST PROTOCOL ── -->
+    <div class="panel" id="panel-ghost">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line" style="background:var(--red)"></div><span class="panel-tag" style="color:var(--red)">Module 10 · T-3</span></div>
+        <div class="panel-title">Ghost Protocol</div>
+        <div class="panel-desc">Forensic Zero — autonomous OpSec hardening suite. Executes a layered wipe of all local signals, buffers, and session artifacts. Restricted to T-3 OWNER clearance.</div>
+      </div>
+      <div class="panel-body" id="ghost-body">
+        <!-- T-3 gate rendered by JS -->
+      </div>
+    </div>
+
+    <!-- ── ACCESS REQUESTS ── -->
+    <div class="panel" id="panel-access-requests">
+      <div class="panel-header">
+        <div class="panel-eyebrow"><div class="panel-eyebrow-line"></div><span class="panel-tag">System · Admin</span></div>
+        <div class="panel-title">ACCESS REQUESTS</div>
+        <div class="panel-desc">Review and provision operator accounts</div>
+      </div>
+      <div class="panel-body">
+        <div class="action-row" style="margin-bottom:20px;">
+          <button class="ar-filter-btn active" data-status="pending" onclick="loadAccessRequests('pending')">PENDING</button>
+          <button class="ar-filter-btn" data-status="approved" onclick="loadAccessRequests('approved')">APPROVED</button>
+          <button class="ar-filter-btn" data-status="denied" onclick="loadAccessRequests('denied')">DENIED</button>
+        </div>
+        <table class="health-table" style="width:100%">
+          <thead><tr>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>ORGANIZATION</th>
+            <th>USE CASE</th>
+            <th>REQUESTED</th>
+            <th>ACTIONS</th>
+          </tr></thead>
+          <tbody id="ar-tbody">
+            <tr><td colspan="6" style="color:#3d5270;font-family:'Courier New',monospace;font-size:10px;letter-spacing:0.1em">— select a filter above —</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// ── Auth gate ────────────────────────────────────────────────────────────────
+const API = (window.location.protocol === 'file:' ||
+             window.location.hostname === 'localhost' ||
+             window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8742'
+  : window.location.origin;
+
+// Omni intelligence map runs as the React SPA served by the backend.
+// Opens in a new tab so the operator console stays open.
+function openIntelMap(hash = '') {
+  const mapOrigin = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5173'
+    : window.location.origin;
+  window.open(mapOrigin + (hash ? '/' + hash : '/'), '_blank');
+}
+
+let TOKEN = null;
+let USER_EMAIL = '';
+function parseJwt(t) {
+  try {
+    const b = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(b.padEnd(b.length + (4 - b.length % 4) % 4, '=')));
+  } catch { return {}; }
+}
+
+let USER_TIER = 0;
+
+(function init() {
+  const loginUrl = API + '/sites/omni/login/';
+  TOKEN = localStorage.getItem('omni_token');
+  if (!TOKEN) { window.location.href = loginUrl; return; }
+  try {
+    const p = parseJwt(TOKEN);
+    const storedTier = parseInt(localStorage.getItem('omni_tier') || '0', 10);
+    const tier = typeof p.tier === 'number' ? p.tier : storedTier;
+    if (p.exp * 1000 < Date.now() || !p.is_developer || tier < 2) {
+      localStorage.removeItem('omni_token');
+      localStorage.removeItem('omni_tier');
+      window.location.href = loginUrl;
+      return;
+    }
+    USER_EMAIL = localStorage.getItem('omni_email') || p.sub || '';
+    USER_TIER  = tier;
+    document.getElementById('user-email').textContent = USER_EMAIL;
+    document.getElementById('user-tier-badge').textContent = `T-${USER_TIER}`;
+    const tierEl = document.getElementById('ov-session-tier');
+    if (tierEl) tierEl.textContent = `T-${USER_TIER}`;
+  } catch { window.location.href = loginUrl; return; }
+
+  checkApiStatus();
+  fetchOverviewStats();
+  fetchLiveObjects();
+})();
+
+function logout() {
+  ['omni_token','omni_email','omni_tier'].forEach(k => localStorage.removeItem(k));
+  window.location.href = API + '/sites/omni/login/';
+}
+
+// ── Navigation ───────────────────────────────────────────────────────────────
+function showPanel(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('active-module-label').textContent = el?.dataset.label || name.toUpperCase();
+  if (name === 'ghost') renderGhostPanel();
+  if (name === 'access-requests') loadAccessRequests('pending');
+}
+function showPanelById(name) {
+  const el = document.querySelector(`.nav-item[data-label*="${name.toUpperCase()}"]`) ||
+             document.querySelector(`.nav-item[onclick*="'${name}'"]`);
+  showPanel(name, el);
+}
+
+// ── Auth headers ─────────────────────────────────────────────────────────────
+function authHeaders(extra = {}) {
+  return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}`, ...extra };
+}
+
+async function apiFetch(path, opts = {}) {
+  try {
+    const r = await fetch(API + path, { credentials: 'omit', ...opts,
+      headers: { ...authHeaders(), ...(opts.headers || {}) } });
+    if (r.status === 401 || r.status === 403) {
+      localStorage.removeItem('omni_token');
+      window.location.href = API + '/sites/omni/login/';
+      return null;
+    }
+    const ct = r.headers.get('content-type') || '';
+    if (ct.includes('json')) return r.json();
+    return r.text();
+  } catch (e) { return { error: e.message }; }
+}
+
+function setResponse(id, data) {
+  document.getElementById(id).textContent =
+    typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+}
+function clearResponse(id) { document.getElementById(id).textContent = '—'; }
+
+// ── API status ───────────────────────────────────────────────────────────────
+async function checkApiStatus() {
+  const dot  = document.getElementById('api-status-dot');
+  const text = document.getElementById('api-status-text');
+  try {
+    const r = await fetch(API + '/health', { credentials: 'omit' });
+    if (r.ok) { dot.classList.remove('offline'); text.textContent = 'ONLINE'; }
+    else       { dot.classList.add('offline');    text.textContent = 'DEGRADED'; }
+  } catch { dot.classList.add('offline'); text.textContent = 'OFFLINE'; }
+}
+
+async function fetchOverviewStats() {
+  try {
+    const r = await fetch(API + '/health', { credentials: 'omit' });
+    if (r.ok) {
+      const d = await r.json();
+      if (d.version)  document.getElementById('ov-version').textContent = d.version;
+      if (d.uptime)   document.getElementById('ov-uptime').textContent = fmtUptime(d.uptime);
+    }
+  } catch {}
+}
+
+function fmtUptime(s) {
+  if (!s) return '—';
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return h ? `${h}h ${m}m` : `${m}m`;
+}
+
+// ── SIGINT ───────────────────────────────────────────────────────────────────
+async function runSigint() {
+  let payload;
+  try { payload = JSON.parse(document.getElementById('sigint-payload').value || '{}'); }
+  catch { payload = { raw: document.getElementById('sigint-payload').value }; }
+  payload.type = document.getElementById('sigint-type').value;
+  setResponse('sigint-resp', '…running classifier…');
+  const r = await apiFetch('/api/sigint/classify', { method:'POST', body: JSON.stringify(payload) });
+  setResponse('sigint-resp', r);
+}
+async function fetchHeatmap() {
+  setResponse('sigint-heatmap', '…fetching…');
+  const r = await apiFetch('/api/sigint/spectrum/heatmap');
+  setResponse('sigint-heatmap', r);
+}
+
+// ── IDENTITY ─────────────────────────────────────────────────────────────────
+async function runIdentity() {
+  let ctx = {};
+  try { ctx = JSON.parse(document.getElementById('id-context').value || '{}'); } catch {}
+  const body = { type: document.getElementById('id-query-type').value,
+                 query: document.getElementById('id-query-val').value, ...ctx };
+  setResponse('id-resp', '…resolving entity…');
+  const r = await apiFetch('/api/identity/lookup', { method:'POST', body: JSON.stringify(body) });
+  setResponse('id-resp', r);
+}
+
+// ── SURVEILLANCE ─────────────────────────────────────────────────────────────
+async function runSurveillanceFuse() {
+  let body;
+  try { body = JSON.parse(document.getElementById('surv-payload').value || '{}'); }
+  catch { body = { raw: document.getElementById('surv-payload').value }; }
+  setResponse('surv-resp', '…fusing observation…');
+  const r = await apiFetch('/api/surveillance/fuse', { method:'POST', body: JSON.stringify(body) });
+  setResponse('surv-resp', r);
+}
+async function fetchEntityGraph() {
+  const id = document.getElementById('surv-entity-id').value.trim();
+  if (!id) { setResponse('surv-graph', 'ERROR: entity ID required'); return; }
+  setResponse('surv-graph', '…fetching graph…');
+  const r = await apiFetch(`/api/surveillance/graph/links/${encodeURIComponent(id)}`);
+  setResponse('surv-graph', r);
+}
+
+// ── BLOCKCHAIN ───────────────────────────────────────────────────────────────
+async function runBlockchainTrace() {
+  const addr  = document.getElementById('bc-address').value.trim();
+  const chain = document.getElementById('bc-chain').value;
+  if (!addr) { setResponse('bc-resp', 'ERROR: address required'); return; }
+  setResponse('bc-resp', '…tracing…');
+  const r = await apiFetch('/api/blockchain/trace', { method:'POST', body: JSON.stringify({ address: addr, chain }) });
+  setResponse('bc-resp', r);
+}
+async function fetchAttribution() {
+  const addr = document.getElementById('bc-attr-addr').value.trim();
+  if (!addr) { setResponse('bc-attr-resp', 'ERROR: address required'); return; }
+  setResponse('bc-attr-resp', '…looking up…');
+  const r = await apiFetch(`/api/blockchain/attribution/${encodeURIComponent(addr)}`);
+  setResponse('bc-attr-resp', r);
+}
+
+// ── EASM ─────────────────────────────────────────────────────────────────────
+async function runEasmDiscover() {
+  const domain = document.getElementById('easm-domain').value.trim();
+  const scope  = document.getElementById('easm-scope').value;
+  if (!domain) { setResponse('easm-resp', 'ERROR: domain required'); return; }
+  setResponse('easm-resp', '…discovering…');
+  const r = await apiFetch('/api/easm/discover', { method:'POST', body: JSON.stringify({ domain, scope }) });
+  setResponse('easm-resp', r);
+}
+async function fetchLeaks() {
+  const domain = document.getElementById('easm-leak-domain').value.trim();
+  if (!domain) { setResponse('easm-leaks', 'ERROR: domain required'); return; }
+  setResponse('easm-leaks', '…checking leaks…');
+  const r = await apiFetch(`/api/easm/leaks/${encodeURIComponent(domain)}`);
+  setResponse('easm-leaks', r);
+}
+
+// ── TRIAGE ───────────────────────────────────────────────────────────────────
+async function runTriage() {
+  let ctx = {};
+  try { ctx = JSON.parse(document.getElementById('triage-context').value || '{}'); } catch {}
+  const body = { subject: document.getElementById('triage-subject').value.trim(), ...ctx };
+  setResponse('triage-resp', '…generating dossier…');
+  const r = await apiFetch('/api/triage/dossier', { method:'POST', body: JSON.stringify(body) });
+  setResponse('triage-resp', r);
+}
+async function fetchAssets() {
+  const id = document.getElementById('triage-asset-id').value.trim();
+  if (!id) { setResponse('triage-assets', 'ERROR: subject ID required'); return; }
+  setResponse('triage-assets', '…fetching…');
+  const r = await apiFetch(`/api/triage/assets/${encodeURIComponent(id)}`);
+  setResponse('triage-assets', r);
+}
+
+// ── MALWARE ──────────────────────────────────────────────────────────────────
+let malwareFile = null;
+function handleMalwareFile(input) {
+  malwareFile = input.files[0];
+  if (malwareFile) {
+    document.querySelector('.drop-zone-text').textContent = malwareFile.name;
+    document.getElementById('malware-submit-btn').disabled = false;
+  }
+}
+async function runMalwareAnalysis() {
+  if (!malwareFile) return;
+  const mode = document.getElementById('malware-mode').value;
+  const fd = new FormData();
+  fd.append('file', malwareFile);
+  fd.append('mode', mode);
+  setResponse('malware-resp', `…analyzing ${malwareFile.name}…`);
+  try {
+    const r = await fetch(API + '/api/malware/analyze', {
+      method: 'POST', credentials: 'omit',
+      headers: { 'Authorization': `Bearer ${TOKEN}` }, body: fd,
+    });
+    const d = r.ok ? await r.json() : { error: await r.text() };
+    setResponse('malware-resp', d);
+  } catch (e) { setResponse('malware-resp', { error: e.message }); }
+}
+async function runYaraScan() {
+  const id = document.getElementById('yara-file-id').value.trim();
+  if (!id) { setResponse('yara-resp', 'ERROR: file ID required'); return; }
+  setResponse('yara-resp', '…scanning…');
+  const r = await apiFetch(`/api/malware/yara/scan/${encodeURIComponent(id)}`);
+  setResponse('yara-resp', r);
+}
+
+// ── ADS-B ────────────────────────────────────────────────────────────────────
+async function fetchAdsb() {
+  setResponse('adsb-resp', '…fetching live feed…');
+  const r = await apiFetch('/adsb/status');
+  if (r) {
+    document.getElementById('adsb-count').textContent = r.count ?? r.aircraft?.length ?? '—';
+    document.getElementById('adsb-lea').textContent = r.lea_count ?? '—';
+    document.getElementById('adsb-status-txt').textContent = r.running ? 'ACTIVE' : 'IDLE';
+  }
+  setResponse('adsb-resp', r);
+}
+
+// ── DOWNLOAD ─────────────────────────────────────────────────────────────────
+async function initiateDownload() {
+  const btn    = document.getElementById('download-btn');
+  const status = document.getElementById('download-status');
+  const prog   = document.getElementById('download-progress');
+  const bar    = document.getElementById('download-progress-bar');
+
+  btn.disabled = true;
+  status.textContent = 'GENERATING TICKET…';
+  prog.style.display = 'block';
+  bar.style.width = '15%';
+
+  try {
+    const ticketRes = await apiFetch('/api/dev/generate-download-ticket', {
+      method: 'POST', body: JSON.stringify({ kind: 'secure-dev-build' })
+    });
+    if (!ticketRes || ticketRes.error || !ticketRes.ticket) {
+      status.textContent = 'ERROR: ' + (ticketRes?.detail || ticketRes?.error || 'ticket generation failed');
+      btn.disabled = false; prog.style.display = 'none'; return;
+    }
+
+    bar.style.width = '45%';
+    status.textContent = 'TICKET ISSUED · INITIATING DOWNLOAD…';
+
+    const ticket = ticketRes.ticket;
+    const dlUrl  = `${API}/api/dist/windows-build?ticket=${encodeURIComponent(ticket)}`;
+
+    bar.style.width = '70%';
+    // Trigger download via hidden anchor
+    const a = document.createElement('a');
+    a.href = dlUrl;
+    a.download = 'Omni_Sovereign_Windows.exe';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    bar.style.width = '100%';
+    status.textContent = 'DOWNLOAD STARTED';
+    setTimeout(() => { prog.style.display = 'none'; bar.style.width = '0'; btn.disabled = false; status.textContent = ''; }, 3000);
+
+  } catch (e) {
+    status.textContent = 'ERROR: ' + e.message;
+    btn.disabled = false; prog.style.display = 'none';
+  }
+}
+
+// ── HEALTH CHECK ─────────────────────────────────────────────────────────────
+async function runHealthCheck() {
+  const checks = [
+    { label: 'Core API',     url: '/health' },
+    { label: 'Auth',         url: '/auth/dev/login',      method: 'POST', body: '{}', skipBody: true },
+    { label: 'SIGINT',       url: '/api/sigint/spectrum/heatmap' },
+    { label: 'Identity',     url: '/api/identity/lookup', method: 'POST', body: '{}', skipBody: true },
+    { label: 'Surveillance', url: '/api/surveillance/graph/links/test' },
+    { label: 'Blockchain',   url: '/api/blockchain/attribution/test' },
+    { label: 'EASM',         url: '/api/easm/leaks/test' },
+    { label: 'Triage',       url: '/api/triage/assets/test' },
+    { label: 'Malware',      url: '/api/malware/yara/scan/test' },
+    { label: 'ADS-B',        url: '/adsb/status' },
+  ];
+  const tbody = document.getElementById('health-tbody');
+  tbody.innerHTML = '';
+  const results = [];
+  for (const c of checks) {
+    const start = Date.now();
+    let status = 'UNKNOWN', badge = 'badge-amber';
+    try {
+      const r = await fetch(API + c.url, {
+        method: c.method || 'GET', credentials: 'omit',
+        headers: { 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' },
+        body: c.method === 'POST' && !c.skipBody ? c.body : undefined,
+      });
+      const ms = Date.now() - start;
+      if (r.status < 400)         { status = `${r.status} OK`; badge = 'badge-green'; }
+      else if (r.status === 401 ||
+               r.status === 403)  { status = `${r.status} AUTH`; badge = 'badge-amber'; }
+      else                        { status = `${r.status} ERR`; badge = 'badge-red'; }
+      results.push({ label: c.label, url: c.url, status, ms, badge });
+    } catch (e) {
+      results.push({ label: c.label, url: c.url, status: 'UNREACHABLE', ms: Date.now()-start, badge: 'badge-red' });
+    }
+    const tr = document.createElement('tr');
+    const last = results[results.length - 1];
+    tr.innerHTML = `<td style="color:var(--text);font-weight:600">${last.label}</td>
+      <td style="font-family:'Courier New',monospace;font-size:10px;color:var(--dim)">${last.url}</td>
+      <td><span class="badge ${last.badge}">${last.status}</span></td>
+      <td style="font-family:'Courier New',monospace;font-size:10px;color:var(--dim)">${last.ms}ms</td>`;
+    tbody.appendChild(tr);
+  }
+  document.getElementById('health-raw').textContent = JSON.stringify(results, null, 2);
+}
+
+// ── GOTHAM: VIEW MODE SWITCHER ────────────────────────────────────────────────
+let _currentMode = 'std';
+function setViewMode(mode) {
+  const layout = document.querySelector('.layout');
+  if (!layout) return;
+  layout.classList.remove('mode-nvg', 'mode-flir');
+  ['std','nvg','flir'].forEach(m => {
+    const btn = document.getElementById('mode-' + m);
+    if (!btn) return;
+    btn.classList.remove('active','nvg-active','flir-active');
+  });
+  _currentMode = mode;
+  if (mode === 'nvg') {
+    layout.classList.add('mode-nvg');
+    document.getElementById('mode-nvg').classList.add('nvg-active');
+  } else if (mode === 'flir') {
+    layout.classList.add('mode-flir');
+    document.getElementById('mode-flir').classList.add('flir-active');
+  } else {
+    document.getElementById('mode-std').classList.add('active');
+  }
+}
+
+// ── GOTHAM: COMMAND SEARCH ────────────────────────────────────────────────────
+(function() {
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      document.getElementById('cmd-search')?.focus();
+    }
+    if (e.key === 'Escape') {
+      const inp = document.getElementById('cmd-search');
+      if (inp) { inp.value = ''; inp.blur(); }
+    }
+  });
+  document.getElementById('cmd-search')?.addEventListener('input', e => {
+    const q = e.target.value.trim().toLowerCase();
+    filterObjectFeed(q);
+  });
+})();
+
+function filterObjectFeed(q) {
+  const cards = document.querySelectorAll('#live-object-feed .object-card[data-id]');
+  let visible = 0;
+  cards.forEach(c => {
+    const id = (c.dataset.id || '').toLowerCase();
+    const type = (c.dataset.type || '').toLowerCase();
+    const show = !q || id.includes(q) || type.includes(q);
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  const countEl = document.getElementById('feed-count');
+  if (countEl) countEl.textContent = (q ? visible : cards.length) + ' OBJECTS';
+}
+
+// ── GOTHAM: LIVE OBJECT FEED ──────────────────────────────────────────────────
+function classifyDevice(mac) {
+  // Rough OUI-based type guessing; extend as needed
+  if (!mac) return 'device';
+  const prefix = mac.toUpperCase().replace(/[^A-F0-9]/g, '').slice(0,6);
+  const vehicleOUI = ['A4C138','D46A35','FCBCE4','001195'];
+  const personOUI  = ['A8BB50','DC2B2A','3C15C2','28CF35','F0B429']; // phone OUIs
+  if (vehicleOUI.includes(prefix)) return 'vehicle';
+  if (personOUI.includes(prefix))  return 'person';
+  return 'device';
+}
+
+function etypeBadge(type) {
+  const map = {
+    person:  ['etype-person', 'PERSON'],
+    device:  ['etype-device', 'DEVICE'],
+    vehicle: ['etype-vehicle', 'VEHICLE'],
+    location:['etype-location', 'LOCATION'],
+  };
+  const [cls, label] = map[type] || map.device;
+  return `<span class="etype ${cls}">${label}</span>`;
+}
+
+function fmtAge(ts) {
+  if (!ts) return '';
+  const sec = Math.floor((Date.now() - ts * 1000) / 1000);
+  if (sec < 60) return sec + 's ago';
+  if (sec < 3600) return Math.floor(sec/60) + 'm ago';
+  return Math.floor(sec/3600) + 'h ago';
+}
+
+async function fetchLiveObjects() {
+  const feed = document.getElementById('live-object-feed');
+  if (!feed) return;
+
+  let items = [];
+  try {
+    // Encounters give the freshest signal objects
+    const enc = await apiFetch('/encounters?limit=40');
+    if (enc && Array.isArray(enc.encounters || enc)) {
+      const arr = enc.encounters || enc;
+      arr.forEach(e => {
+        const type = e.type === 'vehicle' ? 'vehicle'
+                   : e.type === 'person'  ? 'person'
+                   : classifyDevice(e.mac || e.bssid || '');
+        items.push({
+          id: e.plate || e.mac || e.bssid || e.id || '—',
+          type,
+          rssi: e.rssi != null ? e.rssi + ' dBm' : '',
+          ts: e.last_seen || e.timestamp || null,
+        });
+      });
+    }
+  } catch(_) {}
+
+  // Fallback: targets list
+  if (items.length === 0) {
+    try {
+      const tgt = await apiFetch('/targets?limit=40');
+      if (tgt && Array.isArray(tgt.targets || tgt)) {
+        const arr = tgt.targets || tgt;
+        arr.forEach(t => {
+          const type = classifyDevice(t.mac || t.bssid || '');
+          items.push({
+            id: t.mac || t.bssid || t.name || t.id || '—',
+            type,
+            rssi: t.rssi != null ? t.rssi + ' dBm' : '',
+            ts: t.last_seen || t.updated_at || null,
+          });
+        });
+      }
+    } catch(_) {}
+  }
+
+  // Update entity type counters
+  const counts = {person:0, device:0, vehicle:0, location:0};
+  items.forEach(i => { if (counts[i.type] != null) counts[i.type]++; });
+  const setId = (id, v) => { const el=document.getElementById(id); if(el) el.textContent = v > 0 ? v : '—'; };
+  setId('ov-persons',   counts.person);
+  setId('ov-devices',   counts.device);
+  setId('ov-vehicles',  counts.vehicle);
+  setId('ov-locations', counts.location);
+
+  const countEl = document.getElementById('feed-count');
+  if (countEl) countEl.textContent = items.length + ' OBJECTS';
+
+  if (items.length === 0) {
+    feed.innerHTML = `<div class="object-card" style="opacity:.5;">
+      <div class="object-card-pulse" style="background:var(--dim);"></div>
+      <span class="object-card-id" style="color:var(--dim);">NO OBJECTS INGESTED YET · START A SCAN SESSION</span>
+    </div>`;
+    return;
+  }
+
+  feed.innerHTML = items.map(item => `
+    <div class="object-card" data-id="${item.id}" data-type="${item.type}">
+      <div class="object-card-pulse" style="background:${
+        item.type==='person'?'#8ABBFF':item.type==='vehicle'?'#D9822B':item.type==='location'?'#3DCC91':'#36D1DC'
+      };"></div>
+      ${etypeBadge(item.type)}
+      <span class="object-card-id">${item.id}</span>
+      ${item.rssi ? `<span class="object-card-rssi">${item.rssi}</span>` : ''}
+      <span class="object-card-age">${fmtAge(item.ts)}</span>
+    </div>`).join('');
+}
+
+// ── GHOST PROTOCOL ───────────────────────────────────────────────────────────
+const GHOST_STEPS = [
+  {
+    id: 'network-kill',
+    num: 'Step 01',
+    name: 'Network Kill',
+    desc: 'Disables all active network adapters and initiates MAC address randomization and VPN rotation. All outbound traffic halted.',
+    risk: 'high',
+    riskLabel: 'HIGH IMPACT',
+    endpoint: '/api/ghost/network-kill',
+    method: 'POST',
+  },
+  {
+    id: 'buffer-purge',
+    num: 'Step 02',
+    name: 'Buffer Purge',
+    desc: '7-pass Gutmann overwrite of all temporary .pcap, .log, and .tmp artifacts in the session buffer. Forensic reconstruction prevented.',
+    risk: 'low',
+    riskLabel: 'LOW IMPACT',
+    endpoint: '/api/ghost/buffer-purge',
+    method: 'POST',
+  },
+  {
+    id: 'session-shred',
+    num: 'Step 03',
+    name: 'Session Shred',
+    desc: 'Invalidates all active JWT tokens, purges SQLite session artifacts, and clears all local storage credentials. Immediate re-authentication required.',
+    risk: 'low',
+    riskLabel: 'LOW IMPACT',
+    endpoint: null, // handled client-side
+    method: null,
+  },
+  {
+    id: 'env-reset',
+    num: 'Step 04',
+    name: 'Environment Reset',
+    desc: 'Triggers a controlled backend shutdown and restarts the platform on a randomized loopback port. Dashboard becomes unreachable until cold-start.',
+    risk: 'high',
+    riskLabel: 'HIGH IMPACT',
+    endpoint: '/api/ghost/env-reset',
+    method: 'POST',
+  },
+];
+
+function ghostSetStatus(id, text, cls) {
+  const el = document.getElementById('ghost-status-' + id);
+  if (!el) return;
+  el.className = 'ghost-card-status ' + (cls || '');
+  el.textContent = text;
+}
+
+function ghostSetBtn(id, disabled) {
+  const el = document.getElementById('ghost-btn-' + id);
+  if (el) el.disabled = disabled;
+}
+
+async function ghostExecute(stepId) {
+  const step = GHOST_STEPS.find(s => s.id === stepId);
+  if (!step) return;
+
+  // Confirm high-impact steps
+  if (step.risk === 'high') {
+    if (!confirm(`CONFIRM: ${step.name.toUpperCase()}\n\nThis action has HIGH IMPACT and cannot be undone. Proceed?`)) return;
+  }
+
+  ghostSetBtn(stepId, true);
+  ghostSetStatus(stepId, 'EXECUTING…', 'running');
+
+  // Session Shred is handled client-side
+  if (stepId === 'session-shred') {
+    try {
+      ['omni_token','omni_email','omni_tier'].forEach(k => localStorage.removeItem(k));
+      ghostSetStatus(stepId, '✓ SESSION SHREDDED · REDIRECTING TO LOGIN', 'ok');
+      setTimeout(() => { window.location.href = API + '/sites/omni/login/'; }, 1400);
+    } catch(e) {
+      ghostSetStatus(stepId, '✗ ERROR: ' + e.message, 'err');
+      ghostSetBtn(stepId, false);
+    }
+    return;
+  }
+
+  try {
+    const r = await fetch(API + step.endpoint, {
+      method: step.method,
+      credentials: 'omit',
+      headers: { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+    });
+    if (r.ok) {
+      const d = await r.json().catch(() => ({}));
+      ghostSetStatus(stepId, '✓ ' + (d.message || 'EXECUTED').toUpperCase(), 'ok');
+    } else if (r.status === 404) {
+      ghostSetStatus(stepId, '— ENDPOINT NOT YET DEPLOYED ON THIS NODE', '');
+    } else if (r.status === 403) {
+      ghostSetStatus(stepId, '✗ CLEARANCE INSUFFICIENT', 'err');
+    } else {
+      ghostSetStatus(stepId, '✗ HTTP ' + r.status, 'err');
+    }
+  } catch(e) {
+    ghostSetStatus(stepId, '✗ BACKEND UNREACHABLE', 'err');
+  } finally {
+    ghostSetBtn(stepId, false);
+  }
+}
+
+function renderGhostPanel() {
+  const body = document.getElementById('ghost-body');
+  if (!body) return;
+
+  if (USER_TIER < 3) {
+    body.innerHTML = `
+      <div style="display:flex;align-items:center;gap:14px;padding:20px 0;border:1px solid rgba(239,68,68,0.2);background:rgba(239,68,68,0.04);padding:20px 24px;margin-bottom:24px;">
+        <div style="font-family:'Courier New',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--red);">ACCESS DENIED</div>
+        <div style="font-family:'Courier New',monospace;font-size:10px;color:var(--dim);">GHOST PROTOCOL REQUIRES T-3 OWNER CLEARANCE · CURRENT SESSION: T-${USER_TIER}</div>
+      </div>`;
+    return;
+  }
+
+  const cards = GHOST_STEPS.map(s => `
+    <div class="ghost-card">
+      <div class="ghost-card-header">
+        <span class="ghost-card-num">${s.num}</span>
+        <span class="ghost-card-risk ${s.risk}">${s.riskLabel}</span>
+      </div>
+      <div class="ghost-card-name">${s.name}</div>
+      <div class="ghost-card-desc">${s.desc}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px;">
+        <button class="btn btn-red" id="ghost-btn-${s.id}" onclick="ghostExecute('${s.id}')">Execute</button>
+        <div class="ghost-card-status" id="ghost-status-${s.id}">— STANDBY</div>
+      </div>
+    </div>`).join('');
+
+  body.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;padding:12px 16px;border:1px solid rgba(239,68,68,0.15);background:rgba(239,68,68,0.04);">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--amber);"></div>
+      <div style="font-family:'Courier New',monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:var(--amber);">GHOST PROTOCOL · STANDBY · ALL STEPS INDEPENDENT · EXECUTE IN ORDER FOR FULL FORENSIC ZERO</div>
+    </div>
+    <div class="ghost-grid">${cards}</div>`;
+}
+
+// ── Access Requests Panel ──────────────────────────────────────────────────
+
+let _arCurrentStatus = 'pending';
+
+async function loadAccessRequests(status) {
+  _arCurrentStatus = status || _arCurrentStatus;
+  const tbody = document.getElementById('ar-tbody');
+  const filterBtns = document.querySelectorAll('.ar-filter-btn');
+
+  filterBtns.forEach(b => b.classList.toggle('active', b.dataset.status === _arCurrentStatus));
+
+  if (tbody) tbody.innerHTML = '<tr><td colspan="6" style="color:#3d5270;font-family:\'Courier New\',monospace;font-size:10px;letter-spacing:0.1em">LOADING...</td></tr>';
+
+  const rows = await apiFetch('/api/access/requests?status=' + _arCurrentStatus);
+  if (!tbody) return;
+  if (!rows || rows.error) {
+    tbody.innerHTML = '<tr><td colspan="6" style="color:#ef4444;font-family:\'Courier New\',monospace;font-size:10px">FETCH ERROR — check auth</td></tr>';
+    return;
+  }
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="color:#3d5270;font-family:\'Courier New\',monospace;font-size:10px;letter-spacing:0.1em;padding:20px 0">NO REQUESTS</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr data-id="${r.id}">
+      <td>${escHtml(r.name)}</td>
+      <td style="font-family:'Courier New',monospace;font-size:10px">${escHtml(r.email)}</td>
+      <td>${escHtml(r.organization || '—')}</td>
+      <td title="${escHtml(r.use_case)}">${escHtml(r.use_case.length > 60 ? r.use_case.slice(0,60)+'…' : r.use_case)}</td>
+      <td style="font-family:'Courier New',monospace;font-size:10px;white-space:nowrap">${new Date(r.requested_ms).toLocaleDateString()}</td>
+      <td>${r.status === 'pending' ? `
+        <button onclick="approveRequest(${r.id})" class="ar-approve-btn">APPROVE</button>
+        <button onclick="denyRequest(${r.id})" class="ar-deny-btn">DENY</button>
+      ` : `<span class="ar-status-badge ar-status-${r.status}">${r.status.toUpperCase()}</span>`}</td>
+    </tr>
+  `).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function approveRequest(id) {
+  const data = await apiFetch('/api/access/approve/' + id, { method: 'POST' });
+  if (!data) return;
+  if (data.ok) {
+    showCredentialsModal(data.email, data.password);
+    loadAccessRequests();
+  } else {
+    alert('Approval failed: ' + (data.detail || 'unknown error'));
+  }
+}
+
+async function denyRequest(id) {
+  if (!confirm('Deny this access request?')) return;
+  const data = await apiFetch('/api/access/deny/' + id, { method: 'POST' });
+  if (!data) return;
+  if (data.ok) loadAccessRequests();
+  else alert('Denial failed: ' + (data.detail || 'unknown error'));
+}
+
+function showCredentialsModal(email, password) {
+  document.getElementById('cred-email').textContent = email;
+  document.getElementById('cred-password').textContent = password;
+  document.getElementById('credentials-modal').style.display = 'flex';
+}
+
+function closeCredentialsModal() {
+  document.getElementById('credentials-modal').style.display = 'none';
+}
+</script>
+
+<div id="credentials-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:2000;align-items:center;justify-content:center">
+  <div style="background:#020508;border:1px solid rgba(255,255,255,0.08);max-width:480px;width:90%;padding:40px;position:relative">
+    <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.2em;color:#f59e0b;margin-bottom:4px">OPERATOR PROVISIONED</div>
+    <div style="font-family:'Courier New',monospace;font-size:11px;color:#ef4444;margin-bottom:24px">COPY CREDENTIALS NOW — THEY WILL NOT BE SHOWN AGAIN</div>
+    <div style="margin-bottom:12px">
+      <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;margin-bottom:4px">EMAIL</div>
+      <code id="cred-email" style="display:block;background:#000;border:1px solid rgba(255,255,255,0.1);color:#c8d3e0;padding:10px 14px;font-size:13px;font-family:'Courier New',monospace;user-select:all"></code>
+    </div>
+    <div style="margin-bottom:24px">
+      <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;margin-bottom:4px">PASSPHRASE</div>
+      <code id="cred-password" style="display:block;background:#000;border:1px solid rgba(255,255,255,0.1);color:#c8d3e0;padding:10px 14px;font-size:13px;font-family:'Courier New',monospace;user-select:all"></code>
+    </div>
+    <div style="font-family:'Courier New',monospace;font-size:9px;color:#3d5270;margin-bottom:24px">Send these credentials to the operator along with the download link: <span style="color:#c8d3e0">/api/dist/omni-native-build</span></div>
+    <button onclick="closeCredentialsModal()" style="background:#2563eb;border:none;color:#fff;font-family:'Courier New',monospace;font-size:10px;letter-spacing:0.15em;padding:10px 24px;cursor:pointer">CLOSE — I HAVE COPIED THESE CREDENTIALS</button>
+  </div>
+</div>
+</body>
+</html>

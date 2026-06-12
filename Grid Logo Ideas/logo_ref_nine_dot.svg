@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Connection lines forming G -->
+  <path d="M176 80H80V176H176V128H128" stroke="#111111" stroke-width="4" fill="none" stroke-linejoin="round"/>
+  <!-- Dots -->
+  <circle cx="80" cy="80" r="8" fill="#111111"/>
+  <circle cx="128" cy="80" r="8" fill="#111111"/>
+  <circle cx="176" cy="80" r="8" fill="#111111"/>
+  
+  <circle cx="80" cy="128" r="8" fill="#111111"/>
+  <circle cx="128" cy="128" r="8" fill="#111111"/>
+  <circle cx="176" cy="128" r="8" fill="#111111"/>
+  
+  <circle cx="80" cy="176" r="8" fill="#111111"/>
+  <circle cx="128" cy="176" r="8" fill="#111111"/>
+  <circle cx="176" cy="176" r="8" fill="#111111"/>
+</svg>

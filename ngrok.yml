@@ -1,0 +1,8 @@
+version: "3"
+tunnels:
+  backend:
+    proto: http
+    addr: 8742
+    inspect: true
+    # Hosts oracle-site, omni-site, grid-site, invincible-site, API, and React app
+    # Access via: https://<id>.ngrok-free.app/sites/oracle  etc.

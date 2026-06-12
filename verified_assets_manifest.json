@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-03-29T00:00:00-07:00",
+  "scan_target": "C:\\Users\\eckel\\OneDrive\\Documents\\Invincible.Inc\\scanner-map\\vehichles",
+  "policy": "zero-trust-retroactive-sweep",
+  "summary": {
+    "total_files_scanned": 2,
+    "glb_files_found": 0,
+    "gltf_files_found": 0,
+    "verified_clean_assets": 0,
+    "quarantined_assets": 2
+  },
+  "verified_assets": [],
+  "quarantined_assets": [
+    {
+      "original_path": "C:\\Users\\eckel\\OneDrive\\Documents\\Invincible.Inc\\scanner-map\\vehichles\\55z27frcahz4-P911GT.rar",
+      "quarantine_path": "C:\\Users\\eckel\\OneDrive\\Documents\\Invincible.Inc\\.quarantine\\55z27frcahz4-P911GT.rar",
+      "sha256": "996C5711E933E693BDDEA43DB282861FF5AEEAC14BB19F45F4E7B03F6D80E2D9",
+      "reason": "opaque archive container; unsupported for deterministic static GLB/GLTF verification"
+    },
+    {
+      "original_path": "C:\\Users\\eckel\\OneDrive\\Documents\\Invincible.Inc\\scanner-map\\vehichles\\6e48z1kc7r40-bugatti.zip",
+      "quarantine_path": "C:\\Users\\eckel\\OneDrive\\Documents\\Invincible.Inc\\.quarantine\\6e48z1kc7r40-bugatti.zip",
+      "sha256": "1C6CC12BE39311CA1498C771980EC82708137B78E04877AACC8BBE7CCC9190E2",
+      "reason": "archive contained non-web-native .blend/.obj payloads instead of auditable .glb/.gltf assets"
+    }
+  ],
+  "notes": [
+    "No standalone .glb or .gltf files were present in the target directory during the sweep.",
+    "No verified clean 3D assets were available to baseline.",
+    "Quarantined files were moved to the project .quarantine directory and marked read-only."
+  ]
+}

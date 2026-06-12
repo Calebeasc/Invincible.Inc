@@ -1,0 +1,6 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- S-Curve Link Re-creation -->
+  <path d="M80 160C80 160 80 80 128 80C176 80 176 160 176 160" stroke="#111111" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="80" cy="160" r="12" fill="#111111"/>
+  <circle cx="176" cy="160" r="12" fill="#111111"/>
+</svg>

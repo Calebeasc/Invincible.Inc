@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="Omni — The Intelligence Operating System for sovereign multi-domain operations. SIGINT, identity resolution, geospatial awareness, and threat analysis."/>
+<title>Omni — Sovereign Intelligence Platform</title>
+<meta name="theme-color" content="#000000"/>
+<link rel="icon" href="favicon.ico"/>
+<style>
+:root{
+  --bg:     #000000;
+  --bg1:    #040408;
+  --bg2:    #07070d;
+  --bg3:    #0c0c14;
+  --rule:   rgba(255,255,255,0.055);
+  --border: rgba(255,255,255,0.07);
+  --card:   rgba(255,255,255,0.025);
+  --white:  #f0f4f8;
+  --text:   #c8d3e0;
+  --mid:    #8899aa;
+  --dim:    #4a5568;
+  --steel:  #1e3a5f;
+  --blue:   #2563eb;
+  --ice:    #60a5fa;
+  --tag:    rgba(37,99,235,0.15);
+  --tagb:   rgba(37,99,235,0.25);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter','-apple-system',BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  line-height:1.55;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Barely-visible vertical rule lines — pure Gotham */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+  background-size:160px 100%;
+}
+
+/* Tactical Grid Background */
+body::after{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:url('assets/bg_tactical.png');
+  background-repeat:repeat;
+  opacity:0.06;
+}
+
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:rgba(99,130,167,0.25);}
+
+/* ── Classification bar ── */
+.classbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:22px;background:#000;
+  border-bottom:1px solid rgba(239,68,68,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Courier New',Consolas,monospace;
+  font-size:9px;font-weight:700;letter-spacing:3px;
+  color:rgba(239,68,68,0.55);text-transform:uppercase;
+}
+
+/* ── Nav ── */
+nav{
+  position:fixed;top:22px;left:0;right:0;z-index:100;
+  padding:0 56px;height:52px;
+  display:flex;align-items:center;gap:48px;
+  background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(32px);
+  border-bottom:1px solid var(--rule);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-mark{width:26px;height:26px;display:grid;place-items:center;overflow:hidden;}
+.nav-logo-mark img{width:26px;height:26px;object-fit:contain;filter:brightness(0.9);}
+.nav-logo-text{
+  font-size:15px;font-weight:800;letter-spacing:1.5px;
+  color:var(--white);text-transform:uppercase;font-variant:small-caps;
+}
+.nav-sub{
+  font-size:9px;color:var(--dim);letter-spacing:1.5px;
+  font-family:'Courier New',monospace;text-transform:uppercase;
+}
+.nav-links{display:flex;gap:36px;margin-left:auto;}
+nav a.nl{
+  color:var(--dim);text-decoration:none;font-size:11px;
+  font-weight:500;letter-spacing:0.8px;text-transform:uppercase;
+  transition:color .15s;
+}
+nav a.nl:hover{color:var(--mid);}
+.nav-login{
+  padding:6px 16px;font-size:11px;font-weight:600;text-decoration:none;
+  color:var(--mid);letter-spacing:0.5px;text-transform:uppercase;
+  border:1px solid var(--border);transition:all .15s;
+}
+.nav-login:hover{color:var(--white);border-color:rgba(255,255,255,0.2);}
+.nav-cta{
+  padding:6px 16px;font-size:11px;font-weight:700;text-decoration:none;
+  background:var(--blue);color:#fff;letter-spacing:0.5px;text-transform:uppercase;
+  transition:background .15s;
+}
+.nav-cta:hover{background:#1d4ed8;}
+
+section{position:relative;z-index:1;}
+
+/* ── Hero ── */
+.hero{
+  min-height:100vh;
+  padding:148px 56px 100px;
+  max-width:1320px;margin:0 auto;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:14px;margin-bottom:40px;
+}
+.hero-eyebrow-line{width:40px;height:1px;background:var(--blue);}
+.hero-eyebrow-text{
+  font-family:'Courier New',Consolas,monospace;
+  font-size:9px;font-weight:700;letter-spacing:3.5px;
+  text-transform:uppercase;color:var(--ice);
+}
+.hero h1{
+  font-size:clamp(3rem,6vw,5.8rem);
+  font-weight:900;
+  line-height:1.0;
+  letter-spacing:-2.5px;
+  color:var(--white);
+  max-width:900px;
+  margin-bottom:28px;
+}
+.hero h1 em{font-style:normal;color:var(--mid);}
+.hero-sub{
+  font-size:1rem;color:var(--mid);
+  max-width:540px;margin-bottom:52px;
+  line-height:1.75;letter-spacing:0.15px;
+  font-weight:400;
+}
+.hero-actions{display:flex;gap:12px;align-items:center;}
+.btn-primary{
+  padding:11px 28px;font-size:12px;font-weight:700;
+  text-decoration:none;background:var(--blue);color:#fff;
+  letter-spacing:0.5px;text-transform:uppercase;
+  transition:background .15s;
+}
+.btn-primary:hover{background:#1d4ed8;}
+.btn-ghost{
+  padding:11px 28px;font-size:12px;font-weight:500;text-decoration:none;
+  border:1px solid var(--border);color:var(--mid);
+  letter-spacing:0.5px;text-transform:uppercase;transition:all .15s;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.18);color:var(--text);}
+
+/* Hero stat strip */
+.hero-stats{
+  display:flex;gap:0;
+  margin-top:88px;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+.stat-item{
+  flex:1;padding:24px 32px;
+  border-right:1px solid var(--rule);
+}
+.stat-item:last-child{border-right:none;}
+.stat-num{
+  font-size:2rem;font-weight:900;color:var(--white);
+  letter-spacing:-1.5px;margin-bottom:4px;
+  font-variant:tabular-nums;
+}
+.stat-label{
+  font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--dim);
+}
+
+/* ── Full-width divider rule ── */
+.rule-section{border-top:1px solid var(--rule);margin:0;}
+
+/* ── Section scaffold ── */
+.sec{
+  max-width:1320px;margin:0 auto;
+  padding:88px 56px;
+}
+.sec-eyebrow{
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.sec-eyebrow-line{width:24px;height:1px;background:var(--blue);}
+.sec-tag{
+  font-family:'Courier New',Consolas,monospace;
+  font-size:9px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ice);
+}
+.sec-h{
+  font-size:clamp(1.6rem,3vw,2.6rem);
+  font-weight:800;letter-spacing:-1px;
+  color:var(--white);margin-bottom:10px;
+  max-width:720px;
+}
+.sec-p{
+  font-size:13px;color:var(--dim);
+  max-width:480px;line-height:1.8;
+  margin-bottom:56px;
+}
+
+/* ── Tier table ── */
+.tier-table{
+  width:100%;border-collapse:collapse;
+  font-size:12px;margin-top:48px;
+}
+.tier-table th{
+  text-align:left;padding:10px 20px;
+  font-family:'Courier New',monospace;
+  font-size:8px;font-weight:700;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--dim);
+  border-bottom:1px solid var(--border);
+}
+.tier-table td{
+  padding:16px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  vertical-align:middle;
+}
+.tier-table tr:hover td{background:rgba(255,255,255,0.015);}
+.tier-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;letter-spacing:1.5px;
+}
+.t0{background:rgba(100,116,139,.06);color:#64748b;border:1px solid rgba(100,116,139,.12);}
+.t1{background:rgba(14,165,233,.05);color:#38bdf8;border:1px solid rgba(14,165,233,.12);}
+.t2{background:rgba(99,102,241,.05);color:#a5b4fc;border:1px solid rgba(99,102,241,.12);}
+.t3{background:rgba(37,99,235,.06);color:#93c5fd;border:1px solid rgba(37,99,235,.15);}
+.t4{background:rgba(239,68,68,.05);color:#fca5a5;border:1px solid rgba(239,68,68,.1);}
+.tier-name{font-weight:700;color:var(--text);font-size:13px;}
+.tier-desc{color:var(--dim);font-size:12px;}
+.guard-tag{
+  display:inline-block;padding:1px 8px;
+  font-family:'Courier New',monospace;
+  font-size:8px;font-weight:700;letter-spacing:.8px;
+  margin:1px 2px;
+  background:rgba(37,99,235,.07);color:var(--ice);
+  border:1px solid rgba(37,99,235,.15);
+}
+
+/* ── Module grid ── */
+.mod-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border:1px solid var(--rule);
+}
+.mod-cell{
+  padding:32px 28px;
+  border-right:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  transition:background .2s;
+}
+.mod-cell:nth-child(3n){border-right:none;}
+.mod-cell:nth-last-child(-n+3){border-bottom:none;}
+.mod-cell:hover{background:rgba(255,255,255,0.018);}
+.mod-id{
+  font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;letter-spacing:2px;
+  color:var(--blue);margin-bottom:14px;
+  text-transform:uppercase;
+}
+.mod-name{font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--white);}
+.mod-desc{font-size:12px;color:var(--dim);line-height:1.7;}
+.mod-tier{
+  margin-top:14px;
+  font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;letter-spacing:1px;
+  color:var(--dim);text-transform:uppercase;
+}
+
+/* ── Architecture stack ── */
+.arch-stack{
+  display:flex;flex-direction:column;gap:0;
+  border:1px solid var(--rule);margin-top:48px;max-width:700px;
+}
+.arch-row{
+  display:flex;align-items:stretch;
+  border-bottom:1px solid var(--rule);
+}
+.arch-row:last-child{border-bottom:none;}
+.arch-label{
+  width:190px;flex-shrink:0;padding:16px 24px;
+  font-family:'Courier New',monospace;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ice);
+  background:rgba(37,99,235,0.04);
+  border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.arch-body{
+  flex:1;padding:16px 24px;
+  font-size:12px;color:var(--mid);
+  display:flex;flex-direction:column;justify-content:center;
+}
+.arch-tech{
+  font-family:'Courier New',monospace;
+  font-size:10px;color:var(--dim);margin-top:3px;
+}
+
+/* ── Compliance strip ── */
+.compliance{
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  background:var(--bg1);
+}
+.compliance-inner{
+  max-width:1320px;margin:0 auto;
+  padding:24px 56px;
+  display:flex;align-items:center;gap:48px;flex-wrap:wrap;
+}
+.comp-label{
+  font-family:'Courier New',monospace;
+  font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--dim);
+  white-space:nowrap;
+}
+.comp-items{display:flex;gap:24px;flex-wrap:wrap;}
+.comp-item{
+  font-family:'Courier New',monospace;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--mid);
+  padding:5px 14px;border:1px solid var(--rule);
+}
+
+/* ── Oracle bridge / cross-product ── */
+.bridge{
+  border-top:1px solid var(--rule);
+  background:var(--bg1);
+}
+.bridge-inner{
+  max-width:1320px;margin:0 auto;
+  padding:64px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:32px;flex-wrap:wrap;
+}
+.bridge-text h3{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.bridge-text p{font-size:13px;color:var(--dim);max-width:460px;line-height:1.7;}
+.btn-oracle{
+  padding:11px 28px;font-size:11px;font-weight:700;text-decoration:none;
+  border:1px solid rgba(6,182,212,0.25);color:#22d3ee;
+  letter-spacing:0.5px;text-transform:uppercase;transition:all .15s;
+}
+.btn-oracle:hover{background:rgba(6,182,212,0.05);border-color:rgba(6,182,212,0.4);}
+
+/* ── Access request ── */
+.access-sec{
+  border-top:1px solid var(--rule);
+  background:var(--bg1);
+}
+.access-inner{
+  max-width:1320px;margin:0 auto;
+  padding:100px 56px;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.access-text{}
+.access-text h2{font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;letter-spacing:-1px;color:var(--white);margin-bottom:16px;}
+.access-text p{font-size:13px;color:var(--dim);line-height:1.8;max-width:440px;margin-bottom:36px;}
+.access-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.access-meta{font-family:'Courier New',monospace;font-size:9px;color:var(--dim);letter-spacing:2px;margin-top:20px;text-transform:uppercase;}
+
+/* Access credential facts */
+.cred-block{
+  border:1px solid var(--rule);padding:32px;
+  background:rgba(255,255,255,0.015);
+}
+.cred-row{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 0;border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.cred-row:last-child{border-bottom:none;padding-bottom:0;}
+.cred-row:first-child{padding-top:0;}
+.cred-num{
+  font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;color:var(--dim);
+  letter-spacing:1px;min-width:28px;margin-top:2px;
+}
+.cred-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.cred-desc{font-size:11px;color:var(--dim);line-height:1.6;}
+
+/* ── Footer ── */
+footer{
+  border-top:1px solid var(--rule);background:var(--bg);
+  padding:36px 56px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+}
+.footer-id{
+  font-family:'Courier New',monospace;
+  font-size:9px;color:var(--dim);letter-spacing:1.5px;
+  text-transform:uppercase;line-height:1.9;
+}
+.footer-links{display:flex;gap:28px;flex-wrap:wrap;}
+footer a{
+  color:var(--dim);text-decoration:none;font-size:11px;
+  letter-spacing:.3px;transition:color .15s;text-transform:uppercase;
+}
+footer a:hover{color:var(--mid);}
+
+/* ── Responsive ── */
+@media(max-width:1000px){
+  nav{padding:0 24px;}
+  .hero,.sec{padding-left:24px;padding-right:24px;}
+  .hero-stats{display:none;}
+  .mod-grid{grid-template-columns:repeat(2,1fr);}
+  .access-inner{grid-template-columns:1fr;}
+  footer{padding:28px 24px;}
+  .compliance-inner,.bridge-inner{padding-left:24px;padding-right:24px;}
+}
+@media(max-width:640px){
+  .mod-grid{grid-template-columns:1fr;}
+  .mod-cell{border-right:none;}
+}
+
+/* Fade-in on scroll */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* ── Request modal ── */
+#request-modal input,#request-modal textarea{
+  width:100%;background:#000;border:1px solid rgba(255,255,255,0.12);
+  color:#c8d3e0;padding:10px 12px;font-family:inherit;font-size:13px;
+  margin-bottom:16px;box-sizing:border-box;
+}
+#request-modal textarea{resize:vertical;}
+#request-modal input:focus,#request-modal textarea:focus{
+  outline:none;border-color:rgba(37,99,235,0.6);
+}
+#request-modal .req-submit{
+  padding:11px 28px;font-size:12px;font-weight:700;background:#2563eb;
+  color:#fff;letter-spacing:0.5px;text-transform:uppercase;border:none;
+  cursor:pointer;transition:background .15s;width:100%;
+}
+#request-modal .req-submit:hover{background:#1d4ed8;}
+#request-modal .req-submit:disabled{opacity:0.6;cursor:default;}
+</style>
+</head>
+<body>
+
+<!-- Classification bar -->
+<div class="classbar">OMNI PLATFORM · RESTRICTED DISTRIBUTION · OPERATOR ACCESS REQUIRED</div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark"><img src="logo.png" alt="Invincible.Inc"/></div>
+    <span class="nav-logo-text">Omni</span>
+    <span class="nav-sub">by Invincible.Inc</span>
+  </a>
+  <div class="nav-links">
+    <a class="nl" href="#tiers">Tiers</a>
+    <a class="nl" href="#modules">Modules</a>
+    <a class="nl" href="#architecture">Architecture</a>
+    <a class="nl" href="#access">Access</a>
+  </div>
+  <a class="nav-login" href="login/index.html">Log In</a>
+  <a class="nav-cta" href="#" onclick="openRequestModal(); return false;">Request Access</a>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <div class="hero-eyebrow-line"></div>
+    <span class="hero-eyebrow-text">Sovereign Intelligence Platform</span>
+  </div>
+  <h1>The Operating System<br>for <em>Multi-Domain</em><br>Intelligence.</h1>
+  <p class="hero-sub">Omni integrates geospatial, SIGINT, identity resolution, blockchain forensics, and threat analysis into a single tiered command layer — purpose-built for operators who require complete situational awareness.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#" onclick="openRequestModal(); return false;">Request Operator Access</a>
+    <a class="btn-ghost" href="#modules">Review Modules</a>
+  </div>
+
+  <div class="hero-mockup-wrapper reveal" style="margin-top: 80px; border: 1px solid var(--rule); padding: 6px; background: rgba(255,255,255,0.02); box-shadow: 0 40px 100px -20px rgba(37,99,235,0.15);">
+    <div style="border: 1px solid var(--rule); overflow: hidden; background: #000; position: relative;">
+      <!-- Subtle top bar for the mockup window -->
+      <div style="height: 24px; background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--rule); display: flex; align-items: center; padding: 0 12px; gap: 6px;">
+         <div style="width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.15)"></div>
+         <div style="width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.15)"></div>
+         <div style="width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.15)"></div>
+         <div style="margin-left:auto; font-family:'Courier New',monospace; font-size:8px; color:var(--dim); letter-spacing:1px;">OMNI_TERMINAL_V4</div>
+      </div>
+      <img src="assets/omni_mockup.png" alt="Omni Platform Interface" style="width:100%; display:block; opacity: 0.95; filter: contrast(1.1) brightness(1.05);" />
+      <!-- Scanning line overlay on the mockup -->
+      <div style="position:absolute; inset:0; background: linear-gradient(to bottom, transparent 50%, rgba(37,99,235,0.03) 51%, transparent 51%); background-size: 100% 4px; pointer-events:none;"></div>
+    </div>
+  </div>
+
+  <div class="hero-stats reveal">
+    <div class="stat-item">
+      <div class="stat-num">9</div>
+      <div class="stat-label">Intelligence Modules</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Sensitivity Tiers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">T-2+</div>
+      <div class="stat-label">Minimum Clearance</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0ms</div>
+      <div class="stat-label">Public Exposure</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">AES-256</div>
+      <div class="stat-label">Data at Rest</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Compliance ──────────────────────────────────────────────────────── -->
+<div class="compliance reveal">
+  <div class="compliance-inner">
+    <div class="comp-label">Operational Standards</div>
+    <div class="comp-items">
+      <div class="comp-item">AES-256</div>
+      <div class="comp-item">JWT — Tiered</div>
+      <div class="comp-item">Argon2 Auth</div>
+      <div class="comp-item">Local-First</div>
+      <div class="comp-item">Zero Public Exposure</div>
+      <div class="comp-item">Sovereign Mode</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tier Access Model ───────────────────────────────────────────────── -->
+<div class="rule-section"></div>
+<section class="sec" id="tiers">
+  <div class="sec-eyebrow reveal">
+    <div class="sec-eyebrow-line"></div>
+    <span class="sec-tag">Access Model</span>
+  </div>
+  <h2 class="sec-h reveal">Four Tiers. Enforced at Every Layer.</h2>
+  <p class="sec-p reveal">Tier enforcement is not a UI toggle. It is applied simultaneously at the database view, FastAPI dependency injection, JWT session claim, and React build-time bundle separation levels.</p>
+
+  <table class="tier-table reveal">
+    <thead>
+      <tr>
+        <th>Tier</th>
+        <th>Designation</th>
+        <th>Description</th>
+        <th>Backend Guard</th>
+        <th>Frontend Guard</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tier-badge t0">T-0</span></td>
+        <td class="tier-name">UNAPPROVED</td>
+        <td class="tier-desc">No access. Blocked. No authentication granted.</td>
+        <td><span class="guard-tag">NONE</span></td>
+        <td><span class="guard-tag">ALL BUILDS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tier-badge t1">T-1</span></td>
+        <td class="tier-name">INSIDER</td>
+        <td class="tier-desc">Limited Oracle app access — own GPS, encounters, route statistics, basic map data.</td>
+        <td><span class="guard-tag">JWT T≥1</span></td>
+        <td><span class="guard-tag">ORACLE BUILD</span></td>
+      </tr>
+      <tr>
+        <td><span class="tier-badge t2">T-2</span></td>
+        <td class="tier-name">CONTRIBUTOR</td>
+        <td class="tier-desc">Oracle admin, Omni platform, Grid, and most systems. SIGINT, identity, surveillance, advanced research.</td>
+        <td><span class="guard-tag">JWT T≥2</span><span class="guard-tag">SOVEREIGN MODE</span></td>
+        <td><span class="guard-tag">DEV BUILD ONLY</span></td>
+      </tr>
+      <tr>
+        <td><span class="tier-badge t3">T-3</span></td>
+        <td class="tier-name">OWNER</td>
+        <td class="tier-desc">Full sovereign control — Caleb Eckelbecker only. Hardware dispatch, write-back actions, all modules.</td>
+        <td><span class="guard-tag">JWT T=3</span><span class="guard-tag">PIPE ONLY</span></td>
+        <td><span class="guard-tag">NATIVE SHELL</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── Intelligence Modules ────────────────────────────────────────────── -->
+<div class="rule-section"></div>
+<section class="sec" id="modules">
+  <div class="sec-eyebrow reveal">
+    <div class="sec-eyebrow-line"></div>
+    <span class="sec-tag">Intelligence Modules</span>
+  </div>
+  <h2 class="sec-h reveal">Nine Domains. One Common Picture.</h2>
+  <p class="sec-p reveal">Each module operates independently and feeds the Lattice object graph — typed entities linked by confidence-weighted relationships across all operational domains.</p>
+
+  <div class="mod-grid reveal">
+    <div class="mod-cell">
+      <div class="mod-id">Module 01</div>
+      <div class="mod-name">3D Geospatial COP</div>
+      <div class="mod-desc">CesiumJS globe with terrain, 3D Tiles, ADS-B aircraft, satellite TLE tracks, and real-time signal heatmaps. 10,000+ entity rendering via PointPrimitiveCollection.</div>
+      <div class="mod-tier">T-1 / INSIDER ↑</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 02</div>
+      <div class="mod-name">SIGINT Engine</div>
+      <div class="mod-desc">BLE manufacturer fingerprinting (Apple/Google/Microsoft/Samsung/Tile), Wi-Fi BSSID tracking, ADS-B callsign LEA classification, and passive RF observation ingestion.</div>
+      <div class="mod-tier">T-2 / CONTRIBUTOR</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 03</div>
+      <div class="mod-name">Identity Resolution</div>
+      <div class="mod-desc">Cross-domain entity disambiguation linking device signals, location patterns, and behavioral fingerprints to Lattice Person objects with confidence scoring.</div>
+      <div class="mod-tier">T-2 / CONTRIBUTOR</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 04</div>
+      <div class="mod-name">Surveillance Integration</div>
+      <div class="mod-desc">Flock Safety ALPR camera network ingestion with geocoded camera positions, plate read correlation, and spatiotemporal trajectory reconstruction.</div>
+      <div class="mod-tier">T-2 / CONTRIBUTOR</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 05</div>
+      <div class="mod-name">Blockchain Forensics</div>
+      <div class="mod-desc">On-chain transaction tracing, wallet clustering, and cross-chain entity resolution. Links crypto addresses to real-world identities via the Lattice object graph.</div>
+      <div class="mod-tier">T-2 / CONTRIBUTOR</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 06</div>
+      <div class="mod-name">EASM</div>
+      <div class="mod-desc">External Attack Surface Management — continuous discovery of internet-exposed assets, certificate transparency monitoring, and subdomain enumeration for target organizations.</div>
+      <div class="mod-tier">T-2 / CONTRIBUTOR</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 07</div>
+      <div class="mod-name">Threat Triage</div>
+      <div class="mod-desc">Automated encounter classification, anomaly scoring against historical baselines, and priority queuing for analyst review. Integrates SIGINT, geospatial, and identity context.</div>
+      <div class="mod-tier">T-2 / CONTRIBUTOR</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 08</div>
+      <div class="mod-name">Malware Sandbox</div>
+      <div class="mod-desc">Static and dynamic analysis pipeline for submitted artifacts. Behavioral classification, IOC extraction, and MITRE ATT&amp;CK technique mapping for threat intelligence.</div>
+      <div class="mod-tier">T-3 / OWNER</div>
+    </div>
+    <div class="mod-cell">
+      <div class="mod-id">Module 09</div>
+      <div class="mod-name">ADS-B Intercept</div>
+      <div class="mod-desc">Real-time aircraft tracking with LEA classification by callsign prefix and ICAO hex. Police, military, and surveillance aircraft flagged and correlated to ground activity.</div>
+      <div class="mod-tier">T-1 / INSIDER ↑</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Architecture ────────────────────────────────────────────────────── -->
+<div class="rule-section"></div>
+<section class="sec" id="architecture">
+  <div class="sec-eyebrow reveal">
+    <div class="sec-eyebrow-line"></div>
+    <span class="sec-tag">System Architecture</span>
+  </div>
+  <h2 class="sec-h reveal">The Great Partition.</h2>
+  <p class="sec-p reveal">Oracle and Omni are physically and logically separated. Oracle data never traverses Omni routes. Omni code never ships in the Oracle build. Separation is structural, not configurable.</p>
+
+  <div class="arch-stack reveal">
+    <div class="arch-row">
+      <div class="arch-label">UI Shell</div>
+      <div class="arch-body">
+        WinUI 3 (C#) — Native Windows App — No webview
+        <div class="arch-tech">Invincible.Native / Invincible.App.csproj</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-label">Signal Ingest</div>
+      <div class="arch-body">
+        LatticeSignalEngine.dll (C++/WinRT) — BLE + Wi-Fi
+        <div class="arch-tech">BluetoothLEAdvertisementWatcher · Windows.Devices.WiFi</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-label">IPC Layer</div>
+      <div class="arch-body">
+        Named Pipe — \\.\pipe\InvincibleBackend
+        <div class="arch-tech">PipeClient.cs → pipe_server.py → httpx ASGI transport</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-label">API Backend</div>
+      <div class="arch-body">
+        FastAPI (Python) — Sovereign mode required for T-2+ routes
+        <div class="arch-tech">INVINCIBLE_APP_MODE=sovereign · require_tier(min_tier=2)</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-label">Data Store</div>
+      <div class="arch-body">
+        SQLite (WAL) — Tier-filtered views for Oracle partition
+        <div class="arch-tech">oracle_objects / oracle_links → sensitivity_tier ≤ 1</div>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-label">Lattice Graph</div>
+      <div class="arch-body">
+        Typed objects + confidence-weighted links
+        <div class="arch-tech">lattice_objects / lattice_links · sensitivity_tier 0–4</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Oracle bridge ────────────────────────────────────────────────────── -->
+<div class="bridge">
+  <div class="bridge-inner reveal">
+    <div class="bridge-text">
+      <h3>Looking for the consumer driving companion?</h3>
+      <p>Oracle is the everyday driver's interface — Stopper alerts, Watcher detection, GPS accuracy engine, and community heatmaps. Built on the same Lattice stack, purpose-built for the road.</p>
+    </div>
+    <a class="btn-oracle" href="https://github.com/Calebeasc/Oracle">Explore Oracle →</a>
+  </div>
+</div>
+
+<!-- ── Access ───────────────────────────────────────────────────────────── -->
+<div class="access-sec" id="access">
+  <div class="access-inner">
+    <div class="access-text reveal">
+      <div class="sec-eyebrow" style="margin-bottom:14px;">
+        <div class="sec-eyebrow-line"></div>
+        <span class="sec-tag">Operator Access</span>
+      </div>
+      <h2 class="access-text h2" style="font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;letter-spacing:-1px;color:var(--white);margin-bottom:16px;">Access is Not Public.</h2>
+      <p style="font-size:13px;color:var(--dim);line-height:1.8;max-width:440px;margin-bottom:36px;">Omni is available to vetted operators, security researchers, and authorized enterprise teams. All credentials share the unified Invincible.Inc identity pool — cleared on Oracle, cleared on Omni.</p>
+      <div class="access-actions">
+        <a class="btn-primary" href="#" onclick="openRequestModal(); return false;">Submit Access Request</a>
+        <a class="btn-ghost" href="login/index.html">Operator Log In</a>
+      </div>
+      <div class="access-meta">Response within 48 hours · Vetted operators only</div>
+    </div>
+    <div class="cred-block reveal">
+      <div class="cred-row">
+        <div class="cred-num">01</div>
+        <div>
+          <div class="cred-label">Unified Credential Pool</div>
+          <div class="cred-desc">A single identity authenticates across Oracle, Omni, and Grid. Tier level determines what each platform exposes — not separate accounts.</div>
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-num">02</div>
+        <div>
+          <div class="cred-label">Vetting Required</div>
+          <div class="cred-desc">T-2 access and above requires manual review. Automated registration is intentionally disabled for sovereign-tier platforms.</div>
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-num">03</div>
+        <div>
+          <div class="cred-label">Local-First Deployment</div>
+          <div class="cred-desc">The Omni stack runs on operator hardware. No cloud dependency for data processing. Network access is operator-managed.</div>
+        </div>
+      </div>
+      <div class="cred-row">
+        <div class="cred-num">04</div>
+        <div>
+          <div class="cred-label">Twingate Remote Access</div>
+          <div class="cred-desc">Authorized operators connect via Twingate for encrypted private network access to backend.invincible.lan. No public endpoints exposed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-id">
+    <div>Omni · Invincible.Inc</div>
+    <div>© 2025 INVINCIBLE.INC · ALL RIGHTS RESERVED</div>
+  </div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Security Policy</a>
+    <a href="mailto:omni@invincible.inc">Contact</a>
+    <a href="https://github.com/Calebeasc/Omni" style="color:var(--mid);">Invincible.Inc →</a>
+  </div>
+</footer>
+
+<!-- ── Request Access Modal ─────────────────────────────────────────────── -->
+<div id="request-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#020508;border:1px solid rgba(255,255,255,0.08);max-width:480px;width:90%;padding:40px;position:relative;">
+    <button onclick="closeRequestModal()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#3d5270;font-size:20px;cursor:pointer;">×</button>
+    <div style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.2em;color:#c8d3e0;text-transform:uppercase;margin-bottom:8px;">REQUEST OPERATOR ACCESS</div>
+    <div style="font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;text-transform:uppercase;margin-bottom:28px;">Vetted operators only · Response within 48 hours</div>
+    <form id="request-form">
+      <label style="display:block;font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;text-transform:uppercase;margin-bottom:6px;" for="req-name">Full Name</label>
+      <input id="req-name" name="name" type="text" required placeholder="Full name"/>
+      <label style="display:block;font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;text-transform:uppercase;margin-bottom:6px;" for="req-email">Email Address</label>
+      <input id="req-email" name="email" type="email" required placeholder="your@email.com"/>
+      <label style="display:block;font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;text-transform:uppercase;margin-bottom:6px;" for="req-org">Organization <span style="color:#2a3a50;">(optional)</span></label>
+      <input id="req-org" name="organization" type="text" placeholder="Organization"/>
+      <label style="display:block;font-family:'Courier New',monospace;font-size:9px;letter-spacing:0.15em;color:#3d5270;text-transform:uppercase;margin-bottom:6px;" for="req-usecase">Intended Use / Why You Need Access</label>
+      <textarea id="req-usecase" name="use_case" required rows="4" placeholder="Describe your intended use..."></textarea>
+      <button type="submit" class="req-submit">SUBMIT REQUEST</button>
+      <div id="request-status" style="display:none;margin-top:16px;font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.1em;"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+function openRequestModal() {
+  document.getElementById('request-modal').style.display = 'flex';
+  document.getElementById('request-status').style.display = 'none';
+  document.getElementById('request-status').textContent = '';
+}
+
+function closeRequestModal() {
+  document.getElementById('request-modal').style.display = 'none';
+}
+
+document.getElementById('request-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeRequestModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeRequestModal();
+});
+
+document.getElementById('request-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('[type=submit]');
+  const statusEl = document.getElementById('request-status');
+
+  const showError = (msg) => {
+    statusEl.textContent = msg;
+    statusEl.style.color = '#ef4444';
+    statusEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'SUBMIT REQUEST';
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'SUBMITTING...';
+  statusEl.style.display = 'none';
+
+  const payload = {
+    name: this.name.value.trim(),
+    email: this.email.value.trim(),
+    organization: this.organization.value.trim(),
+    use_case: this.use_case.value.trim(),
+  };
+
+  try {
+    const res = await fetch(window.location.origin + '/api/access/request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      this.innerHTML = '<p style="color:#22c55e;font-family:\'Courier New\',monospace;font-size:12px;letter-spacing:0.1em">REQUEST RECEIVED — We will review your application and contact you within 48 hours.</p>';
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showError('ERROR: ' + (err.detail || 'Submission failed. Try again.'));
+    }
+  } catch {
+    showError('Network error. Please try again.');
+  }
+});
+</script>
+</body>
+</html>

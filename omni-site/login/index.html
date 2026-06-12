@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Operator Authentication — Omni</title>
+<meta name="theme-color" content="#000000"/>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" href="../favicon.ico"/>
+<style>
+:root{
+  --bg:#000000; --bg2:#06060a; --bg3:#0c0c14;
+  --rule:rgba(255,255,255,0.055);
+  --border:rgba(255,255,255,0.08);
+  --white:#f0f4f8; --text:#c8d3e0; --mid:#8899aa; --dim:#4a5568;
+  --blue:#2563eb; --ice:#60a5fa;
+  --red:#ef4444; --red2:#fca5a5;
+  --green:#22c55e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;
+  background-image:linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+  background-size:160px 100%;
+}
+
+/* Classification bar */
+.classbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:22px;background:#000;
+  border-bottom:1px solid rgba(239,68,68,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;letter-spacing:3px;
+  color:rgba(239,68,68,0.55);text-transform:uppercase;
+}
+
+.card{
+  position:relative;z-index:1;
+  width:100%;max-width:360px;
+  margin:32px 16px;
+  border:1px solid var(--border);
+  background:rgba(6,6,10,0.98);
+  padding:40px 36px 36px;
+}
+
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:36px;}
+.brand-mark{width:36px;height:36px;overflow:hidden;display:grid;place-items:center;}
+.brand-mark img{width:36px;height:36px;object-fit:contain;filter:brightness(0.9);}
+.brand-name{
+  font-size:16px;font-weight:800;letter-spacing:1.5px;
+  color:var(--white);text-transform:uppercase;font-variant:small-caps;
+}
+.brand-sub{font-size:9px;color:var(--dim);letter-spacing:1.5px;font-family:'Courier New',monospace;text-transform:uppercase;}
+
+.card-title{font-size:1.3rem;font-weight:900;letter-spacing:-0.5px;color:var(--white);margin-bottom:4px;}
+.card-sub{font-size:12px;color:var(--dim);margin-bottom:28px;line-height:1.6;}
+
+.field{margin-bottom:14px;}
+.field-label{
+  display:block;font-family:'Courier New',monospace;
+  font-size:9px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--dim);margin-bottom:7px;
+}
+.field-input{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--rule);
+  color:var(--text);font-size:13px;outline:none;
+  font-family:inherit;
+  transition:border-color .15s;
+}
+.field-input:focus{border-color:rgba(37,99,235,0.4);}
+.field-input::placeholder{color:var(--dim);}
+
+.submit-btn{
+  width:100%;padding:13px;margin-top:6px;
+  background:var(--blue);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;border:none;cursor:pointer;
+  font-family:inherit;
+  transition:background .15s;
+  position:relative;
+}
+.submit-btn:hover{background:#1d4ed8;}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+.spinner{
+  display:none;width:14px;height:14px;
+  border:2px solid rgba(255,255,255,0.2);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .5s linear infinite;
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+}
+@keyframes spin{to{transform:translateY(-50%) rotate(360deg);}}
+
+.error-box{
+  display:none;margin-top:12px;padding:10px 14px;
+  border:1px solid rgba(239,68,68,0.2);
+  background:rgba(239,68,68,0.05);
+  font-size:11px;color:var(--red2);line-height:1.5;
+  font-family:'Courier New',monospace;letter-spacing:.3px;
+}
+
+.back-link{
+  display:block;text-align:center;margin-top:20px;
+  font-family:'Courier New',monospace;font-size:9px;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);text-decoration:none;transition:color .15s;
+}
+.back-link:hover{color:var(--mid);}
+
+.access-note{
+  position:fixed;bottom:20px;
+  font-family:'Courier New',monospace;font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(74,85,104,0.5);text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="classbar">OMNI PLATFORM · OPERATOR AUTHENTICATION · RESTRICTED</div>
+
+<div class="card">
+  <div class="brand">
+    <div class="brand-mark"><img src="../logo.png" alt="Omni"/></div>
+    <div>
+      <div class="brand-name">Omni</div>
+      <div class="brand-sub">by Invincible.Inc</div>
+    </div>
+  </div>
+
+  <div class="card-title">Operator Authentication</div>
+  <p class="card-sub">T-2 clearance minimum required. Credentials are shared across Oracle, Omni, and Grid.</p>
+
+  <div class="field">
+    <label class="field-label" for="email">Operator ID (Email)</label>
+    <input class="field-input" type="email" id="email" placeholder="operator@invincible.inc" autocomplete="email"/>
+  </div>
+  <div class="field">
+    <label class="field-label" for="password">Passphrase</label>
+    <input class="field-input" type="password" id="password" placeholder="••••••••••••" autocomplete="current-password"/>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="doLogin()">
+    Authenticate
+    <div class="spinner" id="spinner"></div>
+  </button>
+
+  <div class="error-box" id="error-box"></div>
+
+  <a class="back-link" href="../index.html">← Return to Omni</a>
+</div>
+
+<div class="access-note">Unauthorized access is monitored and logged · Invincible.Inc</div>
+
+<script>
+const API = (window.location.protocol === 'file:' ||
+             window.location.hostname === 'localhost' ||
+             window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:8742'
+  : window.location.origin;
+
+function parseJwt(t) {
+  try {
+    const b = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(b.padEnd(b.length + (4 - b.length % 4) % 4, '=')));
+  } catch { return {}; }
+}
+
+// Already authenticated? Redirect to the proper HTTP admin URL.
+(function() {
+  const token = localStorage.getItem('omni_token');
+  if (!token) return;
+  const p = parseJwt(token);
+  const storedTier = parseInt(localStorage.getItem('omni_tier') || '0', 10);
+  const tier = typeof p.tier === 'number' ? p.tier : (p.is_developer ? storedTier || 3 : storedTier);
+  if (p.exp * 1000 > Date.now() && p.is_developer && tier >= 2) {
+    window.location.href = API + '/sites/omni/admin/';
+  } else {
+    localStorage.removeItem('omni_token');
+    localStorage.removeItem('omni_tier');
+  }
+})();
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn      = document.getElementById('submit-btn');
+  const spinner  = document.getElementById('spinner');
+  const errBox   = document.getElementById('error-box');
+
+  if (!email || !password) { showError('OPERATOR ID AND PASSPHRASE REQUIRED'); return; }
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  errBox.style.display = 'none';
+
+  try {
+    const res = await fetch(API + '/auth/dev/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+      credentials: 'omit',
+    });
+    const data = await res.json();
+
+    if (!data.ok || !data.token) { showError('AUTHENTICATION FAILED · INVALID CREDENTIALS'); return; }
+
+    const p = parseJwt(data.token);
+    // data.tier from backend is authoritative; fall back to JWT payload.
+    // If tier is absent from both (old backend), default to 3 for vault operators (is_developer = true).
+    const isDev = p.is_developer || data.is_developer || false;
+    const sessionTier = typeof data.tier === 'number' ? data.tier
+                      : typeof p.tier === 'number'    ? p.tier
+                      : isDev                         ? 3
+                      : 0;
+
+    if (!isDev) {
+      showError('ACCESS DENIED · INSUFFICIENT CLEARANCE · OMNI REQUIRES DEVELOPER STATUS');
+      return;
+    }
+    if (sessionTier < 2) {
+      showError(`ACCESS DENIED · T-${sessionTier} CLEARANCE INSUFFICIENT · T-2 MINIMUM REQUIRED`);
+      return;
+    }
+
+    localStorage.setItem('omni_token', data.token);
+    localStorage.setItem('omni_email', data.email || email);
+    localStorage.setItem('omni_tier', sessionTier);
+
+    btn.textContent = 'ACCESS GRANTED';
+    btn.style.background = '#166534';
+    // Redirect to the backend-served URL so the admin page runs over HTTP, not file://
+    setTimeout(() => { window.location.href = API + '/sites/omni/admin/'; }, 600);
+
+  } catch {
+    showError('CANNOT REACH BACKEND · VERIFY OMNI PLATFORM IS RUNNING ON PORT 8742');
+  } finally {
+    spinner.style.display = 'none';
+    if (btn.disabled) btn.disabled = false;
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('spinner').style.display = 'none';
+}
+</script>
+</body>
+</html>

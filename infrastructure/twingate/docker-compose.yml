@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  twingate-connector:
+    image: twingate/connector:latest
+    container_name: invincible-twingate-connector
+    restart: always
+    environment:
+      # These tokens are generated in the Twingate Admin Console
+      # (https://admin.twingate.com)
+      - TWINGATE_NETWORK=${TWINGATE_NETWORK}
+      - TWINGATE_ACCESS_TOKEN=${TWINGATE_ACCESS_TOKEN}
+      - TWINGATE_REFRESH_TOKEN=${TWINGATE_REFRESH_TOKEN}
+      - TWINGATE_LABEL=INVINCIBLE_LATTICE_NODE_01
+    
+    # Optional: Connect to a specific internal network if segmenting
+    # networks:
+    #   - invincible-internal
+
+networks:
+  invincible-internal:
+    driver: bridge

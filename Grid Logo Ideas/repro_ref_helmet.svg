@@ -1,0 +1,6 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tactical Helmet Re-creation -->
+  <path d="M56 120C56 80 88 48 128 48C168 48 200 80 200 120V144H56V120Z" fill="#111111"/>
+  <path d="M128 90L148 126H108L128 90Z" fill="#EF4444"/>
+  <path d="M48 128V144M208 128V144" stroke="#111111" stroke-width="12" stroke-linecap="square"/>
+</svg>
