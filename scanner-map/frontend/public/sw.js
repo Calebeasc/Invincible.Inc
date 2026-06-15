@@ -2,21 +2,25 @@
 // Caches the app shell so it loads instantly and works offline.
 // API calls (fetch to /users, /encounters, etc.) always go to the network.
 
-const CACHE = 'iinc-shell-v7'
+const CACHE = 'iinc-shell-v9'
+// Only files that actually exist at the dist root. Vite hashes App.css/JS into
+// /assets/*, which the fetch handler caches on first online load; the shell here
+// is just what's needed to OPEN offline.
 const SHELL = [
   '/',
   '/index.html',
-  '/App.css',
-  '/favicon.ico',
   '/icon.svg',
   '/manifest.json',
 ]
 
-// Install: pre-cache the shell
+// Install: pre-cache the shell. Use allSettled, not addAll — addAll rejects the
+// whole install if ANY single file 404s (this is exactly what broke offline:
+// the old SHELL listed App.css/favicon.ico which aren't in dist, so the worker
+// never finished installing and never controlled the page).
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(c => c.addAll(SHELL))
+      .then(c => Promise.allSettled(SHELL.map(u => c.add(u))))
       .then(() => self.skipWaiting())
   )
 })
@@ -69,6 +73,7 @@ self.addEventListener('fetch', e => {
                 url.pathname.startsWith('/replay') ||
                 url.pathname.startsWith('/targets') ||
                 url.pathname.startsWith('/devices') ||
+                url.pathname.startsWith('/mesh') ||
                 url.pathname.startsWith('/export') ||
                 url.pathname.startsWith('/stats') ||
                 url.pathname.startsWith('/health') ||

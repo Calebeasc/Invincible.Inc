@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo, Component } f
 import MapView from './components/MapView'
 import Sidebar from './components/Sidebar'
 import StatusBar from './components/StatusBar'
+import useMesh from './hooks/useMesh'
 import SettingsPanel from './components/SettingsPanel'
 import TargetsPanel from './components/TargetsPanel'
 import DataPanel from './components/DataPanel'
@@ -191,6 +192,11 @@ export default function App() {
 
   // ── Feature 4: Stopper hotspots ───────────────────────────────────────────
   const [hotspots,         setHotspots]         = useState([])
+
+  // ── Omni-Mesh: live field-sensor picture (offline-safe; see hooks/useMesh) ──
+  const { meshNodes, meshDetections, meshStatus, meshStats } = useMesh()
+  const [showMesh, setShowMesh] = useState(() => localStorage.getItem('sfm_show_mesh') !== '0')
+  useEffect(() => { localStorage.setItem('sfm_show_mesh', showMesh ? '1' : '0') }, [showMesh])
 
   // ── Live stopper tracking ──────────────────────────────────────────────────
   const [stopperTrails, setStopperTrails] = useState([])
@@ -946,6 +952,9 @@ export default function App() {
           stopperTrails={stopperTrails}
           flockCameras={flockCameras}
           showFlockCameras={showFlockCameras}
+          meshNodes={meshNodes}
+          meshDetections={meshDetections}
+          showMesh={showMesh}
           aircraftData={showAircraft ? aircraftData : []}
           replayMode={replayMode}
           replayEncounters={replayEncounters}
@@ -953,6 +962,33 @@ export default function App() {
           replayHeatCells={replayHeatCells}
           sidebarState={sidebarState}
         />
+
+        {/* Omni-Mesh status pill — tap to toggle the mesh layer. Always shows the
+            connection state so a server outage is visible, not silent. */}
+        <button
+          type="button"
+          onClick={() => setShowMesh((v) => !v)}
+          title="Omni-Mesh field sensors — tap to toggle layer"
+          style={{
+            position: 'absolute', top: 12, right: 12, zIndex: 901,
+            display: 'flex', alignItems: 'center', gap: 7,
+            border: `1px solid ${meshStatus === 'live' ? 'rgba(0,230,118,0.5)' : 'rgba(255,77,109,0.5)'}`,
+            background: 'rgba(8,12,20,0.88)',
+            color: showMesh ? '#E8EDF5' : '#5a7a96',
+            borderRadius: 999, padding: '7px 12px', fontSize: 11,
+            fontFamily: 'monospace', fontWeight: 700, cursor: 'pointer',
+          }}
+        >
+          <span style={{
+            width: 9, height: 9, borderRadius: '50%',
+            background: meshStatus === 'live' ? '#00e676' : '#ff4d6d',
+            boxShadow: meshStatus === 'live' ? '0 0 6px #00e676' : 'none',
+          }} />
+          {meshStatus === 'live'
+            ? `MESH · ${meshStats?.nodes_online ?? meshNodes.length} sensors · ${meshStats?.detections ?? meshDetections.length}`
+            : `MESH OFFLINE · ${meshDetections.length} cached`}
+          {!showMesh && <span style={{ color: '#5a7a96' }}>(hidden)</span>}
+        </button>
 
         {/* Feature 1: Replay panel — floats above the map */}
         {replayMode && (

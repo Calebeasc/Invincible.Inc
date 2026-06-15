@@ -87,6 +87,39 @@ def _oui_key(mac: str | None) -> str | None:
     return cleaned[:6] if len(cleaned) >= 6 else None
 
 
+# Surveillance / law-enforcement device categories — the things field reporters
+# exist to surface. A detection classified into one of these is "flagged" LEA.
+SURVEILLANCE_CATS = {'ring', 'axon', 'flock', 'drone', 'smartglasses'}
+
+# Extra SSID substrings (lowercase) that name surveillance gear over the air, on
+# top of the OUI table — used to identify devices that don't expose a known OUI.
+_SURVEILLANCE_SSID_HINTS = {
+    'flock': ['flock', 'flocksafety'],
+    'axon':  ['axon', 'axon-dock', 'evidence'],
+    'ring':  ['ring-', 'ring setup'],
+    'drone': ['dji-', 'mavic', 'parrot', 'skydio', 'anafi'],
+    'smartglasses': ['ray-ban', 'meta view', 'meta-glasses'],
+}
+
+
+def lea_target_signatures() -> dict:
+    """The LEA/surveillance scan targets a reporter should look for: per category,
+    the OUI prefixes (first 6 hex of the MAC) and SSID substrings that identify it.
+    Handed to hired devices in their enrollment packet so they know what to flag and
+    report ASAP. Single source of truth = the same table classify_wifi() uses."""
+    out: dict[str, dict] = {}
+    for oui, cat in _SPECIFIC_OUIS.items():
+        if cat in SURVEILLANCE_CATS:
+            e = out.setdefault(cat, {
+                "label": TYPE_LABELS.get(cat, cat),
+                "color": TYPE_COLORS.get(cat, "#ef4444"),
+                "oui_prefixes": [],
+                "ssid_patterns": list(_SURVEILLANCE_SSID_HINTS.get(cat, [])),
+            })
+            e["oui_prefixes"].append(oui)
+    return out
+
+
 # ── BLE name-based rules ──────────────────────────────────────────────────────
 # Each entry is (device_type, list_of_substrings_to_match_in_name_lowercased)
 # First match wins — order matters.

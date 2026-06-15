@@ -84,3 +84,23 @@ def decode_token(token: str) -> Optional[dict]:
         return jwt.decode(token, settings.JWT_SECRET, algorithms=[_ALGO])
     except Exception:
         return None
+
+
+# ── ADDED DURING LINUX SERVER SETUP (2026-06-12) ─────────────────────────────
+# `require_developer` is imported by app/api/distribution.py but was missing
+# from this module in every committed branch. Reconstructed to match its usage
+# (`payload = require_developer(authorization)`): validate a Bearer token from
+# the Authorization header and return its decoded payload, else 401.
+# See scanner-map/SETUP_NOTES.md.
+def require_developer(authorization: Optional[str]) -> dict:
+    from fastapi import HTTPException
+
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
+    token = authorization.split(" ", 1)[1].strip() if " " in authorization else authorization.strip()
+    payload = decode_token(token)
+    if not payload or payload.get("scope") != "dev:elevation":
+        raise HTTPException(status_code=401, detail="Invalid or expired developer token")
+    if not get_operator(payload.get("sub", "")):
+        raise HTTPException(status_code=403, detail="Operator no longer exists")
+    return payload

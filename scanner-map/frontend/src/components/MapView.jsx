@@ -97,6 +97,9 @@ export default function MapView({
   interceptionVectors = [],
   flockCameras = [],
   showFlockCameras = true,
+  meshNodes = [],
+  meshDetections = [],
+  showMesh = true,
   replayMode = false,
   replayEncounters = null,
   replayRoute = null,
@@ -118,6 +121,8 @@ export default function MapView({
   const hotspotLayerRef = useRef(null)
   const stopperTrailLayerRef = useRef(null)
   const flockLayerRef = useRef(null)
+  const meshNodeLayerRef = useRef(null)
+  const meshDetLayerRef = useRef(null)
   const alertTimestampsRef = useRef({})
 
   const displayEncounters = replayMode ? (replayEncounters || []) : encounters
@@ -393,6 +398,127 @@ export default function MapView({
         .addTo(flockLayerRef.current)
     })
   }, [flockCameras, showFlockCameras])
+
+  // ── Omni-Mesh: detections heard by the field sensors ──────────────────────
+  // Rendered as lightweight circle markers (not divIcons) so thousands stay
+  // smooth on a phone; colored by signal strength, capped to the strongest.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+
+    if (meshDetLayerRef.current) meshDetLayerRef.current.clearLayers()
+    else meshDetLayerRef.current = L.layerGroup().addTo(map)
+    if (!showMesh) return
+
+    // Flagged surveillance/LEA detections always render (and stand out); plain
+    // detections fill in up to the cap, strongest first, to stay light on phones.
+    const flagged = meshDetections.filter((d) => d && d.threat && d.lat != null && d.lon != null)
+    const plain = meshDetections
+      .filter((d) => d && !d.threat && d.lat != null && d.lon != null)
+      .sort((a, b) => (b.rssi ?? -999) - (a.rssi ?? -999))
+      .slice(0, 1500)
+
+    const SURV_EMOJI = { flock: '📷', axon: '📹', ring: '🔔', drone: '🚁', smartglasses: '🕶' }
+
+    plain.forEach((d) => {
+      const rssi = d.rssi ?? -90
+      const color = rssi >= -50 ? '#00e676' : rssi >= -67 ? '#00d4ff' : '#4a6a86'
+      const isClient = d.type === 'client'
+      L.circleMarker([d.lat, d.lon], {
+        radius: isClient ? 3 : 5,
+        color,
+        weight: 1,
+        opacity: 0.85,
+        fillColor: color,
+        fillOpacity: isClient ? 0.25 : 0.5,
+      }).bindPopup(
+        `<div style="font-family:monospace;font-size:11px;color:#e0e0e0;background:#111820;padding:8px 10px;border-left:3px solid ${color};min-width:170px">
+          <b style="color:${color}">${d.ssid ? d.ssid : (isClient ? 'Wi-Fi client' : 'Access point')}</b><br/>
+          <span style="color:#5a7a96">MAC:</span> ${d.mac}<br/>
+          <span style="color:#5a7a96">RSSI:</span> ${rssi} dBm${d.chan ? ` · ch ${d.chan}` : ''}<br/>
+          ${d.vendor ? `<span style="color:#5a7a96">Vendor:</span> ${d.vendor}<br/>` : ''}
+          <span style="color:#5a7a96">Seen by</span> ${d.sensors || 1} sensor${(d.sensors || 1) > 1 ? 's' : ''} · ${d.hits || 1} hits
+        </div>`,
+        { className: 'dark-popup', maxWidth: 240 },
+      ).addTo(meshDetLayerRef.current)
+    })
+
+    // Surveillance / LEA hits: shown at the triangulated estimate when we have
+    // one (multiple devices located it), else the loudest-sensor position. Draws
+    // the recent path, and labels speed/heading so the operator sees it moving.
+    flagged.forEach((d) => {
+      const color = d.cat_color || '#FF2D55'
+      const emoji = SURV_EMOJI[d.cat] || '⚠'
+      const lat = d.est_lat ?? d.lat
+      const lon = d.est_lon ?? d.lon
+      // Recent path of travel.
+      if (Array.isArray(d.track) && d.track.length >= 2) {
+        L.polyline(d.track.map((p) => [p[1], p[2]]), {
+          color, weight: 2.5, opacity: 0.7, dashArray: '6 4', lineJoin: 'round',
+        }).addTo(meshDetLayerRef.current)
+      }
+      L.circle([lat, lon], {
+        radius: 90, color, weight: 2, opacity: 0.8,
+        fillColor: color, fillOpacity: 0.12, dashArray: '5 4',
+      }).addTo(meshDetLayerRef.current)
+      const kmh = d.speed_mps != null ? (d.speed_mps * 3.6) : null
+      const locLine = d.loc_n
+        ? `<span style="color:#5a7a96">Located by</span> ${d.loc_n} device${d.loc_n > 1 ? 's' : ''}${kmh != null ? ` · <b style="color:${color}">${kmh.toFixed(0)} km/h</b> @ ${Math.round(d.heading_deg ?? 0)}°` : ''}<br/>`
+        : ''
+      L.marker([lat, lon], { icon: makeEmojiIcon(emoji, 22, d.cat_label || 'FLAGGED'), zIndexOffset: 1100 })
+        .bindPopup(
+          `<div style="font-family:monospace;font-size:11px;color:#e0e0e0;background:#111820;padding:8px 10px;border-left:3px solid ${color};min-width:200px">
+            <b style="color:${color}">⚠ ${d.cat_label || 'Flagged device'}</b><br/>
+            ${d.ssid ? `<span style="color:#5a7a96">SSID:</span> ${d.ssid}<br/>` : ''}
+            <span style="color:#5a7a96">MAC:</span> ${d.mac}<br/>
+            <span style="color:#5a7a96">RSSI:</span> ${d.rssi ?? 'n/a'} dBm${d.chan ? ` · ch ${d.chan}` : ''}<br/>
+            ${locLine}
+            <span style="color:#5a7a96">Seen by</span> ${d.sensors || 1} sensor${(d.sensors || 1) > 1 ? 's' : ''} · ${d.hits || 1} hits
+          </div>`,
+          { className: 'dark-popup', maxWidth: 280 },
+        ).addTo(meshDetLayerRef.current)
+    })
+  }, [meshDetections, mapReady, showMesh])
+
+  // ── Omni-Mesh: the field sensor nodes themselves ──────────────────────────
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
+
+    if (meshNodeLayerRef.current) meshNodeLayerRef.current.clearLayers()
+    else meshNodeLayerRef.current = L.layerGroup().addTo(map)
+    if (!showMesh) return
+
+    const now = Date.now() / 1000
+    meshNodes.forEach((n) => {
+      if (!n || n.lat == null || n.lon == null) return
+      const online = n.last_seen && (now - n.last_seen) <= 120
+      const color = online ? '#00e676' : '#8E8E93'
+      // Hired roadside devices get a beacon glyph; roaming sensors get a dish.
+      const icon = makeEmojiIcon(n.hired ? '🛰' : '📡', 22, n.label || n.device_id)
+      L.marker([n.lat, n.lon], { icon, zIndexOffset: 800 })
+        .bindPopup(
+          `<div style="font-family:monospace;font-size:11px;color:#e0e0e0;background:#111820;padding:8px 10px;border-left:3px solid ${color};min-width:190px">
+            <b style="color:${color}">${online ? '● ONLINE' : '○ STALE'} · ${n.hired ? 'HIRED ' : ''}${n.label || 'Sensor'}</b><br/>
+            <span style="color:#5a7a96">ID:</span> ${n.device_id}<br/>
+            ${n.hired ? `<span style="color:#5a7a96">Hired by:</span> ${n.hired_by || 'n/a'} · ${n.kind || 'roadside'}<br/>` : ''}
+            <span style="color:#5a7a96">Reports:</span> ${n.reports || 0} · ${(n.rate_rpm || 0).toFixed?.(1) ?? n.rate_rpm}/min<br/>
+            <span style="color:#5a7a96">Last seen:</span> ${n.last_seen ? Math.round(now - n.last_seen) + 's ago' : 'n/a'}
+          </div>`,
+          { className: 'dark-popup', maxWidth: 240 },
+        )
+        .addTo(meshNodeLayerRef.current)
+      L.circle([n.lat, n.lon], {
+        radius: 250,
+        color,
+        weight: 1.5,
+        opacity: online ? 0.5 : 0.25,
+        fillColor: color,
+        fillOpacity: online ? 0.06 : 0.02,
+        dashArray: '5 5',
+      }).addTo(meshNodeLayerRef.current)
+    })
+  }, [meshNodes, mapReady, showMesh])
 
   useEffect(() => {
     if (!userPos || !onAlert || replayMode) return

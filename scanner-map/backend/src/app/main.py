@@ -29,6 +29,7 @@ from app.api import medic
 from app.api import distribution
 from app.api import unfiltered
 from app.api import identity, geolocation
+from app.api import mesh
 from app.core.daily_checkpoint import ensure_daily_save
 from app.core.storage import get_vehicle_assets_dir
 from app.core.distribution import get_source_root, get_windows_download_targets, iter_file_chunks, resolve_download_path
@@ -157,6 +158,7 @@ app.include_router(medic.router,          prefix="/api",              tags=["med
 app.include_router(unfiltered.router,     prefix="/assistant",        tags=["assistant"])
 app.include_router(identity.router,       prefix="/identity",         tags=["identity"])
 app.include_router(geolocation.router,    prefix="/geo",              tags=["geolocation"])
+app.include_router(mesh.router,           prefix="/mesh",             tags=["mesh"])
 if IS_SOVEREIGN:
     app.include_router(dev_auth.router,        prefix="/auth/dev",  tags=["auth"])
     app.include_router(dev_auth.stepup_router, prefix="/api/auth",  tags=["auth"])
@@ -219,6 +221,14 @@ async def on_startup():
         pass
     trophy_road.bootstrap_legacy_assets()
 
+    # Start the Omni-Mesh hub: restores last snapshot and runs the diff-broadcast
+    # loop from boot so the first sensor report / app connection is served fast.
+    try:
+        mesh.get_hub().start()
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error('Mesh hub start failed: %s', e)
+
     # Start Windows Location API fallback GPS (no-op on non-Windows or if winrt missing)
     try:
         from app.ingest import gps_store
@@ -262,6 +272,9 @@ _explainer = _ROOT / "explainer"
 _vehicle_assets = Path(settings.VEHICLE_ASSET_DIR)
 _frontend_public = _ROOT / "frontend" / "public"
 
+# StaticFiles raises if the dir is absent, so a fresh/isolated HOME couldn't boot.
+# Create it first (mirrors storage.get_vehicle_assets_dir's own mkdir behavior).
+_vehicle_assets.mkdir(parents=True, exist_ok=True)
 app.mount("/dynamic-assets/vehicles", StaticFiles(directory=_vehicle_assets), name="vehicle-assets")
 
 

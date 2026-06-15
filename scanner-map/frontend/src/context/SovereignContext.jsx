@@ -81,4 +81,13 @@ export const SovereignProvider = ({ children }) => {
   )
 }
 
-export const useSovereign = () => useContext(SovereignContext)
+// Safe default so a missing <SovereignProvider> degrades (read-only, signed-out)
+// instead of throwing and taking the whole app down — defense in depth against
+// the render-crash this file caused before the provider was mounted in main.jsx.
+const SOVEREIGN_DEFAULT = {
+  isDev: false, userEmail: '', configured: false, ready: true,
+  elevate: async () => ({ ok: false, error: 'auth unavailable' }),
+  decommission: () => {}, authHeaders: {},
+}
+
+export const useSovereign = () => useContext(SovereignContext) || SOVEREIGN_DEFAULT

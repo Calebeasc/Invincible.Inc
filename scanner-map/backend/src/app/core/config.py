@@ -50,6 +50,15 @@ class Settings:
         os.path.join(os.path.expanduser('~'), 'SafeFlightMap', 'targets.json')
     )
 
+    # Directory of dynamically-served vehicle image assets (mounted at
+    # /dynamic-assets/vehicles by main.py). Added during Linux server setup
+    # (2026-06-12): referenced by main.py + core/storage.py but absent from the
+    # committed Settings. See scanner-map/SETUP_NOTES.md.
+    VEHICLE_ASSET_DIR: str = os.getenv(
+        'SFM_VEHICLE_ASSET_DIR',
+        os.path.join(os.path.expanduser('~'), 'SafeFlightMap', 'vehicle-assets')
+    )
+
     OUI_FUN_WATCHER: str = '00:25:DF'
     OUI_FUN_STOPPER: str = 'B4:1E:52'
 
